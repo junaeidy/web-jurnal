@@ -21,6 +21,7 @@
         "vite": "^6.0.11"
     },
     "dependencies": {
+        "@heroicons/react": "^2.2.0",
         "@heroui/react": "^2.7.10",
         "framer-motion": "^12.16.0",
         "react-hot-toast": "^2.5.2"
