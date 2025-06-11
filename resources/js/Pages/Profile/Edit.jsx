@@ -1,39 +1,40 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
-import DeleteUserForm from './Partials/DeleteUserForm';
-import UpdatePasswordForm from './Partials/UpdatePasswordForm';
-import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm';
+import Sidebar from "@/Components/layouts/Sidebar";
+import Topbar from "@/Components/layouts/Topbar";
+import DeleteUserForm from "./Partials/DeleteUserForm";
+import UpdatePasswordForm from "./Partials/UpdatePasswordForm";
+import UpdateProfileInformationForm from "./Partials/UpdateProfileInformationForm";
+import { Head } from "@inertiajs/react";
+import { useState } from "react";
 
 export default function Edit({ mustVerifyEmail, status }) {
+    const [activeTab, setActiveTab] = useState("Profile");
+
     return (
-        <AuthenticatedLayout
-            header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                    Profile
-                </h2>
-            }
-        >
+        <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
             <Head title="Profile" />
+            <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+            <div className="flex-1 flex flex-col">
+                <Topbar />
+                <main className="flex-1 overflow-y-auto p-6">
+                    <div className="space-y-6 max-w-4xl mx-auto">
+                        <div className="bg-white p-6 rounded-xl shadow dark:bg-gray-800">
+                            <UpdateProfileInformationForm
+                                mustVerifyEmail={mustVerifyEmail}
+                                status={status}
+                                className="max-w-xl"
+                            />
+                        </div>
 
-            <div className="py-12">
-                <div className="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
-                    <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8">
-                        <UpdateProfileInformationForm
-                            mustVerifyEmail={mustVerifyEmail}
-                            status={status}
-                            className="max-w-xl"
-                        />
-                    </div>
+                        <div className="bg-white p-6 rounded-xl shadow dark:bg-gray-800">
+                            <UpdatePasswordForm className="max-w-xl" />
+                        </div>
 
-                    <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8">
-                        <UpdatePasswordForm className="max-w-xl" />
+                        <div className="bg-white p-6 rounded-xl shadow dark:bg-gray-800">
+                            <DeleteUserForm className="max-w-xl" />
+                        </div>
                     </div>
-
-                    <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8">
-                        <DeleteUserForm className="max-w-xl" />
-                    </div>
-                </div>
+                </main>
             </div>
-        </AuthenticatedLayout>
+        </div>
     );
 }

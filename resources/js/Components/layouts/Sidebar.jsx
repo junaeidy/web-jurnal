@@ -10,7 +10,7 @@ import {
 
 const navItems = [
     { name: "Dashboard", icon: ChartBarIcon, href: route("dashboard")},
-    { name: "Management Jurnal", icon: BookOpenIcon},
+    { name: "Manajemen Jurnal", icon: BookOpenIcon, href: route("dashboard.journals.index")},
     { name: "Management Home", icon: HomeIcon},
     { name: "Management Kegiatan", icon: ClockIcon},
     { name: "Management Team", icon: UserGroupIcon},
@@ -23,7 +23,7 @@ export default function Sidebar({ activeTab, setActiveTab }) {
     return (
         <aside className="w-64 bg-white shadow-lg p-4 flex flex-col h-screen">
             <div className="text-2xl font-bold text-blue-600 mb-8">
-               <p>Journal</p>  
+               <p>Journal</p>
             </div>
             <nav className="flex-1 space-y-2">
                 {navItems.map((item) =>
