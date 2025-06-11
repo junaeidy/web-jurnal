@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AboutController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
@@ -27,6 +28,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard/journals', [JournalController::class, 'index'])->name('dashboard.journals.index');
     Route::get('/dashboard/teams', [TeamsController::class, 'index'])->name('dashboard.teams.index');
+    Route::get('/dashboard/abouts', [AboutController::class, 'index'])->name('dashboard.abouts.index');
 });
 
 require __DIR__.'/auth.php';
