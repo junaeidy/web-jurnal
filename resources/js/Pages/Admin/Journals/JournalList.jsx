@@ -18,6 +18,7 @@ import { EyeIcon, EditIcon, DeleteIcon, PlusIcon } from "@/Components/Icons";
 import AddJournal from "@/Components/Admin/Journal/AddJournal";
 import EditJournal from "@/Components/Admin/Journal/EditJournal";
 import ConfirmDialog from "@/Components/ConfirmDialog";
+import JournalDetail from "@/Components/Admin/Journal/JournalDetail";
 import toast from "react-hot-toast";
 
 const columns = [
@@ -46,6 +47,7 @@ export default function JournalList() {
     const [selectedId, setSelectedId] = useState(null);
     const [selectedJournal, setSelectedJournal] = useState(null);
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+    const [isDetailOpen, setIsDetailOpen] = useState(false);
 
     const handleAddSuccess = (newJournal) => {
         fetchJournals();
@@ -108,6 +110,11 @@ export default function JournalList() {
         }
     };
 
+    const handleShowDetail = (journal) => {
+        setSelectedJournal(journal);
+        setIsDetailOpen(true);
+    };
+
     const renderCell = useCallback((journal, columnKey) => {
         switch (columnKey) {
             case "no":
@@ -151,10 +158,14 @@ export default function JournalList() {
                 return (
                     <div className="flex items-center gap-2">
                         <Tooltip content="Detail">
-                            <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+                            <span
+                                onClick={() => handleShowDetail(journal)}
+                                className="text-lg text-default-400 cursor-pointer active:opacity-50"
+                            >
                                 <EyeIcon />
                             </span>
                         </Tooltip>
+
                         <Tooltip content="Edit jurnal">
                             <button
                                 onClick={() => handleEdit(journal.id)}
@@ -265,6 +276,12 @@ export default function JournalList() {
                 journalId={selectedId}
                 onClose={() => setEditModalOpen(false)}
                 onSuccess={() => fetchJournals()}
+            />
+
+            <JournalDetail
+                isOpen={isDetailOpen}
+                onClose={() => setIsDetailOpen(false)}
+                journal={selectedJournal}
             />
 
             <ConfirmDialog
