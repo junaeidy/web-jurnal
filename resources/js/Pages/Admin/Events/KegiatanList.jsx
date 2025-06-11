@@ -86,7 +86,7 @@ export default function KegiatanList() {
         if (!selectedActivity) return;
 
         try {
-            const res = await fetch(`/api/activities/${selectedActivity.id}`, {
+            const res = await fetch(`/api/events/${selectedActivity.id}`, {
                 method: "DELETE",
             });
 
@@ -112,7 +112,7 @@ export default function KegiatanList() {
                     <img
                         src={
                             item.image
-                                ? `/${item.image}`
+                                ? `/storage/${item.image}`
                                 : "https://placehold.co/100x100?text=No+Image"
                         }
                         alt="Poster"
@@ -122,7 +122,7 @@ export default function KegiatanList() {
             case "title":
                 return <div className="font-medium">{item.title}</div>;
             case "date":
-                return item.date || "-";
+                return item.event_date || "-";
             case "location":
                 return item.location || "-";
             case "is_active":

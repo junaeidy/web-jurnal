@@ -9,23 +9,28 @@ import { Editor } from "@tinymce/tinymce-react";
 export default function AddActivity({ show, onClose, onSuccess }) {
     const [form, setForm] = useState({
         title: "",
-        content: "",
+        description: "",
+        event_date: "",
+        location: "",
+        related_link: "",
         image: null,
-        video: "",
-        links: "",
+        is_active: true,
     });
 
     const [preview, setPreview] = useState(null);
     const [loading, setLoading] = useState(false);
     const [tab, setTab] = useState("general");
+    const [submitting, setSubmitting] = useState(false);
 
     const resetForm = () => {
         setForm({
             title: "",
-            content: "",
+            description: "",
+            event_date: "",
+            location: "",
+            related_link: "",
             image: null,
-            video: "",
-            links: "",
+            is_active: true,
         });
         setPreview(null);
         setTab("general");
@@ -36,12 +41,14 @@ export default function AddActivity({ show, onClose, onSuccess }) {
     }, [show]);
 
     const handleChange = (e) => {
-        const { name, value, type, files } = e.target;
+        const { name, value, type, files, checked } = e.target;
 
         if (type === "file") {
             const file = files?.[0];
             setForm((prev) => ({ ...prev, image: file }));
             if (file) setPreview(URL.createObjectURL(file));
+        } else if (type === "checkbox") {
+            setForm((prev) => ({ ...prev, [name]: checked }));
         } else {
             setForm((prev) => ({ ...prev, [name]: value }));
         }
@@ -54,23 +61,31 @@ export default function AddActivity({ show, onClose, onSuccess }) {
 
     const validateForm = () => {
         if (!form.title.trim()) return "Judul kegiatan wajib diisi";
-        if (!form.content.trim()) return "Konten kegiatan wajib diisi";
+        if (!form.description.trim()) return "Konten kegiatan wajib diisi";
+        if (!form.event_date.trim()) return "Tanggal kegiatan wajib diisi";
         return null;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         const error = validateForm();
         if (error) {
             toast.error(error);
             return;
         }
 
-        setLoading(true);
+        setSubmitting(true);
         const formData = new FormData();
 
         for (const key in form) {
             let value = form[key];
+
+            if (key === "is_active") {
+                formData.append("is_active", form.is_active ? "1" : "0");
+                continue;
+            }
+
             if (value === "") value = null;
             if (value !== null) {
                 formData.append(key, value);
@@ -81,21 +96,29 @@ export default function AddActivity({ show, onClose, onSuccess }) {
             const res = await fetch("/api/events", {
                 method: "POST",
                 body: formData,
+                headers: {
+                    Accept: "application/json",
+                },
             });
+
+            console.log("✅ Response status:", res.status);
 
             if (res.ok) {
                 toast.success("Data kegiatan berhasil ditambahkan");
-                const data = await res.json();
-                onSuccess(data);
+                const newData = await res.json();
+                onSuccess(newData);
                 onClose();
+                resetForm();
             } else {
-                toast.error("Gagal menambahkan data kegiatan");
+                const errorText = await res.text();
+                console.error("❌ Gagal tambah data:", errorText);
+                toast.error("Gagal menambahkan data");
             }
-        } catch (err) {
-            console.error(err);
-            toast.error("Terjadi kesalahan saat mengirim data");
+        } catch (error) {
+            console.error("💥 Error saat request:", error);
+            toast.error("Terjadi kesalahan saat menambahkan data");
         } finally {
-            setLoading(false);
+            setSubmitting(false);
         }
     };
 
@@ -138,22 +161,43 @@ export default function AddActivity({ show, onClose, onSuccess }) {
                         <TextInput
                             label="Judul Kegiatan"
                             name="title"
-                            value={form.title}
+                            value={form.title || ""}
                             onChange={handleChange}
                             isRequired
                         />
                         <TextInput
-                            label="Video (Embed URL)"
-                            name="video"
-                            value={form.video}
+                            label="Tanggal Kegiatan"
+                            name="event_date"
+                            type="date"
+                            value={form.event_date || ""}
                             onChange={handleChange}
+                            isRequired
                         />
                         <TextInput
-                            label="Link atau Kontak Tambahan"
-                            name="links"
-                            value={form.links}
+                            label="Lokasi Kegiatan"
+                            name="location"
+                            value={form.location || ""}
+                            onChange={handleChange}
+                            isRequired
+                        />
+                        <TextInput
+                            label="Link Terkait (opsional)"
+                            name="related_link"
+                            value={form.related_link || ""}
                             onChange={handleChange}
                         />
+                        <div className="md:col-span-2">
+                            <label className="flex items-center space-x-2 text-sm text-gray-700 dark:text-gray-200">
+                                <input
+                                    type="checkbox"
+                                    name="is_active"
+                                    checked={form.is_active || false}
+                                    onChange={handleChange}
+                                    className="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
+                                />
+                                <span>Status Aktif</span>
+                            </label>
+                        </div>
                     </div>
                 )}
 
@@ -165,7 +209,7 @@ export default function AddActivity({ show, onClose, onSuccess }) {
                             </label>
                             <Editor
                                 apiKey="wh2upbh3nrh0erdyag8dxm7iktpct0smfh1oj0vxdfydpohv"
-                                value={form.content}
+                                value={form.description}
                                 init={{
                                     height: 300,
                                     menubar: false,
@@ -189,12 +233,13 @@ export default function AddActivity({ show, onClose, onSuccess }) {
                                         "wordcount",
                                     ],
                                     toolbar:
-                                        "undo redo | formatselect | bold italic backcolor | \
-                                        alignleft aligncenter alignright alignjustify | \
-                                        bullist numlist outdent indent | removeformat | help",
+                                        "undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help",
                                 }}
-                                onEditorChange={(content) =>
-                                    setForm((prev) => ({ ...prev, content }))
+                                onEditorChange={(desc) =>
+                                    setForm((prev) => ({
+                                        ...prev,
+                                        description: desc,
+                                    }))
                                 }
                             />
                         </div>
@@ -240,8 +285,8 @@ export default function AddActivity({ show, onClose, onSuccess }) {
                         >
                             Batal
                         </SecondaryButton>
-                        <PrimaryButton type="submit" disabled={loading}>
-                            {loading ? "Menyimpan..." : "Simpan"}
+                        <PrimaryButton type="submit" disabled={submitting}>
+                            {submitting ? "Menyimpan..." : "Simpan"}
                         </PrimaryButton>
                     </div>
 
