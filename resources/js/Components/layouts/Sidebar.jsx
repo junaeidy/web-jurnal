@@ -13,7 +13,7 @@ const navItems = [
     { name: "Manajemen Jurnal", icon: BookOpenIcon, href: route("dashboard.journals.index")},
     { name: "Management Home", icon: HomeIcon},
     { name: "Management Kegiatan", icon: ClockIcon},
-    { name: "Management Team", icon: UserGroupIcon},
+    { name: "Manajemen Team", icon: UserGroupIcon, href: route("dashboard.teams.index")},
     { name: "Management About", icon: InformationCircleIcon},
 ];
 
