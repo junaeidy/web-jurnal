@@ -1,25 +1,25 @@
 import React, { useEffect, useState } from "react";
-import Modal from "@/Components/UI/Modal"; // Import Modal kustom
-import TextInput from "@/Components/UI/TextInput"; // Import TextInput kustom
-import PrimaryButton from "@/Components/UI/PrimaryButton"; // Import PrimaryButton kustom
-import SecondaryButton from "@/Components/UI/SecondaryButton"; // Import SecondaryButton kustom
+import Modal from "@/Components/UI/Modal";
+import TextInput from "@/Components/UI/TextInput";
+import PrimaryButton from "@/Components/UI/PrimaryButton";
+import SecondaryButton from "@/Components/UI/SecondaryButton";
 import toast from "react-hot-toast";
-import { Textarea, Spinner } from "@heroui/react"; // Textarea dan Spinner masih dari heroui/react
+import { Textarea, Spinner } from "@heroui/react";
 
 export default function EditTeamMember({ show, onClose, onSuccess, teamId }) {
     const [form, setForm] = useState({
         name: "",
         position: "",
-        photo: null, // File objek untuk foto baru
+        photo: null,
         description: "",
         email: "",
         contact: "",
         is_active: true,
     });
-    const [existingPhoto, setExistingPhoto] = useState(null); // URL foto yang sudah ada
-    const [preview, setPreview] = useState(null); // URL preview untuk foto baru
-    const [loading, setLoading] = useState(false); // Untuk indikator loading data
-    const [submitting, setSubmitting] = useState(false); // Untuk indikator submit form
+    const [existingPhoto, setExistingPhoto] = useState(null);
+    const [preview, setPreview] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
 
     const fetchData = async () => {
         setLoading(true);
@@ -32,14 +32,14 @@ export default function EditTeamMember({ show, onClose, onSuccess, teamId }) {
             setForm({
                 name: data.name || "",
                 position: data.position || "",
-                photo: null, // Reset photo file saat load data baru
+                photo: null,
                 description: data.description || "",
                 email: data.email || "",
                 contact: data.contact || "",
                 is_active: data.is_active,
             });
             setExistingPhoto(data.photo || null);
-            setPreview(null); // Pastikan preview direset saat memuat data baru
+            setPreview(null);
         } catch (error) {
             console.error("Fetch error:", error);
             toast.error("Gagal memuat data tim");
@@ -48,7 +48,6 @@ export default function EditTeamMember({ show, onClose, onSuccess, teamId }) {
         }
     };
 
-    // Panggil fetchData saat modal muncul atau teamId berubah
     useEffect(() => {
         if (show && teamId) {
             fetchData();
@@ -63,7 +62,7 @@ export default function EditTeamMember({ show, onClose, onSuccess, teamId }) {
             setForm((prev) => ({ ...prev, photo: file }));
             if (file) {
                 setPreview(URL.createObjectURL(file));
-                setExistingPhoto(null); // Hapus existingPhoto jika ada foto baru di-upload
+                setExistingPhoto(null);
             } else {
                 setPreview(null);
             }
@@ -110,35 +109,21 @@ export default function EditTeamMember({ show, onClose, onSuccess, teamId }) {
             }
         }
 
-        // Jika foto baru tidak di-upload tapi ada foto lama dan tidak dihapus, kirim indikator untuk mempertahankan foto lama
-        // Ini perlu disesuaikan dengan bagaimana backend kamu menangani update foto
-        // Contoh: jika photo: null di form, tapi existingPhoto ada, berarti tidak ada perubahan foto
-        // Jika kamu ingin bisa menghapus foto lama tanpa upload baru, tambahkan flag `_delete_photo` ke formData
-        // if (!form.photo && existingPhoto) {
-        //     formData.append('photo_unchanged', true); // Contoh flag
-        // }
-        // Atau jika ingin hapus foto jika `photo` di form adalah `null` dan `existingPhoto` dihapus:
-        // if (form.photo === null && existingPhoto === null && original_existingPhoto_was_present_before_editing) {
-        //     formData.append('_delete_photo', true);
-        // }
-        // Untuk saat ini, kita biarkan `photo: null` saja jika tidak ada perubahan, backend harus mengabaikannya.
-
         try {
-            // Gunakan metode POST atau PATCH. Jika backend Laravel, POST dengan _method: 'PUT'/'PATCH' biasanya lebih mudah.
-            // Atau jika API memang menerima PATCH, gunakan itu.
-            formData.append('_method', 'PUT'); // Menyimulasikan PUT/PATCH untuk Laravel
 
             const res = await fetch(`/api/teams/${teamId}`, {
-                method: "POST", // Tetap POST, tapi sertakan _method PUT/PATCH
-                body: formData,
+                method: "POST",
+                body: (() => {
+          formData.append("_method", "PUT");
+          return formData;
+        })(),
             });
 
             if (res.ok) {
                 toast.success("Data anggota tim berhasil diperbarui");
-                const updatedData = await res.json(); // Ambil data terbaru jika API mengembalikan
-                onSuccess(updatedData); // Panggil onSuccess dengan data terbaru
+                const updatedData = await res.json(); 
+                onSuccess(updatedData); 
                 onClose();
-                // Reset state setelah sukses
                 setPreview(null);
                 setExistingPhoto(null);
             } else {
@@ -232,7 +217,7 @@ export default function EditTeamMember({ show, onClose, onSuccess, teamId }) {
                             {(preview || existingPhoto) ? (
                                 <div className="relative w-[100px] h-[100px] max-w-xs">
                                     <img
-                                        src={preview || `/${existingPhoto}`} // Gunakan preview jika ada, kalau tidak gunakan existingPhoto
+                                        src={preview || `/${existingPhoto}`}
                                         alt="Preview"
                                         className="rounded shadow object-cover w-full h-full"
                                     />

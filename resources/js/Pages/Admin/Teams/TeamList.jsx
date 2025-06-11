@@ -111,6 +111,8 @@ export default function TeamList() {
         setIsDetailOpen(true);
     };
 
+    console.log(filteredMembers);
+
     const renderCell = useCallback((member, columnKey) => {
         switch (columnKey) {
             case "no":
@@ -138,24 +140,25 @@ export default function TeamList() {
             case "is_active":
                 return (
                     <Chip
-                        color={statusColorMap[member.is_active]}
+                        className="capitalize"
+                        color={statusColorMap[Boolean(member.is_active)]}
                         size="sm"
                         variant="flat"
                     >
-                        {member.is_active ? "Aktif" : "Tidak Aktif"}
+                        {member.is_active ? "Active" : "Inactive"}
                     </Chip>
                 );
             case "actions":
                 return (
                     <div className="flex items-center gap-2">
-                        <Tooltip content="Detail">
+                        {/* <Tooltip content="Detail">
                             <span
                                 onClick={() => handleShowDetail(member)}
                                 className="text-lg text-default-400 cursor-pointer active:opacity-50"
                             >
                                 <EyeIcon />
                             </span>
-                        </Tooltip>
+                        </Tooltip> */}
                         <Tooltip content="Edit">
                             <button
                                 onClick={() => handleEdit(member.id)}
@@ -227,7 +230,9 @@ export default function TeamList() {
                     {(column) => (
                         <TableColumn
                             key={column.key}
-                            align={column.key === "actions" ? "center" : "start"}
+                            align={
+                                column.key === "actions" ? "center" : "start"
+                            }
                         >
                             {column.name}
                         </TableColumn>
@@ -237,12 +242,16 @@ export default function TeamList() {
                     items={loading ? [] : filteredMembers}
                     isLoading={loading}
                     loadingContent={<Spinner />}
-                    emptyContent={!loading && "Tidak ada anggota tim ditemukan."}
+                    emptyContent={
+                        !loading && "Tidak ada anggota tim ditemukan."
+                    }
                 >
                     {(item) => (
                         <TableRow key={item.id}>
                             {(columnKey) => (
-                                <TableCell>{renderCell(item, columnKey)}</TableCell>
+                                <TableCell>
+                                    {renderCell(item, columnKey)}
+                                </TableCell>
                             )}
                         </TableRow>
                     )}
@@ -257,7 +266,7 @@ export default function TeamList() {
 
             <EditTeamMember
                 show={editModalOpen}
-                memberId={selectedId}
+                teamId={selectedId}
                 onClose={() => setEditModalOpen(false)}
                 onSuccess={fetchMembers}
             />
