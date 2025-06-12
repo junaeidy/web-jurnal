@@ -22,7 +22,7 @@ const AboutSection = () => {
             setForm((prev) => ({
                 ...prev,
                 ...data,
-                image: null, // reset image untuk upload baru
+                image: null,
             }));
             if (data.image) {
                 setPreview(`/storage/${data.image}`);
@@ -178,7 +178,7 @@ const AboutSection = () => {
                 <button
                     type="submit"
                     disabled={loading}
-                    className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50"
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50"
                 >
                     {loading ? "Menyimpan..." : "Simpan Perubahan"}
                 </button>
