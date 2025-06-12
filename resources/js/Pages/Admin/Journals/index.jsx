@@ -9,12 +9,12 @@ export default function index () {
     const [activeTab, setActiveTab] = useState("Manajemen Jurnal");
 
     return (
-        <div className="flex">
+        <div className="flex h-screen overflow-hidden">
             <Head title="Manajemen Jurnal" />
             <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
             <div className="flex flex-col flex-1 overflow-hidden">
                 <Topbar />
-                <main className="flex-1 p-8">
+                <main className="flex-1 overflow-y-auto p-8">
                     <h1 className="text-2xl font-bold mb-6 text-gray-800 dark:text-white">
                         Manajemen Jurnal
                     </h1>

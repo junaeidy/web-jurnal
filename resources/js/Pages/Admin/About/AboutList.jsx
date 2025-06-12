@@ -32,8 +32,10 @@ export default function AboutList() {
     const [loading, setLoading] = useState(false);
     const [showAddModal, setShowAddModal] = useState(false);
     const [editModalOpen, setEditModalOpen] = useState(false);
-    const [selectedItem, setSelectedItem] = useState(null); 
+    const [selectedItem, setSelectedItem] = useState(null);
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 5;
 
     const fetchData = () => {
         setLoading(true);
@@ -58,6 +60,16 @@ export default function AboutList() {
     const filteredItems = items.filter((item) =>
         item.title?.toLowerCase().includes(search.toLowerCase())
     );
+
+    const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+    const paginatedItems = filteredItems.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [search]);
 
     const handleEdit = (item) => {
         setSelectedItem(item);
@@ -172,7 +184,7 @@ export default function AboutList() {
                     )}
                 </TableHeader>
                 <TableBody
-                    items={loading ? [] : filteredItems}
+                    items={loading ? [] : paginatedItems}
                     isLoading={loading}
                     loadingContent={<Spinner />}
                     emptyContent={!loading && "Tidak ada data ditemukan."}
@@ -188,6 +200,35 @@ export default function AboutList() {
                     )}
                 </TableBody>
             </Table>
+            <div className="flex justify-between items-center mt-4">
+                <span className="text-sm text-gray-600">
+                    Halaman {currentPage} dari {totalPages}
+                </span>
+                <div className="flex gap-2">
+                    <Button
+                        size="sm"
+                        variant="flat"
+                        onClick={() =>
+                            setCurrentPage((prev) => Math.max(prev - 1, 1))
+                        }
+                        disabled={currentPage === 1}
+                    >
+                        Sebelumnya
+                    </Button>
+                    <Button
+                        size="sm"
+                        variant="flat"
+                        onClick={() =>
+                            setCurrentPage((prev) =>
+                                Math.min(prev + 1, totalPages)
+                            )
+                        }
+                        disabled={currentPage === totalPages}
+                    >
+                        Selanjutnya
+                    </Button>
+                </div>
+            </div>
 
             <AddAbout
                 show={showAddModal}

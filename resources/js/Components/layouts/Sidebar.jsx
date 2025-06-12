@@ -10,8 +10,8 @@ import {
 
 const navItems = [
     { name: "Dashboard", icon: ChartBarIcon, href: route("dashboard")},
-    { name: "Manajemen Jurnal", icon: BookOpenIcon, href: route("dashboard.journals.index")},
     { name: "Manajemen Home", icon: HomeIcon, href: route("dashboard.home.index")},
+    { name: "Manajemen Jurnal", icon: BookOpenIcon, href: route("dashboard.journals.index")},
     { name: "Manajemen Kegiatan", icon: ClockIcon, href: route("dashboard.events.index")},
     { name: "Manajemen Team", icon: UserGroupIcon, href: route("dashboard.teams.index")},
     { name: "Manajemen About", icon: InformationCircleIcon, href: route("dashboard.abouts.index")},

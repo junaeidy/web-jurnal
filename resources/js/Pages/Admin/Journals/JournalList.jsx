@@ -49,6 +49,8 @@ export default function JournalList() {
     const [selectedJournal, setSelectedJournal] = useState(null);
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
     const [isDetailOpen, setIsDetailOpen] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 5;
 
     const handleAddSuccess = (newJournal) => {
         fetchJournals();
@@ -84,6 +86,16 @@ export default function JournalList() {
             (statusFilter === "inactive" && !journal.is_active);
         return matchesSearch && matchesStatus;
     });
+
+    const totalPages = Math.ceil(filteredJournals.length / itemsPerPage);
+    const paginatedJournals = filteredJournals.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [search, statusFilter]);
     const handleEdit = (id) => {
         setSelectedId(id);
         setEditModalOpen(true);
@@ -261,7 +273,7 @@ export default function JournalList() {
                 </TableHeader>
 
                 <TableBody
-                    items={loading ? [] : filteredJournals}
+                    items={loading ? [] : paginatedJournals}
                     isLoading={loading}
                     loadingContent={<Spinner />}
                     emptyContent={!loading && "Tidak ada data jurnal."}
@@ -277,6 +289,36 @@ export default function JournalList() {
                     )}
                 </TableBody>
             </Table>
+
+            <div className="flex justify-between items-center mt-4">
+                <span className="text-sm text-gray-600">
+                    Halaman {currentPage} dari {totalPages}
+                </span>
+                <div className="flex gap-2">
+                    <Button
+                        size="sm"
+                        variant="flat"
+                        onClick={() =>
+                            setCurrentPage((prev) => Math.max(prev - 1, 1))
+                        }
+                        disabled={currentPage === 1}
+                    >
+                        Sebelumnya
+                    </Button>
+                    <Button
+                        size="sm"
+                        variant="flat"
+                        onPress={() =>
+                            setCurrentPage((prev) =>
+                                Math.min(prev + 1, totalPages)
+                            )
+                        }
+                        disabled={currentPage === totalPages}
+                    >
+                        Selanjutnya
+                    </Button>
+                </div>
+            </div>
 
             <AddJournal
                 show={showAddModal}

@@ -18,7 +18,6 @@ import { EyeIcon, EditIcon, DeleteIcon, PlusIcon } from "@/Components/Icons";
 import AddTeamMember from "@/Components/Admin/Team/AddTeamMember";
 import EditTeamMember from "@/Components/Admin/Team/EditTeamMember";
 import ConfirmDialog from "@/Components/ConfirmDialog";
-// import TeamMemberDetail from "@/Components/Admin/Team/TeamMemberDetail";
 import toast from "react-hot-toast";
 
 const columns = [
@@ -48,6 +47,8 @@ export default function TeamList() {
     const [selectedMember, setSelectedMember] = useState(null);
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
     const [isDetailOpen, setIsDetailOpen] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 5;
 
     const fetchMembers = () => {
         setLoading(true);
@@ -79,6 +80,16 @@ export default function TeamList() {
             (statusFilter === "inactive" && !member.is_active);
         return matchesSearch && matchesStatus;
     });
+
+    const totalPages = Math.ceil(filteredMembers.length / itemsPerPage);
+    const paginatedMembers = filteredMembers.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [search, statusFilter]);
 
     const handleEdit = (id) => {
         setSelectedId(id);
@@ -151,14 +162,6 @@ export default function TeamList() {
             case "actions":
                 return (
                     <div className="flex items-center gap-2">
-                        {/* <Tooltip content="Detail">
-                            <span
-                                onClick={() => handleShowDetail(member)}
-                                className="text-lg text-default-400 cursor-pointer active:opacity-50"
-                            >
-                                <EyeIcon />
-                            </span>
-                        </Tooltip> */}
                         <Tooltip content="Edit">
                             <button
                                 onClick={() => handleEdit(member.id)}
@@ -239,7 +242,7 @@ export default function TeamList() {
                     )}
                 </TableHeader>
                 <TableBody
-                    items={loading ? [] : filteredMembers}
+                    items={loading ? [] : paginatedMembers}
                     isLoading={loading}
                     loadingContent={<Spinner />}
                     emptyContent={
@@ -257,6 +260,35 @@ export default function TeamList() {
                     )}
                 </TableBody>
             </Table>
+            <div className="flex justify-between items-center mt-4">
+                <span className="text-sm text-gray-600">
+                    Halaman {currentPage} dari {totalPages}
+                </span>
+                <div className="flex gap-2">
+                    <Button
+                        size="sm"
+                        variant="flat"
+                        onClick={() =>
+                            setCurrentPage((prev) => Math.max(prev - 1, 1))
+                        }
+                        disabled={currentPage === 1}
+                    >
+                        Sebelumnya
+                    </Button>
+                    <Button
+                        size="sm"
+                        variant="flat"
+                        onClick={() =>
+                            setCurrentPage((prev) =>
+                                Math.min(prev + 1, totalPages)
+                            )
+                        }
+                        disabled={currentPage === totalPages}
+                    >
+                        Selanjutnya
+                    </Button>
+                </div>
+            </div>
 
             <AddTeamMember
                 show={showAddModal}
@@ -270,13 +302,6 @@ export default function TeamList() {
                 onClose={() => setEditModalOpen(false)}
                 onSuccess={fetchMembers}
             />
-
-            {/* <TeamMemberDetail
-                isOpen={isDetailOpen}
-                onClose={() => setIsDetailOpen(false)}
-                member={selectedMember}
-            /> */}
-
             <ConfirmDialog
                 isOpen={showConfirmDialog}
                 onClose={() => setShowConfirmDialog(false)}

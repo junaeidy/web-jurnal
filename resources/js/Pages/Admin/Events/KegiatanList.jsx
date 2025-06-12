@@ -45,6 +45,8 @@ export default function KegiatanList() {
     const [selectedId, setSelectedId] = useState(null);
     const [selectedActivity, setSelectedActivity] = useState(null);
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 5;
 
     const fetchActivities = () => {
         setLoading(true);
@@ -76,6 +78,16 @@ export default function KegiatanList() {
             (statusFilter === "inactive" && !act.is_active);
         return matchesSearch && matchesStatus;
     });
+
+    const totalPages = Math.ceil(filteredActivities.length / itemsPerPage);
+    const paginatedActivities = filteredActivities.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [search, statusFilter]);
 
     const handleEdit = (id) => {
         setSelectedId(id);
@@ -218,12 +230,10 @@ export default function KegiatanList() {
                     )}
                 </TableHeader>
                 <TableBody
-                    items={loading ? [] : filteredActivities}
+                    items={loading ? [] : paginatedActivities}
                     isLoading={loading}
                     loadingContent={<Spinner />}
-                    emptyContent={
-                        !loading && "Tidak ada kegiatan ditemukan."
-                    }
+                    emptyContent={!loading && "Tidak ada kegiatan ditemukan."}
                 >
                     {(item) => (
                         <TableRow key={item.id}>
@@ -236,6 +246,36 @@ export default function KegiatanList() {
                     )}
                 </TableBody>
             </Table>
+
+            <div className="flex justify-between items-center mt-4">
+                <span className="text-sm text-gray-600">
+                    Halaman {currentPage} dari {totalPages}
+                </span>
+                <div className="flex gap-2">
+                    <Button
+                        size="sm"
+                        variant="flat"
+                        onClick={() =>
+                            setCurrentPage((prev) => Math.max(prev - 1, 1))
+                        }
+                        disabled={currentPage === 1}
+                    >
+                        Sebelumnya
+                    </Button>
+                    <Button
+                        size="sm"
+                        variant="flat"
+                        onClick={() =>
+                            setCurrentPage((prev) =>
+                                Math.min(prev + 1, totalPages)
+                            )
+                        }
+                        disabled={currentPage === totalPages}
+                    >
+                        Selanjutnya
+                    </Button>
+                </div>
+            </div>
 
             <AddActivity
                 show={showAddModal}
