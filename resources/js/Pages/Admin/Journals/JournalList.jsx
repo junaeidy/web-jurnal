@@ -29,6 +29,7 @@ const columns = [
     { name: "DECISION DAYS", key: "decision_days" },
     { name: "IMPACT FACTOR", key: "impact_factor" },
     { name: "STATUS", key: "is_active" },
+    { name: "UNGGULAN", key: "is_featured" },
     { name: "ACTIONS", key: "actions" },
 ];
 
@@ -143,6 +144,18 @@ export default function JournalList() {
                 return journal.decision_days ?? "-";
             case "impact_factor":
                 return journal.impact_factor ?? "-";
+            case "is_featured":
+                return (
+                    <Chip
+                        className="capitalize"
+                        color={journal.is_featured ? "warning" : "default"}
+                        size="sm"
+                        variant="flat"
+                    >
+                        {journal.is_featured ? "Unggulan" : "Biasa"}
+                    </Chip>
+                );
+
             case "is_active":
                 return (
                     <Chip

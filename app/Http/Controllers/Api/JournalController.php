@@ -10,9 +10,6 @@ use Illuminate\Support\Str;
 
 class JournalController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         return Journal::orderBy('created_at', 'desc')->get();
@@ -29,15 +26,16 @@ class JournalController extends Controller
             'decision_days' => 'nullable|integer',
             'impact_factor' => 'nullable|numeric',
             'is_active' => 'boolean',
+            'is_featured' => 'boolean',
         ]);
 
         if ($request->hasFile('cover')) {
             $filename = Str::uuid() . '.' . $request->file('cover')->getClientOriginalExtension();
-
             $request->file('cover')->storeAs('covers', $filename, 'public');
-
             $validated['cover'] = 'storage/covers/' . $filename;
         }
+
+        $validated['is_featured'] = $request->boolean('is_featured', false);
 
         $journal = Journal::create($validated);
 
@@ -47,7 +45,6 @@ class JournalController extends Controller
             'data' => $journal
         ], 201);
     }
-
 
     public function show(Journal $journal)
     {
@@ -65,6 +62,7 @@ class JournalController extends Controller
             'decision_days' => 'nullable|integer',
             'impact_factor' => 'nullable|numeric',
             'is_active' => 'boolean',
+            'is_featured' => 'boolean',
         ]);
 
         if ($request->hasFile('cover')) {
@@ -74,9 +72,10 @@ class JournalController extends Controller
 
             $filename = Str::uuid() . '.' . $request->file('cover')->getClientOriginalExtension();
             $request->file('cover')->storeAs('covers', $filename, 'public');
-
             $validated['cover'] = 'storage/covers/' . $filename;
         }
+
+        $validated['is_featured'] = $request->boolean('is_featured', false);
 
         $journal->update($validated);
 
@@ -89,14 +88,16 @@ class JournalController extends Controller
 
     public function activeJournals()
     {
-       return Journal::where('is_active', true)
-        ->select('id', 'title', 'cover')
-        ->get();
+        return Journal::where('is_active', true)
+            ->select('id', 'title', 'cover')
+            ->get();
     }
 
     public function featuredJournals()
     {
-        return Journal::where('is_featured', true)->select('id', 'title')->get();
+        return Journal::where('is_featured', true)
+            ->select('id', 'title', 'cover')
+            ->get();
     }
 
     public function updateFeaturedJournals(Request $request)
@@ -107,9 +108,8 @@ class JournalController extends Controller
 
         Journal::whereIn('id', $ids)->update(['is_featured' => true]);
 
-        return response()->json(['message' => 'Updated successfully']);
+        return response()->json(['message' => 'Jurnal unggulan berhasil diperbarui.']);
     }
-
 
     public function destroy(Journal $journal)
     {

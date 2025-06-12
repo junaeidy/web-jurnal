@@ -15,6 +15,7 @@ class Journal extends Model
         'decision_days',
         'impact_factor',
         'is_active',
+        'is_featured',
     ];
 
     protected $casts = [
@@ -22,5 +23,6 @@ class Journal extends Model
         'decision_days' => 'integer',
         'impact_factor' => 'float',
         'is_active' => 'boolean',
+        'is_featured' => 'boolean',
     ];
 }

@@ -4,7 +4,6 @@ import Sidebar from "@/Components/layouts/Sidebar";
 import { Head } from "@inertiajs/react";
 import HeroSection from "@/Components/Admin/Home/HeroSection";
 import AboutSection from "@/Components/Admin/Home/AboutSection";
-import JournalSection from "@/Components/Admin/Home/JournalSection";
 
 export default function Index() {
     const [activeTab, setActiveTab] = useState("Manajemen Home");
@@ -30,7 +29,6 @@ export default function Index() {
                     <div className="space-y-24 pb-24">
                         <HeroSection />
                         <AboutSection />
-                        <JournalSection />
                     </div>
                 </main>
             </div>
