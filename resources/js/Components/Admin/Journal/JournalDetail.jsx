@@ -12,7 +12,7 @@ export default function JournalDetail({ isOpen, onClose, journal }) {
               bg: "bg-green-100 text-green-700",
           }
         : {
-              text: "Tidak Aktif",
+              text: "Tidak",
               icon: <XCircleIcon className="h-5 w-5 text-red-500" />,
               bg: "bg-red-100 text-red-700",
           };
@@ -54,6 +54,10 @@ export default function JournalDetail({ isOpen, onClose, journal }) {
                                         <div>{journal.title}</div>
                                     </div>
                                     <div>
+                                        <div className="font-semibold text-gray-500">Penulis</div>
+                                        <div>{journal.authors}</div>
+                                    </div>
+                                    <div>
                                         <div className="font-semibold text-gray-500">Link</div>
                                         <a
                                             href={journal.link}
@@ -75,6 +79,14 @@ export default function JournalDetail({ isOpen, onClose, journal }) {
                                     <div>
                                         <div className="font-semibold text-gray-500">Impact Factor</div>
                                         <div>{journal.impact_factor ?? "-"}</div>
+                                    </div>
+                                    <div>
+                                        <div className="font-semibold text-gray-500">Unggulan</div>
+                                        <div className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium ${statusStyle.bg}`}>
+                                            {statusStyle.icon}
+                                            <span className="ml-1">{statusStyle.text}</span>
+                                        </div>
+
                                     </div>
                                     <div>
                                         <div className="font-semibold text-gray-500">Status</div>

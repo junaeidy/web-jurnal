@@ -17,6 +17,7 @@ export default function AddJournal({ show, onClose, onSuccess }) {
         is_active: true,
         cover: null,
         is_featured: false,
+        authors: "",
     });
 
     const [preview, setPreview] = useState(null);
@@ -33,6 +34,7 @@ export default function AddJournal({ show, onClose, onSuccess }) {
             is_active: true,
             cover: null,
             is_featured: false,
+            authors: "",
         });
         setPreview(null);
     };
@@ -130,6 +132,14 @@ export default function AddJournal({ show, onClose, onSuccess }) {
                         label="Judul Jurnal"
                         name="title"
                         value={form.title}
+                        onChange={handleChange}
+                        isRequired
+                    />
+
+                    <TextInput
+                        label="Penulis"
+                        name="authors"
+                        value={form.authors}
                         onChange={handleChange}
                         isRequired
                     />

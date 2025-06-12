@@ -16,6 +16,7 @@ class Journal extends Model
         'impact_factor',
         'is_active',
         'is_featured',
+        'authors',
     ];
 
     protected $casts = [

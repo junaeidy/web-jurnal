@@ -117,13 +117,6 @@ export default function TeamList() {
         }
     };
 
-    const handleShowDetail = (member) => {
-        setSelectedMember(member);
-        setIsDetailOpen(true);
-    };
-
-    console.log(filteredMembers);
-
     const renderCell = useCallback((member, columnKey) => {
         switch (columnKey) {
             case "no":

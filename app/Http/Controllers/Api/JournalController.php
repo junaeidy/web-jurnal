@@ -27,6 +27,7 @@ class JournalController extends Controller
             'impact_factor' => 'nullable|numeric',
             'is_active' => 'boolean',
             'is_featured' => 'boolean',
+            'authors' => 'required|string',
         ]);
 
         if ($request->hasFile('cover')) {
@@ -63,6 +64,7 @@ class JournalController extends Controller
             'impact_factor' => 'nullable|numeric',
             'is_active' => 'boolean',
             'is_featured' => 'boolean',
+            'authors' => 'required|string'
         ]);
 
         if ($request->hasFile('cover')) {
