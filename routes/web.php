@@ -6,6 +6,7 @@ use Illuminate\Foundation\Application;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\TeamsController;
 use App\Http\Controllers\EventsController;
+use App\Http\Controllers\HomeHeroController;
 use App\Http\Controllers\JournalController;
 use App\Http\Controllers\ProfileController;
 
@@ -31,6 +32,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/teams', [TeamsController::class, 'index'])->name('dashboard.teams.index');
     Route::get('/dashboard/abouts', [AboutController::class, 'index'])->name('dashboard.abouts.index');
     Route::get('/dashboard/events', [EventsController::class, 'index'])->name('dashboard.events.index');
+    Route::get('/dashboard/home', [HomeHeroController::class, 'index'])->name('dashboard.home.index');
 });
 
 require __DIR__.'/auth.php';
