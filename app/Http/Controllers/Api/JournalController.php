@@ -15,7 +15,7 @@ class JournalController extends Controller
         $search = $request->query('search');
         $sort = $request->query('sort', 'title');
 
-        $query = Journal::query();
+        $query = Journal::with('category');
 
         if ($search) {
             $query->where(function ($q) use ($search) {
@@ -35,6 +35,7 @@ class JournalController extends Controller
     }
 
 
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -48,6 +49,8 @@ class JournalController extends Controller
             'is_active' => 'boolean',
             'is_featured' => 'boolean',
             'authors' => 'required|string',
+            'category_id' => 'nullable|exists:categories,id',
+            'published_year' => 'nullable|digits:4|integer|min:1900|max:' . date('Y'),
         ]);
 
         if ($request->hasFile('cover')) {
@@ -84,7 +87,9 @@ class JournalController extends Controller
             'impact_factor' => 'nullable|numeric',
             'is_active' => 'boolean',
             'is_featured' => 'boolean',
-            'authors' => 'required|string'
+            'authors' => 'required|string',
+            'category_id' => 'nullable|exists:categories,id',
+            'published_year' => 'nullable|digits:4|integer|min:1900|max:' . date('Y'),
         ]);
 
         if ($request->hasFile('cover')) {

@@ -17,6 +17,8 @@ class Journal extends Model
         'is_active',
         'is_featured',
         'authors',
+        'category_id',
+        'published_year',
     ];
 
     protected $casts = [
@@ -26,4 +28,9 @@ class Journal extends Model
         'is_active' => 'boolean',
         'is_featured' => 'boolean',
     ];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 }

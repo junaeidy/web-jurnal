@@ -4,9 +4,10 @@ import TextInput from "@/Components/UI/TextInput";
 import PrimaryButton from "@/Components/UI/PrimaryButton";
 import SecondaryButton from "@/Components/UI/SecondaryButton";
 import toast from "react-hot-toast";
-import { Textarea } from "@heroui/react";
+import { Textarea, Select, SelectItem } from "@heroui/react";
 
 export default function EditJournal({ show, onClose, onSuccess, journalId }) {
+    const [categories, setCategories] = useState([]);
     const [form, setForm] = useState({
         title: "",
         description: "",
@@ -18,12 +19,20 @@ export default function EditJournal({ show, onClose, onSuccess, journalId }) {
         is_featured: false,
         cover: null,
         authors: "",
+        category_id: "",
+        published_year: "",
     });
 
     const [preview, setPreview] = useState(null);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
+        if (show) {
+            fetch("/api/categories")
+                .then((res) => res.json())
+                .then((data) => setCategories(data));
+        }
+
         if (show && journalId) {
             setLoading(true);
             fetch(`/api/journals/${journalId}`)
@@ -34,6 +43,8 @@ export default function EditJournal({ show, onClose, onSuccess, journalId }) {
                         is_active: !!data.is_active,
                         is_featured: !!data.is_featured,
                         cover: null,
+                        category_id: data.category_id ?? "",
+                        published_year: data.published_year ?? "",
                     });
                     setPreview(data.cover ? `/${data.cover}` : null);
                 })
@@ -154,6 +165,35 @@ export default function EditJournal({ show, onClose, onSuccess, journalId }) {
                         value={form.impact_factor}
                         onChange={handleChange}
                     />
+                    <TextInput
+                        label="Tahun Terbit"
+                        name="published_year"
+                        type="number"
+                        value={form.published_year}
+                        onChange={handleChange}
+                        placeholder="Misal: 2024"
+                        isRequired
+                    />
+                    <Select
+                        label="Pilih Kategori"
+                        selectedKeys={
+                            form.category_id ? [String(form.category_id)] : []
+                        }
+                        onSelectionChange={(key) =>
+                            setForm((prev) => ({
+                                ...prev,
+                                category_id: Array.from(key)[0],
+                            }))
+                        }
+                        className="max-w-xs"
+                        isRequired
+                    >
+                        {categories.map((cat) => (
+                            <SelectItem key={cat.id} value={cat.id}>
+                                {cat.name}
+                            </SelectItem>
+                        ))}
+                    </Select>
 
                     {/* Checkbox is_active */}
                     <div className="flex items-center mt-1">

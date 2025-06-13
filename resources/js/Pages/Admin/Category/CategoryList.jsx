@@ -9,8 +9,6 @@ import {
     Chip,
     Tooltip,
     Input,
-    Select,
-    SelectItem,
     Button,
     Spinner,
 } from "@heroui/react";
@@ -24,13 +22,23 @@ import toast from "react-hot-toast";
 const columns = [
     { name: "NO", key: "no" },
     { name: "NAMA", key: "name" },
-    { name: "STATUS", key: "is_active" },
+    { name: "TANGGAL BUAT", key: "created_at" },
+    { name: "TANGGAL DIUBAH", key: "updated_at" },
     { name: "AKSI", key: "actions" },
 ];
 
-const statusColorMap = {
-    true: "success",
-    false: "danger",
+const formatDateTime = (value) => {
+    if (!value) return "-";
+    const date = new Date(value);
+    return date.toLocaleString("id-ID", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false,
+    });
 };
 
 export default function CategoryList() {
@@ -66,7 +74,9 @@ export default function CategoryList() {
     }, []);
 
     const filteredCategories = categories.filter((cat) => {
-        const matchesSearch = (cat.name || "").toLowerCase().includes(search.toLowerCase());
+        const matchesSearch = (cat.name || "")
+            .toLowerCase()
+            .includes(search.toLowerCase());
         const matchesStatus =
             statusFilter === "all" ||
             (statusFilter === "active" && cat.is_active) ||
@@ -109,17 +119,9 @@ export default function CategoryList() {
                 return cat.no;
             case "name":
                 return <div className="font-medium">{cat.name}</div>;
-            case "is_active":
-                return (
-                    <Chip
-                        className="capitalize"
-                        color={statusColorMap[Boolean(cat.is_active)]}
-                        size="sm"
-                        variant="flat"
-                    >
-                        {cat.is_active ? "Aktif" : "Tidak Aktif"}
-                    </Chip>
-                );
+            case "created_at":
+            case "updated_at":
+                return <span>{formatDateTime(cat[columnKey])}</span>;
             case "actions":
                 return (
                     <div className="flex items-center gap-2">
@@ -162,23 +164,6 @@ export default function CategoryList() {
                 />
 
                 <div className="flex items-center gap-3 w-full md:w-auto">
-                    <Select
-                        className="w-36"
-                        aria-label="Filter Status"
-                        selectedKeys={[statusFilter]}
-                        onChange={(e) => setStatusFilter(e.target.value)}
-                    >
-                        <SelectItem key="all" value="all">
-                            Semua Status
-                        </SelectItem>
-                        <SelectItem key="active" value="active">
-                            Aktif
-                        </SelectItem>
-                        <SelectItem key="inactive" value="inactive">
-                            Tidak Aktif
-                        </SelectItem>
-                    </Select>
-
                     <Button
                         color="primary"
                         endContent={<PlusIcon />}
@@ -194,7 +179,9 @@ export default function CategoryList() {
                     {(column) => (
                         <TableColumn
                             key={column.key}
-                            align={column.key === "actions" ? "center" : "start"}
+                            align={
+                                column.key === "actions" ? "center" : "start"
+                            }
                         >
                             {column.name}
                         </TableColumn>
@@ -209,7 +196,9 @@ export default function CategoryList() {
                     {(item) => (
                         <TableRow key={item.id}>
                             {(columnKey) => (
-                                <TableCell>{renderCell(item, columnKey)}</TableCell>
+                                <TableCell>
+                                    {renderCell(item, columnKey)}
+                                </TableCell>
                             )}
                         </TableRow>
                     )}
@@ -224,7 +213,9 @@ export default function CategoryList() {
                     <Button
                         size="sm"
                         variant="flat"
-                        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                        onPress={() =>
+                            setCurrentPage((prev) => Math.max(prev - 1, 1))
+                        }
                         disabled={currentPage === 1}
                     >
                         Sebelumnya
@@ -232,7 +223,11 @@ export default function CategoryList() {
                     <Button
                         size="sm"
                         variant="flat"
-                        onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                        onPress={() =>
+                            setCurrentPage((prev) =>
+                                Math.min(prev + 1, totalPages)
+                            )
+                        }
                         disabled={currentPage === totalPages}
                     >
                         Selanjutnya

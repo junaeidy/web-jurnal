@@ -4,7 +4,7 @@ import TextInput from "@/Components/UI/TextInput";
 import PrimaryButton from "@/Components/UI/PrimaryButton";
 import SecondaryButton from "@/Components/UI/SecondaryButton";
 import toast from "react-hot-toast";
-import { Textarea } from "@heroui/react";
+import { Textarea, Select, SelectItem } from "@heroui/react";
 
 export default function AddJournal({ show, onClose, onSuccess }) {
     const [form, setForm] = useState({
@@ -18,8 +18,11 @@ export default function AddJournal({ show, onClose, onSuccess }) {
         cover: null,
         is_featured: false,
         authors: "",
+        category_id: "",
+        published_year: "",
     });
 
+    const [categories, setCategories] = useState([]);
     const [preview, setPreview] = useState(null);
     const [loading, setLoading] = useState(false);
 
@@ -35,20 +38,31 @@ export default function AddJournal({ show, onClose, onSuccess }) {
             cover: null,
             is_featured: false,
             authors: "",
+            category_id: "",
+            published_year: "",
         });
         setPreview(null);
     };
 
     useEffect(() => {
-        if (show) resetForm();
+        if (show) {
+            resetForm();
+            fetchCategories();
+        }
     }, [show]);
 
+    const fetchCategories = async () => {
+        try {
+            const res = await fetch("/api/categories");
+            const data = await res.json();
+            setCategories(data);
+        } catch (err) {
+            toast.error("Gagal memuat kategori");
+        }
+    };
+
     const handleChange = (e) => {
-        if (!e || !e.target) return;
-
         const { name, value, type, checked, files } = e.target;
-
-        if (!name) return;
 
         if (type === "file") {
             const file = files?.[0];
@@ -69,20 +83,8 @@ export default function AddJournal({ show, onClose, onSuccess }) {
         setPreview(null);
     };
 
-    const validateForm = () => {
-        if (!form.title.trim()) return "Judul jurnal wajib diisi";
-        if (form.link && !/^https?:\/\/\S+$/i.test(form.link))
-            return "Link tidak valid";
-        return null;
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const error = validateForm();
-        if (error) {
-            toast.error(error);
-            return;
-        }
 
         setLoading(true);
         const formData = new FormData();
@@ -129,57 +131,84 @@ export default function AddJournal({ show, onClose, onSuccess }) {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <TextInput
-                        label="Judul Jurnal"
                         name="title"
+                        label="Judul Jurnal"
                         value={form.title}
                         onChange={handleChange}
                         isRequired
                     />
-
                     <TextInput
-                        label="Penulis"
                         name="authors"
+                        label="Penulis"
                         value={form.authors}
                         onChange={handleChange}
                         isRequired
                     />
-
                     <TextInput
-                        label="Link"
                         name="link"
+                        label="Link"
                         value={form.link}
                         onChange={handleChange}
-                        placeholder="https://contoh.com"
                         isRequired
                     />
-
                     <TextInput
-                        label="Acceptance Rate (%)"
                         name="acceptance_rate"
+                        label="Acceptance Rate (%)"
                         type="number"
                         value={form.acceptance_rate}
                         onChange={handleChange}
                         isRequired
                     />
-
                     <TextInput
-                        label="Decision Days"
                         name="decision_days"
+                        label="Decision Days"
                         type="number"
                         value={form.decision_days}
                         onChange={handleChange}
                         isRequired
                     />
-
                     <TextInput
-                        label="Impact Factor"
                         name="impact_factor"
+                        label="Impact Factor"
                         type="number"
                         step="0.01"
                         value={form.impact_factor}
                         onChange={handleChange}
                         isRequired
                     />
+
+                    {/* Tahun Terbit */}
+                    <TextInput
+                        name="published_year"
+                        label="Tahun Terbit"
+                        type="number"
+                        value={form.published_year}
+                        onChange={handleChange}
+                        isRequired
+                    />
+
+                    {/* Kategori */}
+                    <div>
+                        <Select
+                            label="Kategori"
+                            className="max-w-full"
+                            selectedKeys={[form.category_id]}
+                            onSelectionChange={(selected) => {
+                                const value = Array.from(selected)[0];
+                                setForm((prev) => ({
+                                    ...prev,
+                                    category_id: value,
+                                }));
+                            }}
+                            isRequired
+                        >
+                            {categories.map((cat) => (
+                                <SelectItem key={cat.id} value={cat.id}>
+                                    {cat.name}
+                                </SelectItem>
+                            ))}
+                        </Select>
+                    </div>
 
                     <div className="flex items-center mt-1">
                         <input
@@ -206,54 +235,54 @@ export default function AddJournal({ show, onClose, onSuccess }) {
                             Tandai sebagai jurnal unggulan
                         </span>
                     </div>
+                </div>
 
-                    <div className="col-span-full">
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
-                            Deskripsi
-                        </label>
-                        <Textarea
-                            name="description"
-                            value={form.description}
-                            onChange={(e) =>
-                                setForm((prev) => ({
-                                    ...prev,
-                                    description: e.target.value,
-                                }))
-                            }
-                            rows={3}
-                            required
-                        />
-                    </div>
+                <div>
+                    <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-200">
+                        Deskripsi
+                    </label>
+                    <Textarea
+                        name="description"
+                        value={form.description}
+                        onChange={(e) =>
+                            setForm((prev) => ({
+                                ...prev,
+                                description: e.target.value,
+                            }))
+                        }
+                        rows={3}
+                        isRequired
+                    />
+                </div>
 
-                    <div className="col-span-full">
-                        <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-200">
-                            Sampul (Cover)
-                        </label>
-                        {preview ? (
-                            <div className="relative w-[100px] h-[100px] max-w-xs">
-                                <img
-                                    src={preview}
-                                    alt="Preview"
-                                    className="rounded shadow"
-                                />
-                                <button
-                                    type="button"
-                                    onClick={handleRemoveImage}
-                                    className="absolute top-1 right-1 px-2 py-1 bg-red-500 text-white text-xs rounded-full"
-                                >
-                                    ×
-                                </button>
-                            </div>
-                        ) : (
-                            <input
-                                type="file"
-                                name="cover"
-                                accept="image/*"
-                                onChange={handleChange}
-                                className="block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+                <div className="col-span-full">
+                    <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-200">
+                        Sampul (Cover)
+                    </label>
+                    {preview ? (
+                        <div className="relative w-[100px] h-[100px] max-w-xs">
+                            <img
+                                src={preview}
+                                alt="Preview"
+                                className="rounded shadow"
                             />
-                        )}
-                    </div>
+                            <button
+                                type="button"
+                                onClick={handleRemoveImage}
+                                className="absolute top-1 right-1 px-2 py-1 bg-red-500 text-white text-xs rounded-full"
+                            >
+                                ×
+                            </button>
+                        </div>
+                    ) : (
+                        <input
+                            type="file"
+                            name="cover"
+                            accept="image/*"
+                            onChange={handleChange}
+                            className="block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+                        />
+                    )}
                 </div>
 
                 <div className="flex justify-end gap-2 pt-4">

@@ -17,6 +17,10 @@ export default function JournalDetail({ isOpen, onClose, journal }) {
               bg: "bg-red-100 text-red-700",
           };
 
+    const truncate = (str, length = 35) => {
+        return str.length > length ? str.substring(0, length) + "..." : str;
+    };
+
     return (
         <Transition appear show={isOpen} as={Fragment}>
             <Dialog as="div" className="relative z-50" onClose={onClose}>
@@ -50,59 +54,108 @@ export default function JournalDetail({ isOpen, onClose, journal }) {
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 text-sm text-gray-700">
                                     <div>
-                                        <div className="font-semibold text-gray-500">Judul</div>
+                                        <div className="font-semibold text-gray-500">
+                                            Judul
+                                        </div>
                                         <div>{journal.title}</div>
                                     </div>
                                     <div>
-                                        <div className="font-semibold text-gray-500">Penulis</div>
+                                        <div className="font-semibold text-gray-500">
+                                            Penulis
+                                        </div>
                                         <div>{journal.authors}</div>
                                     </div>
                                     <div>
-                                        <div className="font-semibold text-gray-500">Link</div>
+                                        <div className="font-semibold text-gray-500">
+                                            Kategori
+                                        </div>
+                                        <div>
+                                            {journal.category?.name ?? "-"}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div className="font-semibold text-gray-500">
+                                            Tahun Terbit
+                                        </div>
+                                        <div>
+                                            {journal.published_year ?? "-"}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div className="font-semibold text-gray-500">
+                                            Link
+                                        </div>
                                         <a
                                             href={journal.link}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="text-blue-600 underline"
+                                            className="text-blue-600 underline break-all"
                                         >
-                                            {journal.link}
+                                            {truncate(journal.link)}
                                         </a>
                                     </div>
                                     <div>
-                                        <div className="font-semibold text-gray-500">Acceptance Rate</div>
-                                        <div>{journal.acceptance_rate ?? "-"}%</div>
-                                    </div>
-                                    <div>
-                                        <div className="font-semibold text-gray-500">Decision Days</div>
-                                        <div>{journal.decision_days ?? "-"} hari</div>
-                                    </div>
-                                    <div>
-                                        <div className="font-semibold text-gray-500">Impact Factor</div>
-                                        <div>{journal.impact_factor ?? "-"}</div>
-                                    </div>
-                                    <div>
-                                        <div className="font-semibold text-gray-500">Unggulan</div>
-                                        <div className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium ${statusStyle.bg}`}>
-                                            {statusStyle.icon}
-                                            <span className="ml-1">{statusStyle.text}</span>
+                                        <div className="font-semibold text-gray-500">
+                                            Acceptance Rate
                                         </div>
-
+                                        <div>
+                                            {journal.acceptance_rate ?? "-"}%
+                                        </div>
                                     </div>
                                     <div>
-                                        <div className="font-semibold text-gray-500">Status</div>
-                                        <div className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium ${statusStyle.bg}`}>
+                                        <div className="font-semibold text-gray-500">
+                                            Decision Days
+                                        </div>
+                                        <div>
+                                            {journal.decision_days ?? "-"} hari
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div className="font-semibold text-gray-500">
+                                            Impact Factor
+                                        </div>
+                                        <div>
+                                            {journal.impact_factor ?? "-"}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div className="font-semibold text-gray-500">
+                                            Unggulan
+                                        </div>
+                                        <div
+                                            className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium ${statusStyle.bg}`}
+                                        >
                                             {statusStyle.icon}
-                                            <span className="ml-1">{statusStyle.text}</span>
+                                            <span className="ml-1">
+                                                {statusStyle.text}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div className="font-semibold text-gray-500">
+                                            Status
+                                        </div>
+                                        <div
+                                            className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium ${statusStyle.bg}`}
+                                        >
+                                            {statusStyle.icon}
+                                            <span className="ml-1">
+                                                {statusStyle.text}
+                                            </span>
                                         </div>
                                     </div>
                                     <div className="sm:col-span-2">
-                                        <div className="font-semibold text-gray-500 mb-1">Deskripsi</div>
+                                        <div className="font-semibold text-gray-500 mb-1">
+                                            Deskripsi
+                                        </div>
                                         <div className="bg-gray-100 rounded p-3 text-gray-700">
                                             {journal.description || "-"}
                                         </div>
                                     </div>
                                     <div className="sm:col-span-2">
-                                        <div className="font-semibold text-gray-500 mb-2">Cover</div>
+                                        <div className="font-semibold text-gray-500 mb-2">
+                                            Cover
+                                        </div>
                                         {journal.cover ? (
                                             <img
                                                 src={`/${journal.cover}`}
@@ -110,7 +163,9 @@ export default function JournalDetail({ isOpen, onClose, journal }) {
                                                 className="w-full max-w-xs rounded-lg shadow border"
                                             />
                                         ) : (
-                                            <div className="text-gray-400 italic">Tidak ada gambar</div>
+                                            <div className="text-gray-400 italic">
+                                                Tidak ada gambar
+                                            </div>
                                         )}
                                     </div>
                                 </div>
