@@ -31,6 +31,10 @@ Route::get('/about-us', function () {
     return Inertia::render('User/About/Index');
 })->name('user.about.index');
 
+Route::get('/team', function () {
+    return Inertia::render('User/Team/Index');
+})->name('user.team.index');
+
 Route::get('/dashboard', function () {
     return Inertia::render('Admin/Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
