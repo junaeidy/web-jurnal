@@ -27,6 +27,10 @@ Route::get('/categories', function () {
     return Inertia::render('Admin/Category/Index');
 })->name('dashboard.categories.index');
 
+Route::get('/about-us', function () {
+    return Inertia::render('User/About/Index');
+})->name('user.about.index');
+
 Route::get('/dashboard', function () {
     return Inertia::render('Admin/Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

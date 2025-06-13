@@ -2,12 +2,12 @@ import React from "react";
 import { Head } from "@inertiajs/react";
 import Navbar from "@/Components/User/Navbar";
 import Footer from "@/Components//User/Footer";
-import ListJournal from "./ListJournal";
+import ListAbout from "./ListAbout";
 
 export default function Index({ auth }) {
     return (
         <>
-            <Head title="Temukan Jurnal" />
+            <Head title="Tentang Kami" />
             <Navbar user={auth.user} />
             <div className="pt-16">
                 <section
@@ -21,19 +21,19 @@ export default function Index({ auth }) {
                     <div className="container mx-auto px-4 relative z-10 animate__animated animate__fadeIn">
                         <div className="pl-6 md:pl-12">
                             <h1 className="text-5xl md:text-6xl font-bold mb-4 text-gray-700">
-                                Temukan Jurnal
+                                Tentang Kami
                             </h1>
                             <p className="text-lg md:text-xl text-gray-700 max-w-2xl">
-                                Jelajahi kumpulan jurnal ilmiah berkualitas dari
-                                berbagai bidang yang telah diterbitkan di
-                                platform Jurnal Kami.
+                                Jurnal Kami merupakan wadah publikasi ilmiah
+                                yang bertujuan menyebarluaskan pengetahuan dan
+                                hasil penelitian dari berbagai bidang keilmuan.
                             </p>
                         </div>
                     </div>
                 </section>
 
                 {/* Content Section */}
-                <ListJournal />
+                <ListAbout />
             </div>
             <Footer />
         </>

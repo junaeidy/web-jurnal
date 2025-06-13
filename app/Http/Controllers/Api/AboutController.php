@@ -14,7 +14,7 @@ class AboutController extends Controller
      */
     public function index()
     {
-        return About::orderBy('created_at', 'desc')->get();
+        return About::all();
     }
 
     public function store(Request $request)

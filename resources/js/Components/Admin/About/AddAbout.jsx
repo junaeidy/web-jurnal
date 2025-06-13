@@ -11,8 +11,8 @@ export default function AddAbout({ show, onClose, onSuccess }) {
         title: "",
         content: "",
         image: null,
-        video: "",
-        links: "",
+        video_url: "",
+        extra_link: "",
     });
 
     const [preview, setPreview] = useState(null);
@@ -24,8 +24,8 @@ export default function AddAbout({ show, onClose, onSuccess }) {
             title: "",
             content: "",
             image: null,
-            video: "",
-            links: "",
+            video_url: "",
+            extra_link: "",
         });
         setPreview(null);
         setTab("general");
@@ -144,14 +144,14 @@ export default function AddAbout({ show, onClose, onSuccess }) {
                         />
                         <TextInput
                             label="Video (Embed URL)"
-                            name="video"
-                            value={form.video}
+                            name="video_url"
+                            value={form.video_url}
                             onChange={handleChange}
                         />
                         <TextInput
                             label="Link atau Kontak Tambahan"
-                            name="links"
-                            value={form.links}
+                            name="extra_link"
+                            value={form.extra_link}
                             onChange={handleChange}
                         />
                     </div>
