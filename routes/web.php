@@ -35,6 +35,16 @@ Route::get('/team', function () {
     return Inertia::render('User/Team/Index');
 })->name('user.team.index');
 
+Route::get('/events', function () {
+    return Inertia::render('User/Event/Index');
+})->name('user.event.index');
+
+Route::get('/events/{slug}', function ($slug) {
+    return Inertia::render('User/Event/DetailEvent', [
+        'slug' => $slug
+    ]);
+});
+
 Route::get('/dashboard', function () {
     return Inertia::render('Admin/Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

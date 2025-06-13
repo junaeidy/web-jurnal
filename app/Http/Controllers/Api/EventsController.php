@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Events;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class EventsController extends Controller
 {
@@ -30,13 +31,26 @@ class EventsController extends Controller
             $validated['image'] = $request->file('image')->store('events', 'public');
         }
 
+        // Slug otomatis di model saat creating
         $event = Events::create($validated);
+
         return response()->json($event, 201);
     }
 
     public function show(Events $event)
     {
         return $event;
+    }
+
+    public function showBySlug($slug)
+    {
+        $event = Events::where('slug', $slug)->first();
+
+        if (!$event) {
+            return response()->json(['message' => 'Event not found'], 404);
+        }
+
+        return response()->json($event);
     }
 
     public function update(Request $request, Events $event)
@@ -52,7 +66,6 @@ class EventsController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            // Delete old image if exists
             if ($event->image) {
                 Storage::disk('public')->delete($event->image);
             }
@@ -60,6 +73,7 @@ class EventsController extends Controller
         }
 
         $event->update($validated);
+
         return response()->json($event);
     }
 
@@ -68,7 +82,9 @@ class EventsController extends Controller
         if ($event->image) {
             Storage::disk('public')->delete($event->image);
         }
+
         $event->delete();
+
         return response()->json(['message' => 'Event deleted']);
     }
 }

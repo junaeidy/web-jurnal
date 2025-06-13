@@ -26,3 +26,4 @@ Route::get('/home/active-journals', [JournalController::class, 'activeJournals']
 Route::get('/home/featured-journals', [JournalController::class, 'featuredJournals']);
 Route::put('/home/featured-journals', [JournalController::class, 'updateFeaturedJournals']);
 Route::apiResource('categories', CategoryController::class);
+Route::get('/events/slug/{slug}', [EventsController::class, 'showBySlug']);

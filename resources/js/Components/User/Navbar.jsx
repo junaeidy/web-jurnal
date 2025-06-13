@@ -7,7 +7,7 @@ export default function Navbar({ user }) {
     const navLinks = [
         { href: "/", label: "Home" },
         { href: "/journal", label: "Jurnal" },
-        { href: "/kegiatan", label: "Kegiatan" },
+        { href: "/events", label: "Kegiatan" },
         { href: "/team", label: "Team" },
         { href: "/about-us", label: "About Us" },
     ];
