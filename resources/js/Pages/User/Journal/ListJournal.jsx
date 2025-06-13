@@ -9,6 +9,8 @@ export default function ListJournal({ onLoaded }) {
     const [loading, setLoading] = useState(false);
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("");
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
 
     const fetchJournals = async () => {
         setLoading(true);
@@ -17,10 +19,13 @@ export default function ListJournal({ onLoaded }) {
                 search,
                 sort: sortBy,
                 category: selectedCategory,
+                page,
+                limit: 15,
             }).toString();
             const response = await fetch(`/api/journals?${query}`);
             const data = await response.json();
-            setJournals(data);
+            setJournals(data.data);
+            setTotalPages(data.last_page);
         } catch (error) {
             console.error("Gagal mengambil data jurnal:", error);
         } finally {
@@ -31,7 +36,7 @@ export default function ListJournal({ onLoaded }) {
 
     useEffect(() => {
         fetchJournals();
-    }, [search, sortBy]);
+    }, [search, sortBy, selectedCategory, page]);
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -186,6 +191,41 @@ export default function ListJournal({ onLoaded }) {
                                     </div>
                                 </div>
                             ))
+                        )}
+                    </div>
+                )}
+                {totalPages > 1 && (
+                    <div className="mt-8 flex justify-center items-center space-x-1">
+                        {[...Array(Math.min(totalPages, 9)).keys()].map((i) => {
+                            const pageNum = i + 1;
+                            return (
+                                <button
+                                    key={pageNum}
+                                    onClick={() => setPage(pageNum)}
+                                    className={`px-3 py-1 rounded ${
+                                        page === pageNum
+                                            ? "bg-blue-600 text-white"
+                                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                                    }`}
+                                >
+                                    {pageNum}
+                                </button>
+                            );
+                        })}
+                        {totalPages > 9 && (
+                            <>
+                                <span className="px-2 text-gray-500">...</span>
+                                <button
+                                    onClick={() => setPage(totalPages)}
+                                    className={`px-3 py-1 rounded ${
+                                        page === totalPages
+                                            ? "bg-blue-600 text-white"
+                                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                                    }`}
+                                >
+                                    {totalPages}
+                                </button>
+                            </>
                         )}
                     </div>
                 )}

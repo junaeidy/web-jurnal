@@ -87,4 +87,15 @@ class EventsController extends Controller
 
         return response()->json(['message' => 'Event deleted']);
     }
+
+    public function publicList(Request $request)
+    {
+        $limit = $request->input('limit', 15);
+
+        $events = Events::where('is_active', 1)
+            ->latest()
+            ->paginate($limit);
+
+        return response()->json($events);
+    }
 }

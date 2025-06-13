@@ -23,10 +23,12 @@ class JournalController extends Controller
             });
         }
 
+        // Filter by category
         if ($request->filled('category')) {
             $query->where('category_id', $request->category);
         }
 
+        // Sorting
         $sortField = 'title';
         $sortDirection = 'asc';
 
@@ -48,10 +50,11 @@ class JournalController extends Controller
             $query->orderBy('created_at', 'desc');
         }
 
-        return $query->get();
+        $perPage = $request->get('limit', 15);
+        $journals = $query->paginate($perPage);
+
+        return response()->json($journals);
     }
-
-
 
 
     public function store(Request $request)
