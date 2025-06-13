@@ -1,17 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Link } from "@inertiajs/react";
 import Modal from "@/Components/UI/Modal";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 
 export default function FeaturedJournalsSection() {
     const [journals, setJournals] = useState([]);
     const [selectedJournal, setSelectedJournal] = useState(null);
+    const sliderRef = useRef(null);
 
     useEffect(() => {
         const fetchJournals = async () => {
             try {
                 const response = await fetch("/api/home/featured-journals");
                 const data = await response.json();
-                setJournals(data.slice(0, 5));
+                setJournals(data.slice(0, 10));
             } catch (error) {
                 console.error("Gagal mengambil data jurnal unggulan:", error);
             }
@@ -22,26 +24,59 @@ export default function FeaturedJournalsSection() {
 
     const handleCloseModal = () => setSelectedJournal(null);
 
+    const scroll = (direction) => {
+        const slider = sliderRef.current;
+        if (slider) {
+            const scrollAmount = slider.clientWidth * 0.8;
+            slider.scrollBy({
+                left: direction === "left" ? -scrollAmount : scrollAmount,
+                behavior: "smooth",
+            });
+        }
+    };
+
     return (
-        <section className="py-16 bg-white">
+        <section className="py-16 bg-white relative">
             <div className="container mx-auto px-4 text-center">
                 <h2 className="text-4xl font-bold text-gray-800 mb-12">
                     Jurnal Unggulan Kami
                 </h2>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+                {/* Tombol kiri-kanan */}
+                <button
+                    onClick={() => scroll("left")}
+                    className="absolute left-4 top-[52%] z-10 bg-white shadow-md p-2 rounded-full hover:bg-gray-100"
+                >
+                    <ChevronLeftIcon className="h-6 w-6 text-gray-700" />
+                </button>
+                <button
+                    onClick={() => scroll("right")}
+                    className="absolute right-4 top-[52%] z-10 bg-white shadow-md p-2 rounded-full hover:bg-gray-100"
+                >
+                    <ChevronRightIcon className="h-6 w-6 text-gray-700" />
+                </button>
+
+                {/* Slider */}
+                <div
+                    ref={sliderRef}
+                    className="flex overflow-x-auto gap-6 px-2 scroll-smooth scrollbar-hide"
+                >
                     {journals.map((journal) => (
                         <div
                             key={journal.id}
-                            className="bg-white rounded-lg shadow-xl overflow-hidden transform hover:scale-105 transition duration-300 border border-gray-200"
+                            className="min-w-[250px] max-w-[250px] bg-white rounded-lg shadow-xl overflow-hidden transform hover:scale-105 transition duration-300 border border-gray-200"
                         >
                             <img
-                                src={`/${journal.cover}`}
+                                src={
+                                    journal.cover
+                                        ? `/${journal.cover}`
+                                        : "https://placehold.co/250x400?text=No+Image"
+                                }
                                 alt={journal.title}
                                 className="w-full h-48 object-cover"
                             />
                             <div className="p-4 text-left">
-                                <h3 className="text-lg font-semibold text-gray-800 mb-2 leading-snug">
+                                <h3 className="text-lg font-semibold text-gray-800 mb-2 leading-snug line-clamp-2">
                                     {journal.title}
                                 </h3>
                                 <p className="text-gray-600 text-xs mb-3">
@@ -64,6 +99,7 @@ export default function FeaturedJournalsSection() {
                     ))}
                 </div>
 
+                {/* Tombol Lihat Semua */}
                 <div className="mt-12">
                     <Link
                         href="/jurnal"
@@ -74,6 +110,7 @@ export default function FeaturedJournalsSection() {
                 </div>
             </div>
 
+            {/* Modal Detail */}
             <Modal
                 show={!!selectedJournal}
                 maxWidth="2xl"
@@ -81,9 +118,12 @@ export default function FeaturedJournalsSection() {
             >
                 {selectedJournal && (
                     <div className="relative">
-                        {/* Cover dan Judul */}
                         <img
-                            src={`/${selectedJournal.cover}`}
+                            src={
+                                selectedJournal.cover
+                                    ? `/${selectedJournal.cover}`
+                                    : "https://placehold.co/250x400?text=No+Image"
+                            }
                             alt={selectedJournal.title}
                             className="w-full h-64 object-cover rounded-t-lg"
                         />
@@ -91,12 +131,9 @@ export default function FeaturedJournalsSection() {
                             <h3 className="text-2xl font-bold text-gray-800 mb-4">
                                 {selectedJournal.title}
                             </h3>
-
-                            {/* Konten Dua Kolom dengan Garis Pembatas */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {/* Kolom Kiri - Deskripsi */}
                                 <div>
-                                    <p className="text-gray-700 leading-relaxed">
+                                    <p className="text-gray-700 leading-relaxed whitespace-pre-line">
                                         {selectedJournal.description}
                                     </p>
                                     {selectedJournal.link && (
@@ -110,8 +147,6 @@ export default function FeaturedJournalsSection() {
                                         </a>
                                     )}
                                 </div>
-
-                                {/* Kolom Kanan - Detail dengan Border */}
                                 <div className="md:border-l md:pl-6 space-y-2 text-sm">
                                     <p className="text-gray-600">
                                         <span className="font-semibold">

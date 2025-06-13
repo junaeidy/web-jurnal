@@ -32,7 +32,7 @@ export default function Footer() {
                         </li>
                         <li>
                             <Link
-                                href="/kegiatan"
+                                href="/events"
                                 className="text-gray-400 hover:text-blue-400 transition duration-300"
                             >
                                 Kegiatan
