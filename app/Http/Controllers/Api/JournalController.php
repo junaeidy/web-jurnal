@@ -98,7 +98,7 @@ class JournalController extends Controller
     public function featuredJournals()
     {
         return Journal::where('is_featured', true)
-            ->select('id', 'title', 'cover')
+            ->select('id', 'authors', 'title', 'description', 'link', 'cover', 'acceptance_rate', 'decision_days', 'impact_factor')
             ->get();
     }
 

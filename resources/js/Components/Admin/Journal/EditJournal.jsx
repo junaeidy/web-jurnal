@@ -197,7 +197,8 @@ export default function EditJournal({ show, onClose, onSuccess, journalId }) {
                                 }))
                             }
                             rows={3}
-                            required
+                            maxLength={255}
+                            isRequired
                         />
                     </div>
 
