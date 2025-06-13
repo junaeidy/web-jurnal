@@ -121,6 +121,12 @@ export default function FeaturedJournalsSection() {
                                     </p>
                                     <p className="text-gray-600">
                                         <span className="font-semibold">
+                                            Tahun Terbit:
+                                        </span>{" "}
+                                        {selectedJournal.published_year}
+                                    </p>
+                                    <p className="text-gray-600">
+                                        <span className="font-semibold">
                                             Acceptance Rate:
                                         </span>{" "}
                                         {selectedJournal.acceptance_rate}%

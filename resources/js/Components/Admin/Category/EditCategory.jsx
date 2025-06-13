@@ -48,25 +48,6 @@ export default function EditCategory({ show, onClose, onSuccess, category }) {
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                     required
                 />
-
-                <div className="flex items-center pt-1">
-                    <input
-                        type="checkbox"
-                        name="is_active"
-                        checked={form.is_active}
-                        onChange={(e) =>
-                            setForm((prev) => ({
-                                ...prev,
-                                is_active: e.target.checked,
-                            }))
-                        }
-                        className="mr-2"
-                    />
-                    <span className="text-sm text-gray-700 dark:text-gray-200">
-                        Aktif
-                    </span>
-                </div>
-
                 <div className="pt-4 mt-4 flex justify-end gap-2 border-t border-gray-200">
                     <SecondaryButton onClick={onClose}>Batal</SecondaryButton>
                     <PrimaryButton type="submit" disabled={loading}>

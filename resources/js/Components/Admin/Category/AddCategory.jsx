@@ -48,20 +48,6 @@ export default function AddCategory({ show, onClose, onSuccess }) {
                     onChange={handleChange}
                     required
                 />
-
-                <div className="flex items-center pt-1">
-                    <input
-                        type="checkbox"
-                        name="is_active"
-                        checked={form.is_active}
-                        onChange={handleChange}
-                        className="mr-2"
-                    />
-                    <span className="text-sm text-gray-700 dark:text-gray-200">
-                        Aktif
-                    </span>
-                </div>
-
                 <div className="flex justify-end gap-2 border-t border-gray-200 mt-4 pt-4">
                     <SecondaryButton onClick={onClose}>Batal</SecondaryButton>
                     <PrimaryButton type="submit" disabled={loading}>

@@ -12,27 +12,45 @@ class JournalController extends Controller
 {
     public function index(Request $request)
     {
-        $search = $request->query('search');
-        $sort = $request->query('sort', 'title');
+        $query = Journal::query();
 
-        $query = Journal::with('category');
-
-        if ($search) {
+        // Filter by search
+        if ($request->filled('search')) {
+            $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
                     ->orWhere('authors', 'like', "%{$search}%");
             });
         }
 
-        $allowedSorts = ['title', 'impact_factor', 'acceptance_rate'];
-        if (in_array($sort, $allowedSorts)) {
-            $query->orderBy($sort, 'asc');
+        if ($request->filled('category')) {
+            $query->where('category_id', $request->category);
+        }
+
+        $sortField = 'title';
+        $sortDirection = 'asc';
+
+        if ($request->filled('sort')) {
+            $sort = $request->sort;
+
+            if (str_starts_with($sort, '-')) {
+                $sortField = ltrim($sort, '-');
+                $sortDirection = 'desc';
+            } else {
+                $sortField = $sort;
+            }
+
+            $allowedSorts = ['title', 'impact_factor', 'acceptance_rate'];
+            if (in_array($sortField, $allowedSorts)) {
+                $query->orderBy($sortField, $sortDirection);
+            }
         } else {
             $query->orderBy('created_at', 'desc');
         }
 
         return $query->get();
     }
+
 
 
 
@@ -123,7 +141,7 @@ class JournalController extends Controller
     public function featuredJournals()
     {
         return Journal::where('is_featured', true)
-            ->select('id', 'authors', 'title', 'description', 'link', 'cover', 'acceptance_rate', 'decision_days', 'impact_factor')
+            ->select('id', 'authors', 'title', 'description', 'link', 'cover', 'acceptance_rate', 'decision_days', 'impact_factor', 'published_year')
             ->get();
     }
 
