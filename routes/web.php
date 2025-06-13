@@ -19,6 +19,10 @@ Route::get('/', function () {
     ]);
 });
 
+Route::get('/journal', function () {
+    return Inertia::render('User/Journal/Index');
+})->name('journal');
+
 Route::get('/dashboard', function () {
     return Inertia::render('Admin/Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

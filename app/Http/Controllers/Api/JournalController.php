@@ -10,10 +10,30 @@ use Illuminate\Support\Str;
 
 class JournalController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return Journal::orderBy('created_at', 'desc')->get();
+        $search = $request->query('search');
+        $sort = $request->query('sort', 'title');
+
+        $query = Journal::query();
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                    ->orWhere('authors', 'like', "%{$search}%");
+            });
+        }
+
+        $allowedSorts = ['title', 'impact_factor', 'acceptance_rate'];
+        if (in_array($sort, $allowedSorts)) {
+            $query->orderBy($sort, 'asc');
+        } else {
+            $query->orderBy('created_at', 'desc');
+        }
+
+        return $query->get();
     }
+
 
     public function store(Request $request)
     {

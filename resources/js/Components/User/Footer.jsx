@@ -1,6 +1,6 @@
-import React from 'react';
-import { Link } from '@inertiajs/react';
-import { Facebook, Instagram, Linkedin } from 'lucide-react';
+import React from "react";
+import { Link } from "@inertiajs/react";
+import { Facebook, Instagram, Linkedin } from "lucide-react";
 
 export default function Footer() {
     return (
@@ -10,19 +10,58 @@ export default function Footer() {
                 <div>
                     <h3 className="text-2xl font-bold mb-4">Jurnal Kami</h3>
                     <p className="text-gray-400 text-sm leading-relaxed">
-                        Platform publikasi ilmiah terkemuka yang berdedikasi untuk menyebarkan riset inovatif dan pengetahuan terbaru dari berbagai disiplin ilmu.
+                        Platform publikasi ilmiah terkemuka yang berdedikasi
+                        untuk menyebarkan riset inovatif dan pengetahuan terbaru
+                        dari berbagai disiplin ilmu.
                     </p>
                 </div>
 
                 {/* Kolom 2: Navigasi Cepat */}
                 <div>
-                    <h3 className="text-xl font-semibold mb-4">Navigasi Cepat</h3>
+                    <h3 className="text-xl font-semibold mb-4">
+                        Navigasi Cepat
+                    </h3>
                     <ul className="space-y-2">
-                        <li><Link href="/" className="text-gray-400 hover:text-blue-400 transition duration-300">Home</Link></li>
-                        <li><Link href="/kegiatan" className="text-gray-400 hover:text-blue-400 transition duration-300">Kegiatan</Link></li>
-                        <li><Link href="/team" className="text-gray-400 hover:text-blue-400 transition duration-300">Team</Link></li>
-                        <li><Link href="/about-us" className="text-gray-400 hover:text-blue-400 transition duration-300">About Us</Link></li>
-                        <li><Link href="/jurnal" className="text-gray-400 hover:text-blue-400 transition duration-300">Semua Jurnal</Link></li>
+                        <li>
+                            <Link
+                                href="/"
+                                className="text-gray-400 hover:text-blue-400 transition duration-300"
+                            >
+                                Home
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                href="/kegiatan"
+                                className="text-gray-400 hover:text-blue-400 transition duration-300"
+                            >
+                                Kegiatan
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                href="/team"
+                                className="text-gray-400 hover:text-blue-400 transition duration-300"
+                            >
+                                Team
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                href="/about-us"
+                                className="text-gray-400 hover:text-blue-400 transition duration-300"
+                            >
+                                About Us
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                href="/journal"
+                                className="text-gray-400 hover:text-blue-400 transition duration-300"
+                            >
+                                Temukan Jurnal
+                            </Link>
+                        </li>
                     </ul>
                 </div>
 
@@ -39,20 +78,30 @@ export default function Footer() {
                         Alamat: Jl. Contoh No. 123, Kota Anda, Indonesia
                     </p>
                     <div className="flex space-x-4 mt-6">
-                        <a href="#" className="text-gray-400 hover:text-blue-400 transition duration-300">
-                           <Facebook />
+                        <a
+                            href="#"
+                            className="text-gray-400 hover:text-blue-400 transition duration-300"
+                        >
+                            <Facebook />
                         </a>
-                        <a href="#" className="text-gray-400 hover:text-blue-400 transition duration-300">
-                           <Instagram />
+                        <a
+                            href="#"
+                            className="text-gray-400 hover:text-blue-400 transition duration-300"
+                        >
+                            <Instagram />
                         </a>
-                        <a href="#" className="text-gray-400 hover:text-blue-400 transition duration-300">
-                           <Linkedin />
+                        <a
+                            href="#"
+                            className="text-gray-400 hover:text-blue-400 transition duration-300"
+                        >
+                            <Linkedin />
                         </a>
                     </div>
                 </div>
             </div>
             <div className="mt-8 pt-8 border-t border-gray-700 text-center text-gray-500 text-sm">
-                &copy; {new Date().getFullYear()} Jurnal Kami. All rights reserved.
+                &copy; {new Date().getFullYear()} Jurnal Kami. All rights
+                reserved.
             </div>
         </footer>
     );

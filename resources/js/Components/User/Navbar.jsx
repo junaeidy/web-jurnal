@@ -6,14 +6,14 @@ export default function Navbar({ user }) {
 
     const navLinks = [
         { href: "/", label: "Home" },
-        { href: "/jurnal", label: "Jurnal" },
+        { href: "/journal", label: "Jurnal" },
         { href: "/kegiatan", label: "Kegiatan" },
         { href: "/team", label: "Team" },
         { href: "/about-us", label: "About Us" },
     ];
 
     const isActive = (href) => {
-        return url === href || url.startsWith(href + "/");
+        return url == href || url.startsWith(href + "/");
     };
 
     return (
