@@ -1,14 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { Head } from "@inertiajs/react";
 import Navbar from "@/Components/User/Navbar";
-import Footer from "@/Components//User/Footer";
+import Footer from "@/Components/User/Footer";
 import ListTeam from "./ListTeam";
 
 export default function Index({ auth }) {
+    const [loading, setLoading] = useState(true);
+
     return (
         <>
             <Head title="Tim Kami" />
             <Navbar user={auth.user} />
+
+            {loading && (
+                <div className="fixed inset-0 bg-white z-[999] flex flex-col items-center justify-center">
+                    <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                    <p className="mt-4 text-gray-600 text-sm">Memuat halaman...</p>
+                </div>
+            )}
+
             <div className="pt-16">
                 <section
                     className="relative py-20 md:py-28 bg-cover bg-center"
@@ -32,8 +42,7 @@ export default function Index({ auth }) {
                     </div>
                 </section>
 
-                {/* Content Section */}
-                <ListTeam />
+                <ListTeam onLoaded={() => setLoading(false)} />
             </div>
             <Footer />
         </>

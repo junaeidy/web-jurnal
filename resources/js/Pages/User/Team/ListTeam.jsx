@@ -1,16 +1,22 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-export default function ListTeam() {
+export default function ListTeam({ onLoaded }) {
     const [teams, setTeams] = useState([]);
 
     useEffect(() => {
-        axios.get("/api/teams").then((res) => {
-            const activeTeams = res.data.filter(
-                (member) => member.is_active === 1
-            );
-            setTeams(activeTeams);
-        });
+        axios
+            .get("/api/teams")
+            .then((res) => {
+                const activeTeams = res.data.filter(
+                    (member) => member.is_active === 1
+                );
+                setTeams(activeTeams);
+            })
+            .catch((err) => console.error("Gagal mengambil data tim:", err))
+            .finally(() => {
+                if (onLoaded) onLoaded();
+            });
     }, []);
 
     if (teams.length === 0) {
@@ -47,7 +53,7 @@ export default function ListTeam() {
                         <img
                             src={
                                 member.photo
-                                    ? `/storage/team/${member.photo}`
+                                    ? `/${member.photo}`
                                     : "https://placehold.co/200x200?text=No+Image"
                             }
                             alt={member.name}

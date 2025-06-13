@@ -1,7 +1,7 @@
 import { Link } from "@inertiajs/react";
 import React, { useEffect, useState } from "react";
 
-export default function HeroSection() {
+export default function HeroSection({onLoadComplete}) {
     const [heroData, setHeroData] = useState(null);
 
     useEffect(() => {
@@ -12,6 +12,8 @@ export default function HeroSection() {
                 setHeroData(data);
             } catch (error) {
                 console.error("Gagal mengambil data hero:", error);
+            }finally{
+                onLoadComplete();
             }
         };
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Modal from "@/Components/UI/Modal";
 
-export default function ListJournal() {
+export default function ListJournal({ onLoaded }) {
     const [journals, setJournals] = useState([]);
     const [selectedJournal, setSelectedJournal] = useState(null);
     const [search, setSearch] = useState("");
@@ -25,6 +25,7 @@ export default function ListJournal() {
             console.error("Gagal mengambil data jurnal:", error);
         } finally {
             setLoading(false);
+            if (onLoaded) onLoaded();
         }
     };
 

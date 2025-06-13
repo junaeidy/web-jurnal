@@ -8,7 +8,7 @@ function stripHtml(html) {
     return div.textContent || div.innerText || "";
 }
 
-export default function ListEvent() {
+export default function ListEvent({ onLoaded }) {
     const [events, setEvents] = useState([]);
 
     useEffect(() => {
@@ -17,7 +17,8 @@ export default function ListEvent() {
                 (event) => event.is_active === 1
             );
             setEvents(activeEvents);
-        });
+        }).catch((err) => console.error("Gagal mengambil data kegiatan:", err)).finally(() => {
+            if (onLoaded) onLoaded()});
     }, []);
 
     if (!events.length) {

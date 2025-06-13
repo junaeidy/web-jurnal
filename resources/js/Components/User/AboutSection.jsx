@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-export default function AboutSection() {
+export default function AboutSection({onLoadComplete}) {
     const [aboutData, setAboutData] = useState(null);
 
     useEffect(() => {
@@ -11,6 +11,8 @@ export default function AboutSection() {
                 setAboutData(data);
             } catch (error) {
                 console.error("Gagal memuat data About:", error);
+            }finally{
+                onLoadComplete();
             }
         };
 

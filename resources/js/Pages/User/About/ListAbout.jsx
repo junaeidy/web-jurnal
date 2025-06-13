@@ -1,13 +1,19 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-export default function ListAbout() {
+export default function ListAbout({ onLoaded }) {
     const [abouts, setAbouts] = useState([]);
 
     useEffect(() => {
-        axios.get("/api/abouts").then((res) => {
-            setAbouts(res.data);
-        });
+        axios
+            .get("/api/abouts")
+            .then((res) => {
+                setAbouts(res.data);
+            })
+            .catch((err) => console.error("Gagal mengambil data tentang:", err))
+            .finally(() => {
+                if (onLoaded) onLoaded();
+            });
     }, []);
 
     if (abouts.length === 0) {
@@ -40,7 +46,7 @@ export default function ListAbout() {
                             {about.image ? (
                                 <div className="w-full aspect-video rounded-lg overflow-hidden">
                                     <img
-                                        src={`/storage/about/${about.image}`}
+                                        src={`/storage/${about.image}`}
                                         alt="Gambar About"
                                         className="w-full h-full object-cover"
                                     />

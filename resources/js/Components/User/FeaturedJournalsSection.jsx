@@ -3,7 +3,7 @@ import { Link } from "@inertiajs/react";
 import Modal from "@/Components/UI/Modal";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 
-export default function FeaturedJournalsSection() {
+export default function FeaturedJournalsSection({onLoadComplete}) {
     const [journals, setJournals] = useState([]);
     const [selectedJournal, setSelectedJournal] = useState(null);
     const sliderRef = useRef(null);
@@ -16,6 +16,8 @@ export default function FeaturedJournalsSection() {
                 setJournals(data.slice(0, 10));
             } catch (error) {
                 console.error("Gagal mengambil data jurnal unggulan:", error);
+            }finally{
+                onLoadComplete();
             }
         };
 
@@ -102,7 +104,7 @@ export default function FeaturedJournalsSection() {
                 {/* Tombol Lihat Semua */}
                 <div className="mt-12">
                     <Link
-                        href="/jurnal"
+                        href="/journal"
                         className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300 transform hover:scale-105"
                     >
                         Lihat Semua Jurnal

@@ -27,7 +27,12 @@ export default function DetailEvent({ auth }) {
     }, [slug]);
 
     if (loading) {
-        return <div className="text-center py-16">Memuat kegiatan...</div>;
+        return (
+            <div className="fixed inset-0 bg-white z-[999] flex flex-col items-center justify-center">
+                <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                <p className="mt-4 text-gray-600 text-sm">Memuat halaman...</p>
+            </div>
+        );
     }
 
     if (!event) {
