@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Head } from "@inertiajs/react";
 import Navbar from "@/Components/User/Navbar";
 import HeroSection from "@/Components/User/HeroSection";
@@ -6,13 +6,26 @@ import AboutSection from "@/Components/User/AboutSection";
 import FeaturedJournalsSection from "@/Components/User/FeaturedJournalsSection";
 import Footer from "@/Components/User/Footer";
 
+// AOS setup
+import AOS from "aos";
+import "aos/dist/aos.css";
+
 export default function Home({ auth }) {
     const [loadingCount, setLoadingCount] = useState(3);
+
     const handleSectionLoaded = () => {
         setLoadingCount((prev) => prev - 1);
     };
 
     const isLoading = loadingCount > 0;
+
+    useEffect(() => {
+        AOS.init({
+            duration: 1000,
+            once: true,
+            easing: 'ease-out-cubic',
+        });
+    }, []);
 
     return (
         <>
@@ -28,9 +41,9 @@ export default function Home({ auth }) {
             )}
 
             <Navbar user={auth.user} />
-            <HeroSection onLoadComplete={handleSectionLoaded} />
-            <AboutSection onLoadComplete={handleSectionLoaded} />
-            <FeaturedJournalsSection onLoadComplete={handleSectionLoaded} />
+            <HeroSection onLoadComplete={handleSectionLoaded} isLoading={isLoading} />
+            <AboutSection onLoadComplete={handleSectionLoaded} isLoading={isLoading} />
+            <FeaturedJournalsSection onLoadComplete={handleSectionLoaded} isLoading={isLoading} />
             <Footer />
         </>
     );

@@ -61,4 +61,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/home', [HomeHeroController::class, 'index'])->name('dashboard.home.index');
 });
 
+Route::fallback(function () {
+    return Inertia::render('Errors/404');
+});
+
 require __DIR__.'/auth.php';

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-export default function AboutSection({ onLoadComplete }) {
+export default function AboutSection({ onLoadComplete, isLoading }) {
     const [aboutData, setAboutData] = useState(null);
 
     useEffect(() => {
@@ -19,13 +19,18 @@ export default function AboutSection({ onLoadComplete }) {
         fetchAboutData();
     }, []);
 
-    if (!aboutData) return null;
+    if (!aboutData || isLoading) return null;
 
     return (
         <section className="py-16 bg-gray-50">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center gap-10">
+            <div
+                className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center gap-10"
+                data-aos="fade-up"
+                data-aos-duration="1000"
+                data-aos-once="true"
+            >
                 {/* Gambar */}
-                <div className="md:w-1/2 w-full flex justify-center">
+                <div className="md:w-1/2 w-full flex justify-center" data-aos="zoom-in" data-aos-delay="200">
                     <img
                         src={`/storage/${aboutData.image}`}
                         alt="Tentang Kami"
@@ -34,7 +39,11 @@ export default function AboutSection({ onLoadComplete }) {
                 </div>
 
                 {/* Konten */}
-                <div className="md:w-1/2 w-full text-center md:text-left">
+                <div
+                    className="md:w-1/2 w-full text-center md:text-left"
+                    data-aos="fade-left"
+                    data-aos-delay="400"
+                >
                     <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-6">
                         {aboutData.title}
                     </h2>
