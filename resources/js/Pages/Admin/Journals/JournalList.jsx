@@ -60,12 +60,19 @@ export default function JournalList() {
         setLoading(true);
         fetch("/api/journals")
             .then((res) => res.json())
-            .then((data) => {
-                const withNo = data.map((item, idx) => ({
+            .then((resData) => {
+                const rawData = resData.data || [];
+
+                const withNo = rawData.map((item, idx) => ({
                     ...item,
                     no: idx + 1,
                 }));
+
                 setJournals(withNo);
+            })
+            .catch((err) => {
+                console.error("Gagal fetch data jurnal:", err);
+                setJournals([]);
             })
             .finally(() => {
                 setLoading(false);

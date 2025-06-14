@@ -17,7 +17,11 @@ export default function Dashboard() {
 
     useEffect(() => {
         axios.get("/api/journals").then((res) => {
-            setJournals(res.data);
+            const journalData = Array.isArray(res.data)
+                ? res.data
+                : res.data.data || [];
+
+            setJournals(journalData);
         });
     }, []);
 
