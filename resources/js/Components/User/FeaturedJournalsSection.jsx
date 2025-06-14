@@ -3,7 +3,7 @@ import { Link } from "@inertiajs/react";
 import Modal from "@/Components/UI/Modal";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 
-export default function FeaturedJournalsSection({onLoadComplete}) {
+export default function FeaturedJournalsSection({ onLoadComplete }) {
     const [journals, setJournals] = useState([]);
     const [selectedJournal, setSelectedJournal] = useState(null);
     const sliderRef = useRef(null);
@@ -16,7 +16,7 @@ export default function FeaturedJournalsSection({onLoadComplete}) {
                 setJournals(data.slice(0, 10));
             } catch (error) {
                 console.error("Gagal mengambil data jurnal unggulan:", error);
-            }finally{
+            } finally {
                 onLoadComplete();
             }
         };
@@ -39,34 +39,36 @@ export default function FeaturedJournalsSection({onLoadComplete}) {
 
     return (
         <section className="py-16 bg-white relative">
-            <div className="container mx-auto px-4 text-center">
-                <h2 className="text-4xl font-bold text-gray-800 mb-12">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-12">
                     Jurnal Unggulan Kami
                 </h2>
 
-                {/* Tombol kiri-kanan */}
-                <button
-                    onClick={() => scroll("left")}
-                    className="absolute left-4 top-[52%] z-10 bg-white shadow-md p-2 rounded-full hover:bg-gray-100"
-                >
-                    <ChevronLeftIcon className="h-6 w-6 text-gray-700" />
-                </button>
-                <button
-                    onClick={() => scroll("right")}
-                    className="absolute right-4 top-[52%] z-10 bg-white shadow-md p-2 rounded-full hover:bg-gray-100"
-                >
-                    <ChevronRightIcon className="h-6 w-6 text-gray-700" />
-                </button>
+                {/* Tombol kiri-kanan (disembunyikan di mobile) */}
+                <div className="hidden md:block">
+                    <button
+                        onClick={() => scroll("left")}
+                        className="absolute left-4 top-[52%] z-10 bg-white shadow-md p-2 rounded-full hover:bg-gray-100"
+                    >
+                        <ChevronLeftIcon className="h-6 w-6 text-gray-700" />
+                    </button>
+                    <button
+                        onClick={() => scroll("right")}
+                        className="absolute right-4 top-[52%] z-10 bg-white shadow-md p-2 rounded-full hover:bg-gray-100"
+                    >
+                        <ChevronRightIcon className="h-6 w-6 text-gray-700" />
+                    </button>
+                </div>
 
                 {/* Slider */}
                 <div
                     ref={sliderRef}
-                    className="flex overflow-x-auto gap-6 px-2 scroll-smooth scrollbar-hide"
+                    className="flex overflow-x-auto gap-6 scroll-smooth scrollbar-hide py-2"
                 >
                     {journals.map((journal) => (
                         <div
                             key={journal.id}
-                            className="min-w-[250px] max-w-[250px] bg-white rounded-lg shadow-xl overflow-hidden transform hover:scale-105 transition duration-300 border border-gray-200"
+                            className="min-w-[80%] sm:min-w-[300px] sm:max-w-[300px] bg-white rounded-lg shadow-xl overflow-hidden transform hover:scale-105 transition duration-300 border border-gray-200"
                         >
                             <img
                                 src={
@@ -78,7 +80,7 @@ export default function FeaturedJournalsSection({onLoadComplete}) {
                                 className="w-full h-48 object-cover"
                             />
                             <div className="p-4 text-left">
-                                <h3 className="text-lg font-semibold text-gray-800 mb-2 leading-snug line-clamp-2">
+                                <h3 className="text-base font-semibold text-gray-800 mb-2 leading-snug line-clamp-2">
                                     {journal.title}
                                 </h3>
                                 <p className="text-gray-600 text-xs mb-3">

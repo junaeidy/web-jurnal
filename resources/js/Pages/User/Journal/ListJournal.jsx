@@ -51,19 +51,14 @@ export default function ListJournal({ onLoaded }) {
         fetchCategories();
     }, []);
 
-    useEffect(() => {
-        fetchJournals();
-    }, [search, sortBy, selectedCategory]);
-
     const handleCloseModal = () => setSelectedJournal(null);
 
     return (
         <section className="py-16 bg-white">
-            <div className="container mx-auto px-4 text-center">
+            <div className="container mx-auto px-4">
                 {/* FILTERS */}
-                <div className="mb-10 grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
-                    {/* Search Input */}
-                    <div className="flex flex-col items-start">
+                <div className="mb-10 grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
+                    <div className="flex flex-col">
                         <label
                             htmlFor="search"
                             className="text-sm font-medium text-gray-700 mb-1"
@@ -80,8 +75,7 @@ export default function ListJournal({ onLoaded }) {
                         />
                     </div>
 
-                    {/* Category Dropdown */}
-                    <div className="flex flex-col items-start">
+                    <div className="flex flex-col">
                         <label
                             htmlFor="category"
                             className="text-sm font-medium text-gray-700 mb-1"
@@ -105,8 +99,7 @@ export default function ListJournal({ onLoaded }) {
                         </select>
                     </div>
 
-                    {/* Sort Dropdown */}
-                    <div className="flex flex-col items-start">
+                    <div className="flex flex-col">
                         <label
                             htmlFor="sort"
                             className="text-sm font-medium text-gray-700 mb-1"
@@ -140,7 +133,7 @@ export default function ListJournal({ onLoaded }) {
                         </p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
                         {journals.length === 0 ? (
                             <div className="col-span-full flex flex-col items-center justify-center py-12 text-gray-500">
                                 <img
@@ -194,6 +187,8 @@ export default function ListJournal({ onLoaded }) {
                         )}
                     </div>
                 )}
+
+                {/* PAGINATION */}
                 {totalPages > 1 && (
                     <div className="mt-8 flex justify-center items-center space-x-1">
                         {[...Array(Math.min(totalPages, 9)).keys()].map((i) => {

@@ -22,6 +22,7 @@ export default function Index({ auth }) {
             )}
 
             <div className="pt-16">
+                {/* Hero Section */}
                 <section
                     className="relative py-20 md:py-28 bg-cover bg-center"
                     style={{
@@ -29,13 +30,13 @@ export default function Index({ auth }) {
                             "url('https://images.pexels.com/photos/796602/pexels-photo-796602.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1')",
                     }}
                 >
-                    <div className="absolute inset-0 bg-black opacity-15"></div>
-                    <div className="container mx-auto px-4 relative z-10 animate__animated animate__fadeIn">
-                        <div className="pl-6 md:pl-12">
-                            <h1 className="text-5xl md:text-6xl font-bold mb-4 text-gray-700">
+                    <div className="absolute inset-0 bg-black/50"></div>
+                    <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="text-left text-white">
+                            <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
                                 Kegiatan Kami
                             </h1>
-                            <p className="text-lg md:text-xl text-gray-700 max-w-2xl">
+                            <p className="text-lg md:text-xl max-w-3xl leading-relaxed">
                                 Kegiatan kami meliputi pengelolaan proses
                                 publikasi jurnal ilmiah, mulai dari penerimaan
                                 naskah, proses review, hingga penerbitan artikel

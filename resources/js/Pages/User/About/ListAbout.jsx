@@ -42,7 +42,11 @@ export default function ListAbout({ onLoaded }) {
                         className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center"
                     >
                         {/* Media */}
-                        <div className={isEven ? "order-2" : "order-1"}>
+                        <div
+                            className={`${
+                                isEven ? "md:order-2" : "md:order-1"
+                            } order-1`}
+                        >
                             {about.image ? (
                                 <div className="w-full aspect-video rounded-lg overflow-hidden">
                                     <img
@@ -70,7 +74,11 @@ export default function ListAbout({ onLoaded }) {
                         </div>
 
                         {/* Konten */}
-                        <div className={isEven ? "order-1" : "order-2"}>
+                        <div
+                            className={`${
+                                isEven ? "md:order-1" : "md:order-2"
+                            } order-2`}
+                        >
                             <h2 className="text-2xl font-bold mb-4 text-center md:text-left">
                                 {about.title}
                             </h2>

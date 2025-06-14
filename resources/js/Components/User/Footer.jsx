@@ -4,8 +4,8 @@ import { Facebook, Instagram, Linkedin } from "lucide-react";
 
 export default function Footer() {
     return (
-        <footer className="bg-gray-800 text-white py-12">
-            <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <footer className="bg-gray-800 text-white pt-12 pb-6">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
                 {/* Kolom 1: Informasi Jurnal */}
                 <div>
                     <h3 className="text-2xl font-bold mb-4">Jurnal Kami</h3>
@@ -22,46 +22,22 @@ export default function Footer() {
                         Navigasi Cepat
                     </h3>
                     <ul className="space-y-2">
-                        <li>
-                            <Link
-                                href="/"
-                                className="text-gray-400 hover:text-blue-400 transition duration-300"
-                            >
-                                Home
-                            </Link>
-                        </li>
-                        <li>
-                            <Link
-                                href="/events"
-                                className="text-gray-400 hover:text-blue-400 transition duration-300"
-                            >
-                                Kegiatan
-                            </Link>
-                        </li>
-                        <li>
-                            <Link
-                                href="/team"
-                                className="text-gray-400 hover:text-blue-400 transition duration-300"
-                            >
-                                Team
-                            </Link>
-                        </li>
-                        <li>
-                            <Link
-                                href="/about-us"
-                                className="text-gray-400 hover:text-blue-400 transition duration-300"
-                            >
-                                About Us
-                            </Link>
-                        </li>
-                        <li>
-                            <Link
-                                href="/journal"
-                                className="text-gray-400 hover:text-blue-400 transition duration-300"
-                            >
-                                Temukan Jurnal
-                            </Link>
-                        </li>
+                        {[
+                            { href: "/", label: "Home" },
+                            { href: "/events", label: "Kegiatan" },
+                            { href: "/team", label: "Team" },
+                            { href: "/about-us", label: "About Us" },
+                            { href: "/journal", label: "Temukan Jurnal" },
+                        ].map((link) => (
+                            <li key={link.href}>
+                                <Link
+                                    href={link.href}
+                                    className="text-gray-400 hover:text-blue-400 transition duration-300"
+                                >
+                                    {link.label}
+                                </Link>
+                            </li>
+                        ))}
                     </ul>
                 </div>
 
@@ -82,24 +58,26 @@ export default function Footer() {
                             href="#"
                             className="text-gray-400 hover:text-blue-400 transition duration-300"
                         >
-                            <Facebook />
+                            <Facebook size={20} />
                         </a>
                         <a
                             href="#"
                             className="text-gray-400 hover:text-blue-400 transition duration-300"
                         >
-                            <Instagram />
+                            <Instagram size={20} />
                         </a>
                         <a
                             href="#"
                             className="text-gray-400 hover:text-blue-400 transition duration-300"
                         >
-                            <Linkedin />
+                            <Linkedin size={20} />
                         </a>
                     </div>
                 </div>
             </div>
-            <div className="mt-8 pt-8 border-t border-gray-700 text-center text-gray-500 text-sm">
+
+            {/* Footer bawah */}
+            <div className="mt-10 pt-6 border-t border-gray-700 text-center text-gray-500 text-sm px-4">
                 &copy; {new Date().getFullYear()} Jurnal Kami. All rights
                 reserved.
             </div>

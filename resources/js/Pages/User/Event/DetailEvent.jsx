@@ -29,8 +29,8 @@ export default function DetailEvent({ auth }) {
     if (loading) {
         return (
             <div className="fixed inset-0 bg-white z-[999] flex flex-col items-center justify-center">
-                <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-                <p className="mt-4 text-gray-600 text-sm">Memuat halaman...</p>
+                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mx-auto"></div>
+                <p className="mt-2 text-gray-500">Memuat halaman...</p>
             </div>
         );
     }
@@ -43,6 +43,12 @@ export default function DetailEvent({ auth }) {
         );
     }
 
+    const formattedDate = new Date(event.event_date).toLocaleString("id-ID", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "2-digit",
+    });
+
     return (
         <>
             <Navbar user={auth.user} />
@@ -50,12 +56,7 @@ export default function DetailEvent({ auth }) {
             <section className="max-w-4xl mx-auto px-4 pt-24 pb-12">
                 <h1 className="text-3xl font-bold mb-4">{event.title}</h1>
                 <p className="text-gray-500 mb-2">
-                    {new Date(event.event_date).toLocaleDateString("id-ID", {
-                        weekday: "long",
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                    })}
+                    {formattedDate}
                     {event.location && ` • ${event.location}`}
                 </p>
 
