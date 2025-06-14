@@ -101,7 +101,7 @@ export default function FeaturedJournalsSection({ onLoadComplete, isLoading }) {
                                 </p>
                                 <button
                                     onClick={() => setSelectedJournal(journal)}
-                                    className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-1.5 px-4 rounded-lg text-xs transition duration-300"
+                                    className="inline-block bg-[#50c878] hover:bg-[#3fa767] text-white font-bold py-1.5 px-4 rounded-lg text-xs transition duration-300"
                                 >
                                     Baca Selengkapnya
                                 </button>
@@ -114,7 +114,7 @@ export default function FeaturedJournalsSection({ onLoadComplete, isLoading }) {
                 <div className="mt-12" data-aos="zoom-in" data-aos-delay="800">
                     <Link
                         href="/journal"
-                        className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300 transform hover:scale-105"
+                        className="inline-block bg-[#50c878] hover:bg-[#3fa767] text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300 transform hover:scale-105"
                     >
                         Lihat Semua Jurnal
                     </Link>
@@ -152,7 +152,7 @@ export default function FeaturedJournalsSection({ onLoadComplete, isLoading }) {
                                             href={selectedJournal.link}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="inline-block mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition"
+                                            className="inline-block mt-4 bg-[#50c878] hover:bg-[#3fa767] text-white font-bold py-2 px-4 rounded-lg transition"
                                         >
                                             Kunjungi Jurnal
                                         </a>

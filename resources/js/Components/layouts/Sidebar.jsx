@@ -25,7 +25,7 @@ export default function Sidebar({ activeTab, setActiveTab }) {
     return (
         <aside className="w-64 bg-white shadow-lg p-4 flex flex-col h-screen">
             <div className="text-2xl font-bold text-blue-600 mb-8">
-               <p>Journal</p>
+               <p>Adra Karima Hubbi</p>
             </div>
             <nav className="flex-1 space-y-2">
                 {navItems.map((item) =>
@@ -59,7 +59,7 @@ export default function Sidebar({ activeTab, setActiveTab }) {
                 )}
             </nav>
             <div className="mt-auto pt-6 border-t border-gray-200 text-sm text-gray-500">
-                Created with ❤️ @ 2025
+                Created with ❤️ @ {new Date().getFullYear()}
             </div>
         </aside>
     );

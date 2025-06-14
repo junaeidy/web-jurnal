@@ -177,7 +177,7 @@ export default function ListJournal({ onLoaded }) {
                                             onClick={() =>
                                                 setSelectedJournal(journal)
                                             }
-                                            className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-1.5 px-4 rounded-lg text-xs transition duration-300"
+                                            className="inline-block bg-[#50c878] hover:bg-[#3fa767]0 text-white font-bold py-1.5 px-4 rounded-lg text-xs transition duration-300"
                                         >
                                             Baca Selengkapnya
                                         </button>
@@ -199,7 +199,7 @@ export default function ListJournal({ onLoaded }) {
                                     onClick={() => setPage(pageNum)}
                                     className={`px-3 py-1 rounded ${
                                         page === pageNum
-                                            ? "bg-blue-600 text-white"
+                                            ? "bg-[#50c878] text-white"
                                             : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                                     }`}
                                 >
@@ -214,7 +214,7 @@ export default function ListJournal({ onLoaded }) {
                                     onClick={() => setPage(totalPages)}
                                     className={`px-3 py-1 rounded ${
                                         page === totalPages
-                                            ? "bg-blue-600 text-white"
+                                            ? "bg-[#50c878] text-white"
                                             : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                                     }`}
                                 >
@@ -257,7 +257,7 @@ export default function ListJournal({ onLoaded }) {
                                             href={selectedJournal.link}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="inline-block mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition"
+                                            className="inline-block mt-4 bg-[#50c878] hover:bg-[#3fa767] text-white font-bold py-2 px-4 rounded-lg transition"
                                         >
                                             Kunjungi Jurnal
                                         </a>

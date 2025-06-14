@@ -4,8 +4,7 @@ export default function PrimaryButton({ children, loading = false, className = '
   return (
     <Button
       isLoading={loading}
-      color="primary"
-      className={className}
+      className={`bg-[#50c878] hover:bg-[#3fa767] text-white font-medium rounded-lg px-4 py-2 transition duration-300 ${className}`}
       {...props}
     >
       {children}

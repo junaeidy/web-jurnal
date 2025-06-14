@@ -49,7 +49,7 @@ export default function HeroSection({ onLoadComplete, isLoading }) {
                 <div data-aos="zoom-in" data-aos-delay="500">
                     <Link
                         href={heroData.cta_link}
-                        className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 sm:px-8 rounded-full text-base sm:text-lg shadow-lg transform hover:scale-105 transition duration-300"
+                        className="inline-block bg-[#50c878] hover:bg-[#3fa767] text-white font-bold py-3 px-6 sm:px-8 rounded-full text-base sm:text-lg shadow-lg transform hover:scale-105 transition duration-300"
                     >
                         {heroData.cta_text}
                     </Link>
