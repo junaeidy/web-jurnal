@@ -30,7 +30,11 @@ export default function AboutSection({ onLoadComplete, isLoading }) {
                 data-aos-once="true"
             >
                 {/* Gambar */}
-                <div className="md:w-1/2 w-full flex justify-center" data-aos="zoom-in" data-aos-delay="200">
+                <div
+                    className="md:w-1/2 w-full flex justify-center"
+                    data-aos="zoom-in"
+                    data-aos-delay="200"
+                >
                     <img
                         src={`/storage/${aboutData.image}`}
                         alt="Tentang Kami"
@@ -58,7 +62,7 @@ export default function AboutSection({ onLoadComplete, isLoading }) {
                                 href={aboutData.google_form_link}
                                 className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg text-base transition duration-300 transform hover:scale-105"
                             >
-                                Daftar Sekarang
+                                Register Now
                             </a>
                         )}
                         {aboutData.whatsapp_link && (
@@ -66,9 +70,29 @@ export default function AboutSection({ onLoadComplete, isLoading }) {
                                 href={aboutData.whatsapp_link}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-lg text-base transition duration-300 transform hover:scale-105"
+                                className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-lg text-base transition duration-300 transform hover:scale-105 flex items-center justify-center space-x-2"
                             >
-                                Hubungi via WhatsApp
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width={24}
+                                    height={24}
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth={2}
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    className="icon icon-tabler icons-tabler-outline icon-tabler-brand-whatsapp"
+                                >
+                                    <path
+                                        stroke="none"
+                                        d="M0 0h24v24H0z"
+                                        fill="none"
+                                    />
+                                    <path d="M3 21l1.65 -3.8a9 9 0 1 1 3.4 2.9l-5.05 .9" />
+                                    <path d="M9 10a.5 .5 0 0 0 1 0v-1a.5 .5 0 0 0 -1 0v1a5 5 0 0 0 5 5h1a.5 .5 0 0 0 0 -1h-1a.5 .5 0 0 0 0 1" />
+                                </svg>
+                                <span>WhatsApp</span>
                             </a>
                         )}
                     </div>

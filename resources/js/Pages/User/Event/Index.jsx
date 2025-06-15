@@ -9,14 +9,14 @@ export default function Index({ auth }) {
 
     return (
         <>
-            <Head title="Kegiatan Kami" />
+            <Head title="Our Events" />
             <Navbar user={auth.user} />
 
             {isLoading && (
                 <div className="fixed inset-0 bg-white z-[999] flex flex-col items-center justify-center">
                     <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
                     <p className="mt-4 text-gray-600 text-sm">
-                        Memuat halaman...
+                        Loading...
                     </p>
                 </div>
             )}
@@ -37,13 +37,7 @@ export default function Index({ auth }) {
                                 Kegiatan Kami
                             </h1>
                             <p className="text-lg md:text-xl max-w-3xl leading-relaxed">
-                                Kegiatan kami meliputi pengelolaan proses
-                                publikasi jurnal ilmiah, mulai dari penerimaan
-                                naskah, proses review, hingga penerbitan artikel
-                                secara berkala. Selain itu, kami juga aktif
-                                dalam menyelenggarakan pelatihan, seminar, dan
-                                diskusi ilmiah untuk mendukung pengembangan
-                                riset di berbagai bidang.
+                                Our events include managing the scientific journal publication process, starting from receiving manuscripts, reviewing the process, to publishing articles periodically. In addition, we are also active in organizing training, seminars, and scientific discussions to support the development of research in various fields.
                             </p>
                         </div>
                     </div>

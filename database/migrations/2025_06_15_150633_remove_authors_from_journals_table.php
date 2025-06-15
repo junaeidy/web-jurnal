@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('events', function (Blueprint $table) {
-            $table->string('slug')->unique()->after('title');
+        Schema::table('journals', function (Blueprint $table) {
+            $table->dropColumn('authors');
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('events', function (Blueprint $table) {
-            $table->dropColumn('slug');
+        Schema::table('journals', function (Blueprint $table) {
+            $table->string('authors');
         });
     }
 };

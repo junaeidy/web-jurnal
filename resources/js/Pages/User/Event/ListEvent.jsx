@@ -83,13 +83,13 @@ export default function ListEvent({ onLoaded }) {
     return (
         <section className="max-w-6xl mx-auto px-4 py-12">
             <h2 className="text-3xl font-bold mb-8 text-center">
-                Daftar Kegiatan
+                List of events
             </h2>
 
             {isLoading ? (
                 <div className="text-center py-20">
                     <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mx-auto mb-2"></div>
-                    <p className="text-gray-500">Memuat data kegiatan...</p>
+                    <p className="text-gray-500">Loading events ...</p>
                 </div>
             ) : events.length === 0 ? (
                 <div className="text-center py-20">
@@ -99,7 +99,7 @@ export default function ListEvent({ onLoaded }) {
                         className="mx-auto mb-4 w-32"
                     />
                     <p className="text-gray-500">
-                        Tidak ada kegiatan yang tersedia.
+                        There are no events available.
                     </p>
                 </div>
             ) : (

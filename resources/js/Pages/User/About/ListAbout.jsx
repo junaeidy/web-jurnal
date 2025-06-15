@@ -25,7 +25,7 @@ export default function ListAbout({ onLoaded }) {
                     className="w-60 mb-6"
                 />
                 <p className="text-gray-500 text-lg">
-                    Tidak ada data tentang kami.
+                    There is no data about us.
                 </p>
             </div>
         );
@@ -96,7 +96,7 @@ export default function ListAbout({ onLoaded }) {
                                         rel="noopener noreferrer"
                                         className="inline-block bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition"
                                     >
-                                        Info Lebih Lanjut
+                                        More Information
                                     </a>
                                 </div>
                             )}

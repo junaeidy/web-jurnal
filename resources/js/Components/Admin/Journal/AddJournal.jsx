@@ -17,7 +17,6 @@ export default function AddJournal({ show, onClose, onSuccess }) {
         is_active: true,
         cover: null,
         is_featured: false,
-        authors: "",
         category_id: "",
         published_year: "",
     });
@@ -37,7 +36,6 @@ export default function AddJournal({ show, onClose, onSuccess }) {
             is_active: true,
             cover: null,
             is_featured: false,
-            authors: "",
             category_id: "",
             published_year: "",
         });
@@ -134,13 +132,6 @@ export default function AddJournal({ show, onClose, onSuccess }) {
                         name="title"
                         label="Judul Jurnal"
                         value={form.title}
-                        onChange={handleChange}
-                        isRequired
-                    />
-                    <TextInput
-                        name="authors"
-                        label="Penulis"
-                        value={form.authors}
                         onChange={handleChange}
                         isRequired
                     />

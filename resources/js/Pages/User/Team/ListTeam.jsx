@@ -28,7 +28,7 @@ export default function ListTeam({ onLoaded }) {
                     className="w-60 mb-6"
                 />
                 <p className="text-gray-500 text-lg">
-                    Belum ada anggota tim ditampilkan.
+                    No team members are displayed yet.
                 </p>
             </div>
         );
@@ -37,11 +37,10 @@ export default function ListTeam({ onLoaded }) {
     return (
         <section className="max-w-6xl mx-auto px-4 py-12">
             <h2 className="text-4xl font-bold text-center mb-4 text-gray-800">
-                Tim Kami
+                Our Team
             </h2>
             <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
-                Kami adalah tim yang berdedikasi untuk mendukung kemajuan ilmu
-                pengetahuan dan inovasi.
+                We are a team dedicated to supporting the advancement of science and innovation.
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
@@ -74,7 +73,7 @@ export default function ListTeam({ onLoaded }) {
                             <div className="text-sm text-gray-500 mt-2 space-y-1">
                                 {member.email && <p>Email: {member.email}</p>}
                                 {member.contact && (
-                                    <p>Kontak: {member.contact}</p>
+                                    <p>Contact: {member.contact}</p>
                                 )}
                             </div>
                         )}

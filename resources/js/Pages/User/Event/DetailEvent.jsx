@@ -30,7 +30,7 @@ export default function DetailEvent({ auth }) {
         return (
             <div className="fixed inset-0 bg-white z-[999] flex flex-col items-center justify-center">
                 <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mx-auto"></div>
-                <p className="mt-2 text-gray-500">Memuat halaman...</p>
+                <p className="mt-2 text-gray-500">Loading...</p>
             </div>
         );
     }
@@ -38,7 +38,7 @@ export default function DetailEvent({ auth }) {
     if (!event) {
         return (
             <div className="text-center py-16 text-gray-500">
-                Kegiatan tidak ditemukan.
+                Event not found.
             </div>
         );
     }

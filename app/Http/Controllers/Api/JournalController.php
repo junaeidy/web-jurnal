@@ -18,8 +18,7 @@ class JournalController extends Controller
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', "%{$search}%")
-                    ->orWhere('authors', 'like', "%{$search}%");
+                $q->where('title', 'like', "%{$search}%");
             });
         }
 
@@ -69,7 +68,6 @@ class JournalController extends Controller
             'impact_factor' => 'nullable|numeric',
             'is_active' => 'boolean',
             'is_featured' => 'boolean',
-            'authors' => 'required|string',
             'category_id' => 'nullable|exists:categories,id',
             'published_year' => 'nullable|digits:4|integer|min:1900|max:' . date('Y'),
         ]);
@@ -108,7 +106,6 @@ class JournalController extends Controller
             'impact_factor' => 'nullable|numeric',
             'is_active' => 'boolean',
             'is_featured' => 'boolean',
-            'authors' => 'required|string',
             'category_id' => 'nullable|exists:categories,id',
             'published_year' => 'nullable|digits:4|integer|min:1900|max:' . date('Y'),
         ]);
@@ -144,7 +141,7 @@ class JournalController extends Controller
     public function featuredJournals()
     {
         return Journal::where('is_featured', true)
-            ->select('id', 'authors', 'title', 'description', 'link', 'cover', 'acceptance_rate', 'decision_days', 'impact_factor', 'published_year')
+            ->select('id', 'title', 'description', 'link', 'cover', 'acceptance_rate', 'decision_days', 'impact_factor', 'published_year')
             ->get();
     }
 

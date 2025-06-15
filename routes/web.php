@@ -9,6 +9,7 @@ use App\Http\Controllers\EventsController;
 use App\Http\Controllers\HomeHeroController;
 use App\Http\Controllers\JournalController;
 use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Artisan;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -63,6 +64,11 @@ Route::middleware('auth')->group(function () {
 
 Route::fallback(function () {
     return Inertia::render('Errors/404');
+});
+
+Route::get('/storage-link', function(){
+    Artisan::call('storage:link');
+    return "Storage link created";
 });
 
 require __DIR__.'/auth.php';

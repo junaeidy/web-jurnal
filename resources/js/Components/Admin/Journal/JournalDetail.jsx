@@ -61,12 +61,6 @@ export default function JournalDetail({ isOpen, onClose, journal }) {
                                     </div>
                                     <div>
                                         <div className="font-semibold text-gray-500">
-                                            Penulis
-                                        </div>
-                                        <div>{journal.authors}</div>
-                                    </div>
-                                    <div>
-                                        <div className="font-semibold text-gray-500">
                                             Kategori
                                         </div>
                                         <div>

@@ -8,8 +8,8 @@ export default function Navbar({ user }) {
 
     const navLinks = [
         { href: "/", label: "Home" },
-        { href: "/journal", label: "Jurnal" },
-        { href: "/events", label: "Kegiatan" },
+        { href: "/journal", label: "Journal" },
+        { href: "/events", label: "Events" },
         { href: "/team", label: "Team" },
         { href: "/about-us", label: "About Us" },
     ];

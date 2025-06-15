@@ -63,12 +63,12 @@ export default function ListJournal({ onLoaded }) {
                             htmlFor="search"
                             className="text-sm font-medium text-gray-700 mb-1"
                         >
-                            Cari Jurnal
+                            Search Journal
                         </label>
                         <input
                             id="search"
                             type="text"
-                            placeholder="Judul atau Penulis..."
+                            placeholder="Search by title"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                             className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -80,7 +80,7 @@ export default function ListJournal({ onLoaded }) {
                             htmlFor="category"
                             className="text-sm font-medium text-gray-700 mb-1"
                         >
-                            Filter Kategori
+                            Category Filters
                         </label>
                         <select
                             id="category"
@@ -90,7 +90,7 @@ export default function ListJournal({ onLoaded }) {
                             }
                             className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
-                            <option value="">Semua Kategori</option>
+                            <option value="">All Categories</option>
                             {categories.map((cat) => (
                                 <option key={cat.id} value={cat.id}>
                                     {cat.name}
@@ -104,7 +104,7 @@ export default function ListJournal({ onLoaded }) {
                             htmlFor="sort"
                             className="text-sm font-medium text-gray-700 mb-1"
                         >
-                            Urutkan Berdasarkan
+                            Sort By
                         </label>
                         <select
                             id="sort"
@@ -112,13 +112,13 @@ export default function ListJournal({ onLoaded }) {
                             onChange={(e) => setSortBy(e.target.value)}
                             className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
-                            <option value="title">Judul (A-Z)</option>
-                            <option value="-title">Judul (Z-A)</option>
+                            <option value="title">Title (A-Z)</option>
+                            <option value="-title">Title (Z-A)</option>
                             <option value="-impact_factor">
-                                Impact Factor (Tinggi ke Rendah)
+                                Impact Factor (High to Low)
                             </option>
                             <option value="-acceptance_rate">
-                                Acceptance Rate (Tinggi ke Rendah)
+                                Acceptance Rate (High to Low)
                             </option>
                         </select>
                     </div>
@@ -129,7 +129,7 @@ export default function ListJournal({ onLoaded }) {
                     <div className="text-center py-10">
                         <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mx-auto"></div>
                         <p className="mt-2 text-gray-500">
-                            Memuat data jurnal...
+                            Loading journal ...
                         </p>
                     </div>
                 ) : (
@@ -142,7 +142,7 @@ export default function ListJournal({ onLoaded }) {
                                     className="w-40 h-40 object-contain mb-4"
                                 />
                                 <p className="text-lg font-medium">
-                                    Tidak ada data jurnal.
+                                    No journal found.
                                 </p>
                             </div>
                         ) : (
@@ -164,12 +164,6 @@ export default function ListJournal({ onLoaded }) {
                                         <h3 className="text-lg font-semibold text-gray-800 mb-2 leading-snug">
                                             {journal.title}
                                         </h3>
-                                        <p className="text-gray-600 text-xs mb-3">
-                                            Oleh:{" "}
-                                            <span className="font-medium text-blue-600">
-                                                {journal.authors}
-                                            </span>
-                                        </p>
                                         <p className="text-gray-700 text-sm mb-4 line-clamp-3">
                                             {journal.description}
                                         </p>
@@ -179,7 +173,7 @@ export default function ListJournal({ onLoaded }) {
                                             }
                                             className="inline-block bg-[#50c878] hover:bg-[#3fa767]0 text-white font-bold py-1.5 px-4 rounded-lg text-xs transition duration-300"
                                         >
-                                            Baca Selengkapnya
+                                            Read more
                                         </button>
                                     </div>
                                 </div>
@@ -259,20 +253,14 @@ export default function ListJournal({ onLoaded }) {
                                             rel="noopener noreferrer"
                                             className="inline-block mt-4 bg-[#50c878] hover:bg-[#3fa767] text-white font-bold py-2 px-4 rounded-lg transition"
                                         >
-                                            Kunjungi Jurnal
+                                            Visit Journal
                                         </a>
                                     )}
                                 </div>
                                 <div className="md:border-l md:pl-6 space-y-2 text-sm">
                                     <p className="text-gray-600">
                                         <span className="font-semibold">
-                                            Penulis:
-                                        </span>{" "}
-                                        {selectedJournal.authors}
-                                    </p>
-                                    <p className="text-gray-600">
-                                        <span className="font-semibold">
-                                            Tahun Terbit:
+                                            First Published:
                                         </span>{" "}
                                         {selectedJournal.published_year}
                                     </p>
@@ -286,7 +274,7 @@ export default function ListJournal({ onLoaded }) {
                                         <span className="font-semibold">
                                             Decision Days:
                                         </span>{" "}
-                                        {selectedJournal.decision_days} hari
+                                        {selectedJournal.decision_days} days
                                     </p>
                                     <p className="text-gray-600">
                                         <span className="font-semibold">

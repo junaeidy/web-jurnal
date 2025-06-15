@@ -18,7 +18,6 @@ export default function EditJournal({ show, onClose, onSuccess, journalId }) {
         is_active: true,
         is_featured: false,
         cover: null,
-        authors: "",
         category_id: "",
         published_year: "",
     });
@@ -125,13 +124,6 @@ export default function EditJournal({ show, onClose, onSuccess, journalId }) {
                         label="Judul Jurnal"
                         name="title"
                         value={form.title}
-                        onChange={handleChange}
-                        isRequired
-                    />
-                    <TextInput
-                        label="Penulis"
-                        name="authors"
-                        value={form.authors}
                         onChange={handleChange}
                         isRequired
                     />

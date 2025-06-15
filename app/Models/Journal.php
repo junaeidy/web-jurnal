@@ -16,7 +16,6 @@ class Journal extends Model
         'impact_factor',
         'is_active',
         'is_featured',
-        'authors',
         'category_id',
         'published_year',
     ];

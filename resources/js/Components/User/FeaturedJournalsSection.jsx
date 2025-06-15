@@ -46,7 +46,7 @@ export default function FeaturedJournalsSection({ onLoadComplete, isLoading }) {
                     className="text-3xl md:text-4xl font-bold text-gray-800 mb-12"
                     data-aos="fade-up"
                 >
-                    Jurnal Unggulan Kami
+                    Our Featured Journals
                 </h2>
 
                 {/* Tombol kiri-kanan */}
@@ -90,12 +90,6 @@ export default function FeaturedJournalsSection({ onLoadComplete, isLoading }) {
                                 <h3 className="text-base font-semibold text-gray-800 mb-2 leading-snug line-clamp-2">
                                     {journal.title}
                                 </h3>
-                                <p className="text-gray-600 text-xs mb-3">
-                                    Oleh:{" "}
-                                    <span className="font-medium text-blue-600">
-                                        {journal.authors}
-                                    </span>
-                                </p>
                                 <p className="text-gray-700 text-sm mb-4 line-clamp-3">
                                     {journal.description}
                                 </p>
@@ -103,7 +97,7 @@ export default function FeaturedJournalsSection({ onLoadComplete, isLoading }) {
                                     onClick={() => setSelectedJournal(journal)}
                                     className="inline-block bg-[#50c878] hover:bg-[#3fa767] text-white font-bold py-1.5 px-4 rounded-lg text-xs transition duration-300"
                                 >
-                                    Baca Selengkapnya
+                                    Read more
                                 </button>
                             </div>
                         </div>
@@ -116,7 +110,7 @@ export default function FeaturedJournalsSection({ onLoadComplete, isLoading }) {
                         href="/journal"
                         className="inline-block bg-[#50c878] hover:bg-[#3fa767] text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300 transform hover:scale-105"
                     >
-                        Lihat Semua Jurnal
+                        View All Journals
                     </Link>
                 </div>
             </div>
@@ -154,22 +148,19 @@ export default function FeaturedJournalsSection({ onLoadComplete, isLoading }) {
                                             rel="noopener noreferrer"
                                             className="inline-block mt-4 bg-[#50c878] hover:bg-[#3fa767] text-white font-bold py-2 px-4 rounded-lg transition"
                                         >
-                                            Kunjungi Jurnal
+                                            Visit Journal
                                         </a>
                                     )}
                                 </div>
                                 <div className="md:border-l md:pl-6 space-y-2 text-sm">
                                     <p className="text-gray-600">
-                                        <span className="font-semibold">Penulis:</span> {selectedJournal.authors}
-                                    </p>
-                                    <p className="text-gray-600">
-                                        <span className="font-semibold">Tahun Terbit:</span> {selectedJournal.published_year}
+                                        <span className="font-semibold">First Published:</span> {selectedJournal.published_year}
                                     </p>
                                     <p className="text-gray-600">
                                         <span className="font-semibold">Acceptance Rate:</span> {selectedJournal.acceptance_rate}%
                                     </p>
                                     <p className="text-gray-600">
-                                        <span className="font-semibold">Decision Days:</span> {selectedJournal.decision_days} hari
+                                        <span className="font-semibold">Decision Days:</span> {selectedJournal.decision_days} days
                                     </p>
                                     <p className="text-gray-600">
                                         <span className="font-semibold">Impact Factor:</span> {selectedJournal.impact_factor}
