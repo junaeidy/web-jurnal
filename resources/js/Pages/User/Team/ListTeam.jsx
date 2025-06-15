@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Modal from "@/Components/UI/Modal";
 
 export default function ListTeam({ onLoaded }) {
     const [teams, setTeams] = useState([]);
+    const [selectedMember, setSelectedMember] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         axios
@@ -18,6 +21,16 @@ export default function ListTeam({ onLoaded }) {
                 if (onLoaded) onLoaded();
             });
     }, []);
+
+    const openModal = (member) => {
+        setSelectedMember(member);
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setSelectedMember(null);
+        setIsModalOpen(false);
+    };
 
     if (teams.length === 0) {
         return (
@@ -40,14 +53,16 @@ export default function ListTeam({ onLoaded }) {
                 Our Team
             </h2>
             <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
-                We are a team dedicated to supporting the advancement of science and innovation.
+                We are a team dedicated to supporting the advancement of science
+                and innovation.
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                 {teams.map((member) => (
                     <div
                         key={member.id}
-                        className="bg-white rounded-xl shadow-md p-6 text-center transform transition duration-300 hover:shadow-2xl hover:-translate-y-1"
+                        onClick={() => openModal(member)}
+                        className="bg-white rounded-xl shadow-md p-6 text-center transform transition duration-300 hover:shadow-2xl hover:-translate-y-1 cursor-pointer"
                     >
                         <img
                             src={
@@ -64,22 +79,48 @@ export default function ListTeam({ onLoaded }) {
                         <p className="text-blue-600 font-medium mb-2">
                             {member.position}
                         </p>
-                        {member.description && (
-                            <p className="text-sm text-gray-600 mb-2">
-                                {member.description}
-                            </p>
-                        )}
-                        {(member.email || member.contact) && (
-                            <div className="text-sm text-gray-500 mt-2 space-y-1">
-                                {member.email && <p>Email: {member.email}</p>}
-                                {member.contact && (
-                                    <p>Contact: {member.contact}</p>
-                                )}
-                            </div>
-                        )}
                     </div>
                 ))}
             </div>
+
+            <Modal show={isModalOpen} onClose={closeModal} maxWidth="md">
+                {selectedMember && (
+                    <div className="p-6 max-h-[80vh] overflow-y-auto">
+                        <div className="text-center">
+                            <img
+                                src={
+                                    selectedMember.photo
+                                        ? `/${selectedMember.photo}`
+                                        : "https://placehold.co/200x200?text=No+Image"
+                                }
+                                alt={selectedMember.name}
+                                className="w-32 h-32 mx-auto rounded-full object-cover mb-4"
+                            />
+                            <h2 className="text-2xl font-bold text-gray-800 mb-1">
+                                {selectedMember.name}
+                            </h2>
+                            <p className="text-blue-600 font-medium mb-3">
+                                {selectedMember.position}
+                            </p>
+
+                            {selectedMember.description && (
+                                <p className="text-gray-700 text-sm leading-relaxed mb-4 text-justify">
+                                    {selectedMember.description}
+                                </p>
+                            )}
+
+                            <div className="text-sm text-gray-500 space-y-1">
+                                {selectedMember.email && (
+                                    <p>Email: {selectedMember.email}</p>
+                                )}
+                                {selectedMember.contact && (
+                                    <p>Contact: {selectedMember.contact}</p>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </Modal>
         </section>
     );
 }

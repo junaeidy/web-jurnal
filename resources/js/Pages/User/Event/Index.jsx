@@ -34,7 +34,7 @@ export default function Index({ auth }) {
                     <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="text-left text-white">
                             <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
-                                Kegiatan Kami
+                                Our Events
                             </h1>
                             <p className="text-lg md:text-xl max-w-3xl leading-relaxed">
                                 Our events include managing the scientific journal publication process, starting from receiving manuscripts, reviewing the process, to publishing articles periodically. In addition, we are also active in organizing training, seminars, and scientific discussions to support the development of research in various fields.

@@ -46,6 +46,10 @@ Route::get('/events/{slug}', function ($slug) {
     ]);
 });
 
+Route::get('/dashboard/partners', function () {
+    return Inertia::render('Admin/MOU/Index');
+})->name('dashboard.partners.index');
+
 Route::get('/dashboard', function () {
     return Inertia::render('Admin/Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

@@ -49,7 +49,7 @@ export default function FeaturedJournalsSection({ onLoadComplete, isLoading }) {
                     Our Featured Journals
                 </h2>
 
-                {/* Tombol kiri-kanan */}
+                {/* Tombol Navigasi Slider */}
                 <div className="hidden md:block">
                     <button
                         onClick={() => scroll("left")}
@@ -65,7 +65,7 @@ export default function FeaturedJournalsSection({ onLoadComplete, isLoading }) {
                     </button>
                 </div>
 
-                {/* Slider */}
+                {/* Slider Card */}
                 <div
                     ref={sliderRef}
                     className="flex overflow-x-auto gap-6 scroll-smooth scrollbar-hide py-2"
@@ -115,7 +115,7 @@ export default function FeaturedJournalsSection({ onLoadComplete, isLoading }) {
                 </div>
             </div>
 
-            {/* Modal Detail */}
+            {/* Modal Detail Jurnal */}
             <Modal
                 show={!!selectedJournal}
                 maxWidth="2xl"
@@ -141,29 +141,56 @@ export default function FeaturedJournalsSection({ onLoadComplete, isLoading }) {
                                     <p className="text-gray-700 leading-relaxed whitespace-pre-line">
                                         {selectedJournal.description}
                                     </p>
-                                    {selectedJournal.link && (
+
+                                    {/* Tombol Aksi */}
+                                    <div className="mt-6 flex flex-col sm:flex-row sm:items-center gap-4">
+                                        {selectedJournal.link && (
+                                            <a
+                                                href={selectedJournal.link}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex-1 text-center bg-[#50c878] hover:bg-[#3fa767] text-white font-semibold py-2.5 px-4 rounded-lg transition duration-300"
+                                            >
+                                                Visit Journal
+                                            </a>
+                                        )}
+
                                         <a
-                                            href={selectedJournal.link}
+                                            href="https://wa.me/6285379388533"
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="inline-block mt-4 bg-[#50c878] hover:bg-[#3fa767] text-white font-bold py-2 px-4 rounded-lg transition"
+                                            className="flex-1 text-center flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2.5 px-4 rounded-lg transition duration-300"
                                         >
-                                            Visit Journal
+                                            Contact
                                         </a>
-                                    )}
+                                    </div>
                                 </div>
+
+                                {/* Detail Metadata */}
                                 <div className="md:border-l md:pl-6 space-y-2 text-sm">
                                     <p className="text-gray-600">
-                                        <span className="font-semibold">First Published:</span> {selectedJournal.published_year}
+                                        <span className="font-semibold">
+                                            First Published:
+                                        </span>{" "}
+                                        {selectedJournal.published_year}
                                     </p>
                                     <p className="text-gray-600">
-                                        <span className="font-semibold">Acceptance Rate:</span> {selectedJournal.acceptance_rate}%
+                                        <span className="font-semibold">
+                                            Acceptance Rate:
+                                        </span>{" "}
+                                        {selectedJournal.acceptance_rate}%
                                     </p>
                                     <p className="text-gray-600">
-                                        <span className="font-semibold">Decision Days:</span> {selectedJournal.decision_days} days
+                                        <span className="font-semibold">
+                                            Decision Days:
+                                        </span>{" "}
+                                        {selectedJournal.decision_days} days
                                     </p>
                                     <p className="text-gray-600">
-                                        <span className="font-semibold">Impact Factor:</span> {selectedJournal.impact_factor}
+                                        <span className="font-semibold">
+                                            Impact Factor:
+                                        </span>{" "}
+                                        {selectedJournal.impact_factor}
                                     </p>
                                 </div>
                             </div>

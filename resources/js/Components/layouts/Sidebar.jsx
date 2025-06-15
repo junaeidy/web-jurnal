@@ -2,6 +2,7 @@ import { Link, usePage } from "@inertiajs/react";
 import {
     ArchiveBoxIcon,
     BookOpenIcon,
+    BriefcaseIcon,
     ChartBarIcon,
     ClockIcon,
     HomeIcon,
@@ -12,6 +13,7 @@ import {
 const navItems = [
     { name: "Dashboard", icon: ChartBarIcon, href: route("dashboard")},
     { name: "Manajemen Home", icon: HomeIcon, href: route("dashboard.home.index")},
+    { name: "Manajemen Partner", icon: BriefcaseIcon, href: route("dashboard.partners.index")},
     { name: "Manajemen Kategori", icon: ArchiveBoxIcon, href: route("dashboard.categories.index")},
     { name: "Manajemen Jurnal", icon: BookOpenIcon, href: route("dashboard.journals.index")},
     { name: "Manajemen Kegiatan", icon: ClockIcon, href: route("dashboard.events.index")},

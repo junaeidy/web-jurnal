@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\AboutController;
 use App\Http\Controllers\Api\TeamsController;
 use App\Http\Controllers\Api\EventsController;
 use App\Http\Controllers\Api\JournalController;
+use App\Http\Controllers\API\PartnerController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\HomeHeroController;
 use App\Http\Controllers\Api\HomeAboutController;
@@ -28,3 +29,4 @@ Route::put('/home/featured-journals', [JournalController::class, 'updateFeatured
 Route::apiResource('categories', CategoryController::class);
 Route::get('/events/slug/{slug}', [EventsController::class, 'showBySlug']);
 Route::get('/public-events', [EventsController::class, 'publicList']);
+Route::apiResource('partners', PartnerController::class);

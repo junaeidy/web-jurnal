@@ -4,6 +4,7 @@ import Navbar from "@/Components/User/Navbar";
 import HeroSection from "@/Components/User/HeroSection";
 import AboutSection from "@/Components/User/AboutSection";
 import FeaturedJournalsSection from "@/Components/User/FeaturedJournalsSection";
+import PartnerSection from "@/Components/User/PartnerSection";
 import Footer from "@/Components/User/Footer";
 
 // AOS setup
@@ -35,7 +36,7 @@ export default function Home({ auth }) {
                 <div className="fixed inset-0 bg-white z-[999] flex flex-col items-center justify-center">
                     <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-600 border-t-transparent"></div>
                     <p className="mt-4 text-gray-600 text-sm font-medium">
-                        Memuat halaman...
+                        Loading...
                     </p>
                 </div>
             )}
@@ -44,6 +45,7 @@ export default function Home({ auth }) {
             <HeroSection onLoadComplete={handleSectionLoaded} isLoading={isLoading} />
             <AboutSection onLoadComplete={handleSectionLoaded} isLoading={isLoading} />
             <FeaturedJournalsSection onLoadComplete={handleSectionLoaded} isLoading={isLoading} />
+            <PartnerSection onLoadComplete={handleSectionLoaded} isLoading={isLoading} />
             <Footer />
         </>
     );
