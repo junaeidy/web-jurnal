@@ -24,7 +24,7 @@ export default function PartnerSection({ onLoadComplete, isLoading }) {
     return (
         <section className="bg-gray-50 py-6 overflow-hidden mb-10" data-aos="fade-up">
             <div className="max-w-7xl mx-auto px-4">
-                <h2 className="text-xl font-semibold text-center mb-4">Our Partners</h2>
+                <h2 className="text-center text-3xl md:text-4xl font-bold text-gray-800 mb-12">Our Partners</h2>
                 <div className="relative w-full overflow-hidden">
                     <div className="whitespace-nowrap animate-marquee flex items-center gap-12">
                         {partners.concat(partners).map((partner, idx) => (
