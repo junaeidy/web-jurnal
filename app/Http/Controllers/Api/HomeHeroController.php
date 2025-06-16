@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Journal;
 use App\Models\HomeHero;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -21,24 +20,43 @@ class HomeHeroController extends Controller
         $data = HomeHero::firstOrCreate([]);
 
         $validated = $request->validate([
-            'title' => 'required|string',
-            'subtitle' => 'nullable|string',
-            'cta_text' => 'nullable|string',
+            'title_id' => 'required|string',
+            'title_en' => 'required|string',
+            'subtitle_id' => 'nullable|string',
+            'subtitle_en' => 'nullable|string',
+            'cta_text_id' => 'nullable|string',
+            'cta_text_en' => 'nullable|string',
             'cta_link' => 'nullable|url',
             'image' => 'nullable|image|max:2048',
         ]);
 
+        $data->title = [
+            'id' => $validated['title_id'],
+            'en' => $validated['title_en']
+        ];
+        $data->subtitle = [
+            'id' => $validated['subtitle_id'] ?? '',
+            'en' => $validated['subtitle_en'] ?? ''
+        ];
+        $data->cta_text = [
+            'id' => $validated['cta_text_id'] ?? '',
+            'en' => $validated['cta_text_en'] ?? ''
+        ];
+        $data->cta_link = $validated['cta_link'] ?? null;
+
         if ($request->hasFile('image')) {
-            // Delete old if exists
-            if ($data->image && Storage::exists($data->image)) {
-                Storage::delete($data->image);
+            if ($data->image && Storage::disk('public')->exists($data->image)) {
+                Storage::disk('public')->delete($data->image);
             }
             $path = $request->file('image')->store('home', 'public');
-            $validated['image'] = $path;
+            $data->image = $path;
         }
 
-        $data->update($validated);
+        $data->save();
 
-        return response()->json(['message' => 'Hero updated successfully', 'data' => $data]);
+        return response()->json([
+            'message' => 'Hero updated successfully',
+            'data' => $data
+        ]);
     }
 }

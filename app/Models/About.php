@@ -13,4 +13,9 @@ class About extends Model
         'video_url',
         'extra_link'
     ];
+
+    protected $casts = [
+        'title' => 'array',
+        'content' => 'array',
+    ];
 }

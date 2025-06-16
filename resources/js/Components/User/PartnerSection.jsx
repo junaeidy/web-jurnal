@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { usePage } from "@inertiajs/react";
 
 export default function PartnerSection({ onLoadComplete, isLoading }) {
     const [partners, setPartners] = useState([]);
+    const { translations } = usePage().props;
+    const partner = translations?.partner || {};
 
     useEffect(() => {
         const fetchPartners = async () => {
@@ -22,9 +25,14 @@ export default function PartnerSection({ onLoadComplete, isLoading }) {
     if (isLoading || partners.length === 0) return null;
 
     return (
-        <section className="bg-gray-50 py-6 overflow-hidden mb-10" data-aos="fade-up">
+        <section
+            className="bg-gray-50 py-6 overflow-hidden mb-10"
+            data-aos="fade-up"
+        >
             <div className="max-w-7xl mx-auto px-4">
-                <h2 className="text-center text-3xl md:text-4xl font-bold text-gray-800 mb-12">Our Partners</h2>
+                <h2 className="text-center text-3xl md:text-4xl font-bold text-gray-800 mb-12">
+                    {partner.title}
+                </h2>
                 <div className="relative w-full overflow-hidden">
                     <div className="whitespace-nowrap animate-marquee flex items-center gap-12">
                         {partners.concat(partners).map((partner, idx) => (

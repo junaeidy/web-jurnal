@@ -1,79 +1,81 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "@/Components/UI/Modal";
 import TextInput from "@/Components/UI/TextInput";
 import PrimaryButton from "@/Components/UI/PrimaryButton";
 import SecondaryButton from "@/Components/UI/SecondaryButton";
+import { PhotoIcon } from "@heroicons/react/24/solid";
+import { Editor } from "@tinymce/tinymce-react";
 import toast from "react-hot-toast";
-import { Textarea, Select, SelectItem } from "@heroui/react";
+import axios from "axios";
+import { Select, SelectItem } from "@heroui/react";
 
 export default function AddJournal({ show, onClose, onSuccess }) {
+    const [activeTab, setActiveTab] = useState("informasi");
+    const [activeLangTab, setActiveLangTab] = useState("id");
+
     const [form, setForm] = useState({
-        title: "",
-        description: "",
+        title_id: "",
+        title_en: "",
+        description_id: "",
+        description_en: "",
         link: "",
         acceptance_rate: "",
         decision_days: "",
         impact_factor: "",
         is_active: true,
-        cover: null,
         is_featured: false,
         category_id: "",
         published_year: "",
+        cover: null,
     });
 
-    const [categories, setCategories] = useState([]);
     const [preview, setPreview] = useState(null);
+    const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(false);
-
-    const resetForm = () => {
-        setForm({
-            title: "",
-            description: "",
-            link: "",
-            acceptance_rate: "",
-            decision_days: "",
-            impact_factor: "",
-            is_active: true,
-            cover: null,
-            is_featured: false,
-            category_id: "",
-            published_year: "",
-        });
-        setPreview(null);
-    };
 
     useEffect(() => {
         if (show) {
-            resetForm();
+            setForm({
+                title_id: "",
+                title_en: "",
+                description_id: "",
+                description_en: "",
+                link: "",
+                acceptance_rate: "",
+                decision_days: "",
+                impact_factor: "",
+                is_active: true,
+                is_featured: false,
+                category_id: "",
+                published_year: "",
+                cover: null,
+            });
+            setPreview(null);
             fetchCategories();
         }
     }, [show]);
 
     const fetchCategories = async () => {
         try {
-            const res = await fetch("/api/categories");
-            const data = await res.json();
-            setCategories(data);
-        } catch (err) {
+            const res = await axios.get("/api/categories");
+            setCategories(res.data);
+        } catch {
             toast.error("Gagal memuat kategori");
         }
     };
 
     const handleChange = (e) => {
-        const { name, value, type, checked, files } = e.target;
+        const { name, value, type, checked } = e.target;
+        setForm((prev) => ({
+            ...prev,
+            [name]: type === "checkbox" ? checked : value,
+        }));
+    };
 
-        if (type === "file") {
-            const file = files?.[0];
-            if (file) {
-                setForm((prev) => ({ ...prev, cover: file }));
-                setPreview(URL.createObjectURL(file));
-            }
-        } else {
-            setForm((prev) => ({
-                ...prev,
-                [name]: type === "checkbox" ? checked : value,
-            }));
-        }
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        setForm((prev) => ({ ...prev, cover: file }));
+        if (file) setPreview(URL.createObjectURL(file));
     };
 
     const handleRemoveImage = () => {
@@ -83,115 +85,136 @@ export default function AddJournal({ show, onClose, onSuccess }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         setLoading(true);
+
         const formData = new FormData();
-
-        for (const key in form) {
-            let value = form[key];
-            if (value === "") value = null;
-
-            if (typeof value === "boolean") {
-                formData.append(key, value ? "1" : "0");
-            } else if (value !== null) {
-                formData.append(key, value);
-            }
-        }
+        Object.entries(form).forEach(([key, val]) => {
+            if (val !== "" && val !== null)
+                formData.append(key, typeof val === "boolean" ? (val ? "1" : "0") : val);
+        });
 
         try {
-            const res = await fetch("/api/journals", {
-                method: "POST",
-                body: formData,
-            });
-
-            if (res.ok) {
-                const data = await res.json();
-                toast.success("Jurnal berhasil ditambahkan");
-                onSuccess(data);
-                onClose();
-            } else {
-                toast.error("Gagal menambahkan jurnal");
-            }
-        } catch (err) {
-            toast.error("Terjadi kesalahan saat mengirim data");
-            console.error(err);
+            await axios.post("/api/journals", formData);
+            toast.success("Jurnal berhasil ditambahkan");
+            onSuccess();
+            onClose();
+        } catch {
+            toast.error("Gagal menambahkan jurnal");
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <Modal show={show} onClose={onClose}>
-            <form onSubmit={handleSubmit} className="p-6 space-y-6">
-                <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
+        <Modal show={show} onClose={onClose} maxWidth="3xl">
+            <div className="border-b px-6 pt-4">
+                <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-5">
                     Tambah Jurnal
                 </h2>
+                <nav className="-mb-px flex space-x-6" aria-label="Tabs">
+                    {["informasi", "konten"].map((tab) => (
+                        <button
+                            key={tab}
+                            className={`pb-2 text-sm font-medium ${
+                                activeTab === tab
+                                    ? "border-b-2 border-blue-600 text-blue-600"
+                                    : "text-gray-500 hover:text-gray-700"
+                            }`}
+                            onClick={() => setActiveTab(tab)}
+                        >
+                            {tab === "informasi" ? "Informasi Umum" : "Konten & Media"}
+                        </button>
+                    ))}
+                </nav>
+            </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <TextInput
-                        name="title"
-                        label="Judul Jurnal"
-                        value={form.title}
-                        onChange={handleChange}
-                        isRequired
-                    />
-                    <TextInput
-                        name="link"
-                        label="Link"
-                        value={form.link}
-                        onChange={handleChange}
-                        isRequired
-                    />
-                    <TextInput
-                        name="acceptance_rate"
-                        label="Acceptance Rate (%)"
-                        type="number"
-                        value={form.acceptance_rate}
-                        onChange={handleChange}
-                        isRequired
-                    />
-                    <TextInput
-                        name="decision_days"
-                        label="Decision Days"
-                        type="number"
-                        value={form.decision_days}
-                        onChange={handleChange}
-                        isRequired
-                    />
-                    <TextInput
-                        name="impact_factor"
-                        label="Impact Factor"
-                        type="number"
-                        step="0.01"
-                        value={form.impact_factor}
-                        onChange={handleChange}
-                        isRequired
-                    />
+            <form onSubmit={handleSubmit} className="space-y-6 px-6 py-4">
+                {/* --- Tab: Informasi --- */}
+                {activeTab === "informasi" && (
+                    <>
+                        <div className="flex gap-4 border-b pb-2">
+                            {["id", "en"].map((lang) => (
+                                <button
+                                    type="button"
+                                    key={lang}
+                                    className={`text-sm font-semibold ${
+                                        activeLangTab === lang
+                                            ? "text-blue-600 border-b-2 border-blue-600"
+                                            : "text-gray-500"
+                                    }`}
+                                    onClick={() => setActiveLangTab(lang)}
+                                >
+                                    {lang === "id" ? "Bahasa Indonesia" : "English"}
+                                </button>
+                            ))}
+                        </div>
 
-                    {/* Tahun Terbit */}
-                    <TextInput
-                        name="published_year"
-                        label="Tahun Terbit"
-                        type="number"
-                        value={form.published_year}
-                        onChange={handleChange}
-                        isRequired
-                    />
+                        {activeLangTab === "id" && (
+                            <TextInput
+                                label="Judul (ID)"
+                                name="title_id"
+                                value={form.title_id}
+                                onChange={handleChange}
+                                isRequired
+                            />
+                        )}
+                        {activeLangTab === "en" && (
+                            <TextInput
+                                label="Title (EN)"
+                                name="title_en"
+                                value={form.title_en}
+                                onChange={handleChange}
+                                isRequired
+                            />
+                        )}
 
-                    {/* Kategori */}
-                    <div>
+                        <TextInput
+                            label="Link Jurnal"
+                            name="link"
+                            value={form.link}
+                            onChange={handleChange}
+                            isRequired
+                        />
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <TextInput
+                                label="Acceptance Rate (%)"
+                                name="acceptance_rate"
+                                type="number"
+                                value={form.acceptance_rate}
+                                onChange={handleChange}
+                            />
+                            <TextInput
+                                label="Decision Days"
+                                name="decision_days"
+                                type="number"
+                                value={form.decision_days}
+                                onChange={handleChange}
+                            />
+                            <TextInput
+                                label="Impact Factor"
+                                name="impact_factor"
+                                type="number"
+                                step="0.01"
+                                value={form.impact_factor}
+                                onChange={handleChange}
+                            />
+                            <TextInput
+                                label="Tahun Terbit"
+                                name="published_year"
+                                type="number"
+                                value={form.published_year}
+                                onChange={handleChange}
+                            />
+                        </div>
+
                         <Select
                             label="Kategori"
-                            className="max-w-full"
                             selectedKeys={[form.category_id]}
                             onSelectionChange={(selected) => {
                                 const value = Array.from(selected)[0];
-                                setForm((prev) => ({
-                                    ...prev,
-                                    category_id: value,
-                                }));
+                                setForm((prev) => ({ ...prev, category_id: value }));
                             }}
-                            isRequired
                         >
                             {categories.map((cat) => (
                                 <SelectItem key={cat.id} value={cat.id}>
@@ -199,87 +222,137 @@ export default function AddJournal({ show, onClose, onSuccess }) {
                                 </SelectItem>
                             ))}
                         </Select>
-                    </div>
 
-                    <div className="flex items-center mt-1">
-                        <input
-                            type="checkbox"
-                            name="is_active"
-                            checked={form.is_active}
-                            onChange={handleChange}
-                            className="mr-2"
-                        />
-                        <span className="text-sm text-gray-700 dark:text-gray-200">
-                            Aktif
-                        </span>
-                    </div>
-
-                    <div className="flex items-center mt-1">
-                        <input
-                            type="checkbox"
-                            name="is_featured"
-                            checked={form.is_featured}
-                            onChange={handleChange}
-                            className="mr-2"
-                        />
-                        <span className="text-sm text-gray-700 dark:text-gray-200">
-                            Tandai sebagai jurnal unggulan
-                        </span>
-                    </div>
-                </div>
-
-                <div>
-                    <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-200">
-                        Deskripsi
-                    </label>
-                    <Textarea
-                        name="description"
-                        value={form.description}
-                        onChange={(e) =>
-                            setForm((prev) => ({
-                                ...prev,
-                                description: e.target.value,
-                            }))
-                        }
-                        rows={3}
-                        isRequired
-                    />
-                </div>
-
-                <div className="col-span-full">
-                    <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-200">
-                        Sampul (Cover)
-                    </label>
-                    {preview ? (
-                        <div className="relative w-[100px] h-[100px] max-w-xs">
-                            <img
-                                src={preview}
-                                alt="Preview"
-                                className="rounded shadow"
-                            />
-                            <button
-                                type="button"
-                                onClick={handleRemoveImage}
-                                className="absolute top-1 right-1 px-2 py-1 bg-red-500 text-white text-xs rounded-full"
-                            >
-                                ×
-                            </button>
+                        <div className="flex items-center gap-6 mt-2">
+                            <label className="flex gap-2 items-center text-sm">
+                                <input
+                                    type="checkbox"
+                                    name="is_active"
+                                    checked={form.is_active}
+                                    onChange={handleChange}
+                                />
+                                Aktif
+                            </label>
+                            <label className="flex gap-2 items-center text-sm">
+                                <input
+                                    type="checkbox"
+                                    name="is_featured"
+                                    checked={form.is_featured}
+                                    onChange={handleChange}
+                                />
+                                Tampilkan sebagai unggulan
+                            </label>
                         </div>
-                    ) : (
-                        <input
-                            type="file"
-                            name="cover"
-                            accept="image/*"
-                            onChange={handleChange}
-                            className="block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
-                        />
-                    )}
-                </div>
+                    </>
+                )}
 
-                <div className="flex justify-end gap-2 pt-4">
-                    <SecondaryButton type="button" onClick={onClose}>
-                        Batal
-                    </SecondaryButton>
+                {/* --- Tab: Konten & Media --- */}
+                {activeTab === "konten" && (
+                    <>
+                        <div className="flex gap-4 border-b pb-2">
+                            {["id", "en"].map((lang) => (
+                                <button
+                                    type="button"
+                                    key={lang}
+                                    className={`text-sm font-semibold ${
+                                        activeLangTab === lang
+                                            ? "text-blue-600 border-b-2 border-blue-600"
+                                            : "text-gray-500"
+                                    }`}
+                                    onClick={() => setActiveLangTab(lang)}
+                                >
+                                    {lang === "id" ? "Bahasa Indonesia" : "English"}
+                                </button>
+                            ))}
+                        </div>
+
+                        {activeLangTab === "id" && (
+                            <div>
+                                <label className="block text-sm font-medium mb-2">
+                                    Deskripsi (ID)
+                                </label>
+                                <Editor
+                                    apiKey="wh2upbh3nrh0erdyag8dxm7iktpct0smfh1oj0vxdfydpohv"
+                                    value={form.description_id}
+                                    init={{
+                                        height: 250,
+                                        menubar: false,
+                                        plugins: "link lists image preview",
+                                        toolbar:
+                                            "undo redo | bold italic underline | bullist numlist | link | preview",
+                                    }}
+                                    onEditorChange={(content) =>
+                                        setForm((prev) => ({
+                                            ...prev,
+                                            description_id: content,
+                                        }))
+                                    }
+                                />
+                            </div>
+                        )}
+                        {activeLangTab === "en" && (
+                            <div>
+                                <label className="block text-sm font-medium mb-2">
+                                    Description (EN)
+                                </label>
+                                <Editor
+                                    apiKey="no-api-key"
+                                    value={form.description_en}
+                                    init={{
+                                        height: 250,
+                                        menubar: false,
+                                        plugins: "link lists image preview",
+                                        toolbar:
+                                            "undo redo | bold italic underline | bullist numlist | link | preview",
+                                    }}
+                                    onEditorChange={(content) =>
+                                        setForm((prev) => ({
+                                            ...prev,
+                                            description_en: content,
+                                        }))
+                                    }
+                                />
+                            </div>
+                        )}
+
+                        <div>
+                            <label className="block text-sm font-medium mb-1">
+                                Sampul (Cover)
+                            </label>
+                            <div className="mt-2 flex gap-4 items-center">
+                                {preview && (
+                                    <div className="relative">
+                                        <img
+                                            src={preview}
+                                            alt="Preview"
+                                            className="h-24 rounded border"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={handleRemoveImage}
+                                            className="absolute top-0 right-0 bg-red-500 text-white px-1 text-xs rounded-bl"
+                                        >
+                                            x
+                                        </button>
+                                    </div>
+                                )}
+                                <label className="cursor-pointer flex items-center gap-2 text-sm px-3 py-2 border border-gray-300 rounded-md bg-gray-50 hover:bg-gray-100">
+                                    <PhotoIcon className="w-5 h-5" />
+                                    <span>Pilih Gambar</span>
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        className="hidden"
+                                        onChange={handleImageChange}
+                                    />
+                                </label>
+                            </div>
+                        </div>
+                    </>
+                )}
+
+                <div className="flex justify-end gap-3 border-t pt-4 mt-6">
+                    <SecondaryButton onClick={onClose}>Batal</SecondaryButton>
                     <PrimaryButton type="submit" disabled={loading}>
                         {loading ? "Menyimpan..." : "Simpan"}
                     </PrimaryButton>

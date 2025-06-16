@@ -52,7 +52,7 @@ export default function JournalList() {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 5;
 
-    const handleAddSuccess = (newJournal) => {
+    const handleAddSuccess = () => {
         fetchJournals();
     };
 
@@ -62,12 +62,10 @@ export default function JournalList() {
             .then((res) => res.json())
             .then((resData) => {
                 const rawData = resData.data || [];
-
                 const withNo = rawData.map((item, idx) => ({
                     ...item,
                     no: idx + 1,
                 }));
-
                 setJournals(withNo);
             })
             .catch((err) => {
@@ -84,7 +82,7 @@ export default function JournalList() {
     }, []);
 
     const filteredJournals = journals.filter((journal) => {
-        const matchesSearch = (journal.title || "")
+        const matchesSearch = (journal.title?.id || "")
             .toLowerCase()
             .includes(search.toLowerCase());
         const matchesStatus =
@@ -103,6 +101,7 @@ export default function JournalList() {
     useEffect(() => {
         setCurrentPage(1);
     }, [search, statusFilter]);
+
     const handleEdit = (id) => {
         setSelectedId(id);
         setEditModalOpen(true);
@@ -153,7 +152,9 @@ export default function JournalList() {
                 );
             case "title":
                 return (
-                    <div className="text-sm font-semibold">{journal.title}</div>
+                    <div className="text-sm font-semibold">
+                        {journal.title?.id || "-"}
+                    </div>
                 );
             case "acceptance_rate":
                 return journal.acceptance_rate
@@ -174,7 +175,6 @@ export default function JournalList() {
                         {journal.is_featured ? "Unggulan" : "Biasa"}
                     </Chip>
                 );
-
             case "is_active":
                 return (
                     <Chip
@@ -351,7 +351,7 @@ export default function JournalList() {
                 onClose={() => setShowConfirmDialog(false)}
                 onConfirm={handleDelete}
                 title="Hapus Jurnal"
-                message={`Apakah kamu yakin ingin menghapus jurnal "${selectedJournal?.title}"? Ini tidak bisa dikembalikan.`}
+                message={`Apakah kamu yakin ingin menghapus jurnal "${selectedJournal?.title?.id}"? Ini tidak bisa dikembalikan.`}
             />
         </div>
     );

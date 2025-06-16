@@ -26,6 +26,8 @@ class Journal extends Model
         'impact_factor' => 'float',
         'is_active' => 'boolean',
         'is_featured' => 'boolean',
+        'title' => 'array',
+        'description' => 'array',
     ];
 
     public function category()

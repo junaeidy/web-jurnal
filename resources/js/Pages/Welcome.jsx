@@ -6,6 +6,7 @@ import AboutSection from "@/Components/User/AboutSection";
 import FeaturedJournalsSection from "@/Components/User/FeaturedJournalsSection";
 import PartnerSection from "@/Components/User/PartnerSection";
 import Footer from "@/Components/User/Footer";
+import { usePage } from "@inertiajs/react";
 
 // AOS setup
 import AOS from "aos";
@@ -13,6 +14,8 @@ import "aos/dist/aos.css";
 
 export default function Home({ auth }) {
     const [loadingCount, setLoadingCount] = useState(3);
+    const { translations } = usePage().props;
+    const t = translations.navbar;
 
     const handleSectionLoaded = () => {
         setLoadingCount((prev) => prev - 1);
@@ -24,13 +27,13 @@ export default function Home({ auth }) {
         AOS.init({
             duration: 1000,
             once: true,
-            easing: 'ease-out-cubic',
+            easing: "ease-out-cubic",
         });
     }, []);
 
     return (
         <>
-            <Head title="Home" />
+            <Head title={t.home} />
 
             {isLoading && (
                 <div className="fixed inset-0 bg-white z-[999] flex flex-col items-center justify-center">
@@ -42,10 +45,22 @@ export default function Home({ auth }) {
             )}
 
             <Navbar user={auth.user} />
-            <HeroSection onLoadComplete={handleSectionLoaded} isLoading={isLoading} />
-            <AboutSection onLoadComplete={handleSectionLoaded} isLoading={isLoading} />
-            <FeaturedJournalsSection onLoadComplete={handleSectionLoaded} isLoading={isLoading} />
-            <PartnerSection onLoadComplete={handleSectionLoaded} isLoading={isLoading} />
+            <HeroSection
+                onLoadComplete={handleSectionLoaded}
+                isLoading={isLoading}
+            />
+            <AboutSection
+                onLoadComplete={handleSectionLoaded}
+                isLoading={isLoading}
+            />
+            <FeaturedJournalsSection
+                onLoadComplete={handleSectionLoaded}
+                isLoading={isLoading}
+            />
+            <PartnerSection
+                onLoadComplete={handleSectionLoaded}
+                isLoading={isLoading}
+            />
             <Footer />
         </>
     );

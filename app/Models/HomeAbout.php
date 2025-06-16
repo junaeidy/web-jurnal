@@ -13,4 +13,9 @@ class HomeAbout extends Model
         'google_form_link',
         'whatsapp_link',
     ];
+
+    protected $casts = [
+        'title' => 'array',
+        'content' => 'array',
+    ];
 }

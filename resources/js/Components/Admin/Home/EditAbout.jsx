@@ -9,29 +9,37 @@ import toast from "react-hot-toast";
 import axios from "axios";
 
 export default function EditAbout({ show, onClose, onSuccess, about }) {
+    const [activeTab, setActiveTab] = useState("informasi");
+    const [activeLangTab, setActiveLangTab] = useState("id");
     const [form, setForm] = useState({
-        title: "",
-        content: "",
-        image: null,
+        title_id: "",
+        title_en: "",
+        content_id: "",
+        content_en: "",
         google_form_link: "",
         whatsapp_link: "",
+        image: null,
     });
     const [preview, setPreview] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [activeTab, setActiveTab] = useState("info");
 
     useEffect(() => {
-        if (show && about) {
+        if (about && show) {
             setForm({
-                title: about.title || "",
-                content: about.content || "",
+                title_id: about.title?.id || "",
+                title_en: about.title?.en || "",
+                content_id: about.content?.id || "",
+                content_en: about.content?.en || "",
                 google_form_link: about.google_form_link || "",
                 whatsapp_link: about.whatsapp_link || "",
                 image: null,
             });
-            setPreview(about.image ? `/storage/${about.image}` : null);
+
+            if (about.image) {
+                setPreview(`/storage/${about.image}`);
+            }
         }
-    }, [show, about]);
+    }, [about, show]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -53,12 +61,10 @@ export default function EditAbout({ show, onClose, onSuccess, about }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!about?.id) return;
-
         setLoading(true);
         const formData = new FormData();
         Object.entries(form).forEach(([key, val]) => {
-            if (val) formData.append(key, val);
+            if (val !== null) formData.append(key, val);
         });
         formData.append("_method", "PUT");
 
@@ -76,54 +82,91 @@ export default function EditAbout({ show, onClose, onSuccess, about }) {
 
     return (
         <Modal show={show} onClose={onClose}>
-            <div className="px-4 pt-3">
+            <div className="border-b px-6 pt-4">
                 <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-5">
-                    Edit Kegiatan
+                    Edit About Section
                 </h2>
-                <div className="flex gap-4 mb-4 border-b">
+                <nav className="-mb-px flex space-x-6" aria-label="Tabs">
                     <button
                         type="button"
-                        onClick={() => setActiveTab("info")}
-                        className={`pb-2 px-1 border-b-2 text-sm ${
-                            activeTab === "info"
-                                ? "border-blue-600 font-semibold"
-                                : "border-transparent text-gray-500 hover:text-gray-700"
+                        className={`pb-2 text-sm font-medium ${
+                            activeTab === "informasi"
+                                ? "border-b-2 border-blue-600 text-blue-600"
+                                : "text-gray-500 hover:text-gray-700"
                         }`}
+                        onClick={() => setActiveTab("informasi")}
                     >
                         Informasi Umum
                     </button>
                     <button
                         type="button"
-                        onClick={() => setActiveTab("media")}
-                        className={`pb-2 px-1 border-b-2 text-sm ${
-                            activeTab === "media"
-                                ? "border-blue-600 font-semibold"
-                                : "border-transparent text-gray-500 hover:text-gray-700"
+                        className={`pb-2 text-sm font-medium ${
+                            activeTab === "konten"
+                                ? "border-b-2 border-blue-600 text-blue-600"
+                                : "text-gray-500 hover:text-gray-700"
                         }`}
+                        onClick={() => setActiveTab("konten")}
                     >
                         Konten & Media
                     </button>
-                </div>
+                </nav>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4 px-4 py-2">
-                {activeTab === "info" && (
+            <form onSubmit={handleSubmit} className="space-y-6 px-6 py-4">
+                {activeTab === "informasi" && (
                     <>
+                        <div className="flex gap-4 border-b pb-2">
+                            <button
+                                type="button"
+                                className={`text-sm font-semibold ${
+                                    activeLangTab === "id"
+                                        ? "text-blue-600 border-b-2 border-blue-600"
+                                        : "text-gray-500"
+                                }`}
+                                onClick={() => setActiveLangTab("id")}
+                            >
+                                Bahasa Indonesia
+                            </button>
+                            <button
+                                type="button"
+                                className={`text-sm font-semibold ${
+                                    activeLangTab === "en"
+                                        ? "text-blue-600 border-b-2 border-blue-600"
+                                        : "text-gray-500"
+                                }`}
+                                onClick={() => setActiveLangTab("en")}
+                            >
+                                English
+                            </button>
+                        </div>
+
+                        {activeLangTab === "id" && (
+                            <TextInput
+                                label="Judul (ID)"
+                                name="title_id"
+                                value={form.title_id}
+                                onChange={handleChange}
+                                isRequired
+                            />
+                        )}
+                        {activeLangTab === "en" && (
+                            <TextInput
+                                label="Title (EN)"
+                                name="title_en"
+                                value={form.title_en}
+                                onChange={handleChange}
+                                isRequired
+                            />
+                        )}
+
                         <TextInput
-                            label="Judul"
-                            name="title"
-                            value={form.title}
-                            onChange={handleChange}
-                            required
-                        />
-                        <TextInput
-                            label="Link Google Form"
+                            label="Link Google Form (opsional)"
                             name="google_form_link"
                             value={form.google_form_link}
                             onChange={handleChange}
                         />
                         <TextInput
-                            label="Link WhatsApp"
+                            label="Link WhatsApp (opsional)"
                             name="whatsapp_link"
                             value={form.whatsapp_link}
                             onChange={handleChange}
@@ -131,33 +174,92 @@ export default function EditAbout({ show, onClose, onSuccess, about }) {
                     </>
                 )}
 
-                {activeTab === "media" && (
+                {activeTab === "konten" && (
                     <>
-                        <div>
-                            <label className="block text-sm font-medium mb-1">
-                                Konten
-                            </label>
-                            <Editor
-                                apiKey="wh2upbh3nrh0erdyag8dxm7iktpct0smfh1oj0vxdfydpohv"
-                                value={form.content}
-                                init={{
-                                    height: 300,
-                                    menubar: false,
-                                    plugins: "link lists image preview",
-                                    toolbar:
-                                        "undo redo | bold italic underline | bullist numlist | link | preview",
-                                }}
-                                onEditorChange={(content) =>
-                                    setForm((prev) => ({ ...prev, content }))
-                                }
-                            />
+                        <div className="flex gap-4 border-b pb-2">
+                            <button
+                                type="button"
+                                className={`text-sm font-semibold ${
+                                    activeLangTab === "id"
+                                        ? "text-blue-600 border-b-2 border-blue-600"
+                                        : "text-gray-500"
+                                }`}
+                                onClick={() => setActiveLangTab("id")}
+                            >
+                                Bahasa Indonesia
+                            </button>
+                            <button
+                                type="button"
+                                className={`text-sm font-semibold ${
+                                    activeLangTab === "en"
+                                        ? "text-blue-600 border-b-2 border-blue-600"
+                                        : "text-gray-500"
+                                }`}
+                                onClick={() => setActiveLangTab("en")}
+                            >
+                                English
+                            </button>
                         </div>
 
+                        {activeLangTab === "id" && (
+                            <div>
+                                <label className="block text-sm font-medium mb-2">
+                                    Konten (ID)
+                                </label>
+                                <div className="border rounded-md shadow-sm overflow-hidden">
+                                    <Editor
+                                        apiKey="wh2upbh3nrh0erdyag8dxm7iktpct0smfh1oj0vxdfydpohv"
+                                        value={form.content_id}
+                                        init={{
+                                            height: 300,
+                                            menubar: false,
+                                            plugins: "link lists image preview",
+                                            toolbar:
+                                                "undo redo | bold italic underline | bullist numlist | link | preview",
+                                        }}
+                                        onEditorChange={(content) =>
+                                            setForm((prev) => ({
+                                                ...prev,
+                                                content_id: content,
+                                            }))
+                                        }
+                                    />
+                                </div>
+                            </div>
+                        )}
+
+                        {activeLangTab === "en" && (
+                            <div>
+                                <label className="block text-sm font-medium mb-2">
+                                    Content (EN)
+                                </label>
+                                <div className="border rounded-md shadow-sm overflow-hidden">
+                                    <Editor
+                                        apiKey="wh2upbh3nrh0erdyag8dxm7iktpct0smfh1oj0vxdfydpohv"
+                                        value={form.content_en}
+                                        init={{
+                                            height: 300,
+                                            menubar: false,
+                                            plugins: "link lists image preview",
+                                            toolbar:
+                                                "undo redo | bold italic underline | bullist numlist | link | preview",
+                                        }}
+                                        onEditorChange={(content) =>
+                                            setForm((prev) => ({
+                                                ...prev,
+                                                content_en: content,
+                                            }))
+                                        }
+                                    />
+                                </div>
+                            </div>
+                        )}
+
                         <div>
-                            <label className="block text-sm font-medium">
+                            <label className="block text-sm font-medium mb-1">
                                 Gambar
                             </label>
-                            <div className="mt-2 flex gap-4 items-start">
+                            <div className="mt-2 flex gap-4 items-center">
                                 {preview && (
                                     <div className="relative">
                                         <img
@@ -168,13 +270,13 @@ export default function EditAbout({ show, onClose, onSuccess, about }) {
                                         <button
                                             type="button"
                                             onClick={handleRemoveImage}
-                                            className="absolute top-0 right-0 bg-red-500 text-white px-1 text-xs rounded"
+                                            className="absolute top-0 right-0 bg-red-500 text-white px-1 text-xs rounded-bl"
                                         >
                                             x
                                         </button>
                                     </div>
                                 )}
-                                <label className="cursor-pointer flex items-center gap-2">
+                                <label className="cursor-pointer flex items-center gap-2 text-sm px-3 py-2 border border-gray-300 rounded-md bg-gray-50 hover:bg-gray-100">
                                     <PhotoIcon className="w-5 h-5" />
                                     <span>Pilih Gambar</span>
                                     <input
@@ -189,7 +291,7 @@ export default function EditAbout({ show, onClose, onSuccess, about }) {
                     </>
                 )}
 
-                <div className="flex justify-end gap-2 border-t pt-4 mt-4">
+                <div className="flex justify-end gap-3 border-t pt-4 mt-6">
                     <SecondaryButton onClick={onClose}>Batal</SecondaryButton>
                     <PrimaryButton type="submit" disabled={loading}>
                         {loading ? "Menyimpan..." : "Simpan Perubahan"}

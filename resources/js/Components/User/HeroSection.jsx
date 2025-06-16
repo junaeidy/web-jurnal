@@ -1,15 +1,24 @@
-import { Link } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 import React, { useEffect, useState } from "react";
 
 export default function HeroSection({ onLoadComplete, isLoading }) {
     const [heroData, setHeroData] = useState(null);
+    const { props } = usePage();
+    const currentLang = props.locale || "en";
 
     useEffect(() => {
         const fetchHeroData = async () => {
             try {
                 const response = await fetch("/api/home/hero");
                 const data = await response.json();
-                setHeroData(data);
+
+                setHeroData({
+                    title: JSON.parse(data.title || "{}"),
+                    subtitle: JSON.parse(data.subtitle || "{}"),
+                    cta_text: JSON.parse(data.cta_text || "{}"),
+                    cta_link: data.cta_link,
+                    image: data.image,
+                });
             } catch (error) {
                 console.error("Gagal mengambil data hero:", error);
             } finally {
@@ -37,21 +46,21 @@ export default function HeroSection({ onLoadComplete, isLoading }) {
                     data-aos="fade-up"
                     data-aos-delay="100"
                 >
-                    {heroData.title}
+                    {heroData.title[currentLang]}
                 </h1>
                 <p
                     className="text-base sm:text-lg md:text-xl mb-8"
                     data-aos="fade-up"
                     data-aos-delay="300"
                 >
-                    {heroData.subtitle}
+                    {heroData.subtitle[currentLang]}
                 </p>
                 <div data-aos="zoom-in" data-aos-delay="500">
                     <Link
                         href={heroData.cta_link}
                         className="inline-block bg-[#50c878] hover:bg-[#3fa767] text-white font-bold py-3 px-6 sm:px-8 rounded-full text-base sm:text-lg shadow-lg transform hover:scale-105 transition duration-300"
                     >
-                        {heroData.cta_text}
+                        {heroData.cta_text[currentLang]}
                     </Link>
                 </div>
             </div>

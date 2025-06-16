@@ -18,16 +18,24 @@ class HomeAboutController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
-            'content' => 'nullable|string',
+            'title_id' => 'required|string|max:255',
+            'title_en' => 'required|string|max:255',
+            'content_id' => 'nullable|string',
+            'content_en' => 'nullable|string',
             'google_form_link' => 'nullable|url',
             'whatsapp_link' => 'nullable|url',
             'image' => 'nullable|image|max:2048',
         ]);
 
         $about = new HomeAbout();
-        $about->title = $request->title;
-        $about->content = $request->content;
+        $about->title = [
+            'id' => $request->title_id,
+            'en' => $request->title_en,
+        ];
+        $about->content = [
+            'id' => $request->content_id,
+            'en' => $request->content_en,
+        ];
         $about->google_form_link = $request->google_form_link;
         $about->whatsapp_link = $request->whatsapp_link;
 
@@ -43,8 +51,10 @@ class HomeAboutController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'title' => 'nullable|string|max:255',
-            'content' => 'nullable|string',
+            'title_id' => 'nullable|string|max:255',
+            'title_en' => 'nullable|string|max:255',
+            'content_id' => 'nullable|string',
+            'content_en' => 'nullable|string',
             'google_form_link' => 'nullable|url',
             'whatsapp_link' => 'nullable|url',
             'image' => 'nullable|image|max:2048',
@@ -52,8 +62,19 @@ class HomeAboutController extends Controller
 
         $about = HomeAbout::findOrFail($id);
 
-        $about->title = $request->title ?? $about->title;
-        $about->content = $request->content ?? $about->content;
+        // Update multi-bahasa
+        $title = $about->title ?? [];
+        $about->title = [
+            'id' => $request->title_id ?? $title['id'] ?? '',
+            'en' => $request->title_en ?? $title['en'] ?? '',
+        ];
+
+        $content = $about->content ?? [];
+        $about->content = [
+            'id' => $request->content_id ?? $content['id'] ?? '',
+            'en' => $request->content_en ?? $content['en'] ?? '',
+        ];
+
         $about->google_form_link = $request->google_form_link ?? $about->google_form_link;
         $about->whatsapp_link = $request->whatsapp_link ?? $about->whatsapp_link;
 

@@ -2,11 +2,14 @@ import React, { useEffect, useState, useRef } from "react";
 import { Link } from "@inertiajs/react";
 import Modal from "@/Components/UI/Modal";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import { usePage } from "@inertiajs/react";
 
 export default function FeaturedJournalsSection({ onLoadComplete, isLoading }) {
     const [journals, setJournals] = useState([]);
     const [selectedJournal, setSelectedJournal] = useState(null);
     const sliderRef = useRef(null);
+    const { translations } = usePage().props;
+    const journalT = translations?.journal || {};
 
     useEffect(() => {
         const fetchJournals = async () => {
@@ -46,7 +49,7 @@ export default function FeaturedJournalsSection({ onLoadComplete, isLoading }) {
                     className="text-3xl md:text-4xl font-bold text-gray-800 mb-12"
                     data-aos="fade-up"
                 >
-                    Our Featured Journals
+                    {journalT.title}
                 </h2>
 
                 {/* Tombol Navigasi Slider */}
@@ -97,7 +100,7 @@ export default function FeaturedJournalsSection({ onLoadComplete, isLoading }) {
                                     onClick={() => setSelectedJournal(journal)}
                                     className="inline-block bg-[#50c878] hover:bg-[#3fa767] text-white font-bold py-1.5 px-4 rounded-lg text-xs transition duration-300"
                                 >
-                                    Read more
+                                    {journalT.read_more}
                                 </button>
                             </div>
                         </div>
@@ -110,7 +113,7 @@ export default function FeaturedJournalsSection({ onLoadComplete, isLoading }) {
                         href="/journal"
                         className="inline-block bg-[#50c878] hover:bg-[#3fa767] text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300 transform hover:scale-105"
                     >
-                        View All Journals
+                        {journalT.view_all}
                     </Link>
                 </div>
             </div>
@@ -151,7 +154,7 @@ export default function FeaturedJournalsSection({ onLoadComplete, isLoading }) {
                                                 rel="noopener noreferrer"
                                                 className="flex-1 text-center bg-[#50c878] hover:bg-[#3fa767] text-white font-semibold py-2.5 px-4 rounded-lg transition duration-300"
                                             >
-                                                Visit Journal
+                                                {journalT.visit}
                                             </a>
                                         )}
 
@@ -161,7 +164,7 @@ export default function FeaturedJournalsSection({ onLoadComplete, isLoading }) {
                                             rel="noopener noreferrer"
                                             className="flex-1 text-center flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2.5 px-4 rounded-lg transition duration-300"
                                         >
-                                            Contact
+                                            {journalT.contact}
                                         </a>
                                     </div>
                                 </div>
@@ -170,25 +173,25 @@ export default function FeaturedJournalsSection({ onLoadComplete, isLoading }) {
                                 <div className="md:border-l md:pl-6 space-y-2 text-sm">
                                     <p className="text-gray-600">
                                         <span className="font-semibold">
-                                            First Published:
+                                            {journalT.published_year}:
                                         </span>{" "}
                                         {selectedJournal.published_year}
                                     </p>
                                     <p className="text-gray-600">
                                         <span className="font-semibold">
-                                            Acceptance Rate:
+                                            {journalT.acceptance_rate}:
                                         </span>{" "}
                                         {selectedJournal.acceptance_rate}%
                                     </p>
                                     <p className="text-gray-600">
                                         <span className="font-semibold">
-                                            Decision Days:
+                                            {journalT.decision_days}:
                                         </span>{" "}
                                         {selectedJournal.decision_days} days
                                     </p>
                                     <p className="text-gray-600">
                                         <span className="font-semibold">
-                                            Impact Factor:
+                                            {journalT.impact_factor}:
                                         </span>{" "}
                                         {selectedJournal.impact_factor}
                                     </p>

@@ -7,23 +7,35 @@ import { Textarea } from "@heroui/react";
 
 const HeroSection = () => {
     const [form, setForm] = useState({
-        title: "",
-        subtitle: "",
-        cta_text: "",
+        title_id: "",
+        title_en: "",
+        subtitle_id: "",
+        subtitle_en: "",
+        cta_text_id: "",
+        cta_text_en: "",
         cta_link: "",
         image: null,
     });
+
     const [preview, setPreview] = useState(null);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         axios.get("/api/home/hero").then((res) => {
             const data = res.data;
+
             setForm((prev) => ({
                 ...prev,
-                ...data,
+                title_id: data.title ? JSON.parse(data.title).id : "",
+                title_en: data.title ? JSON.parse(data.title).en : "",
+                subtitle_id: data.subtitle ? JSON.parse(data.subtitle).id : "",
+                subtitle_en: data.subtitle ? JSON.parse(data.subtitle).en : "",
+                cta_text_id: data.cta_text ? JSON.parse(data.cta_text).id : "",
+                cta_text_en: data.cta_text ? JSON.parse(data.cta_text).en : "",
+                cta_link: data.cta_link || "",
                 image: null,
             }));
+
             if (data.image) {
                 setPreview(`/storage/${data.image}`);
             }
@@ -38,14 +50,11 @@ const HeroSection = () => {
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         setForm({ ...form, image: file });
-
-        if (file) {
-            setPreview(URL.createObjectURL(file));
-        }
+        if (file) setPreview(URL.createObjectURL(file));
     };
 
     const handleRemoveImage = () => {
-        setForm((prev) => ({ ...prev, image: null }));
+        setForm({ ...form, image: null });
         setPreview(null);
     };
 
@@ -54,18 +63,15 @@ const HeroSection = () => {
         setLoading(true);
 
         const formData = new FormData();
-        formData.append("title", form.title ?? "");
-        formData.append("subtitle", form.subtitle ?? "");
-        formData.append("cta_text", form.cta_text ?? "");
-        formData.append("cta_link", form.cta_link ?? "");
-        if (form.image) {
-            formData.append("image", form.image);
-        }
+        formData.append("title_id", form.title_id);
+        formData.append("title_en", form.title_en);
+        formData.append("subtitle_id", form.subtitle_id);
+        formData.append("subtitle_en", form.subtitle_en);
+        formData.append("cta_text_id", form.cta_text_id);
+        formData.append("cta_text_en", form.cta_text_en);
+        formData.append("cta_link", form.cta_link);
+        if (form.image) formData.append("image", form.image);
         formData.append("_method", "PUT");
-
-        for (const [key, value] of formData.entries()) {
-            console.log("FormData:", key, value);
-        }
 
         try {
             await axios.post("/api/home/hero", formData, {
@@ -73,10 +79,7 @@ const HeroSection = () => {
             });
             toast.success("Hero Section berhasil diperbarui");
         } catch (err) {
-            console.error("Gagal menyimpan Hero Section", err);
-            if (err.response) {
-                console.error("Response error data:", err.response.data);
-            }
+            console.error("Gagal menyimpan:", err);
             toast.error("Gagal menyimpan Hero Section");
         } finally {
             setLoading(false);
@@ -86,38 +89,58 @@ const HeroSection = () => {
     return (
         <form
             onSubmit={handleSubmit}
-            className="max-w-4xl bg-white shadow p-6 rounded-xl space-y-6"
+            className="max-w-5xl bg-white shadow p-6 rounded-xl space-y-6"
         >
             <h2 className="text-2xl font-bold mb-4">Hero Section</h2>
 
-            <div>
-                <label className="block text-sm font-medium">Judul Utama</label>
-                <TextInput
-                    type="text"
-                    name="title"
-                    value={form.title}
-                    onChange={handleChange}
-                    className="mt-1 w-full rounded-md border-gray-300 shadow-sm"
-                    required
-                />
+            <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                    <label className="block text-sm font-medium">
+                        Judul (Indonesia)
+                    </label>
+                    <TextInput
+                        name="title_id"
+                        value={form.title_id}
+                        onChange={handleChange}
+                    />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium">
+                        Title (English)
+                    </label>
+                    <TextInput
+                        name="title_en"
+                        value={form.title_en}
+                        onChange={handleChange}
+                    />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium">
+                        Subjudul (Indonesia)
+                    </label>
+                    <Textarea
+                        name="subtitle_id"
+                        value={form.subtitle_id}
+                        onChange={handleChange}
+                        rows={3}
+                    />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium">
+                        Subtitle (English)
+                    </label>
+                    <Textarea
+                        name="subtitle_en"
+                        value={form.subtitle_en}
+                        onChange={handleChange}
+                        rows={3}
+                    />
+                </div>
             </div>
 
             <div>
                 <label className="block text-sm font-medium">
-                    Subjudul / Deskripsi
-                </label>
-                <Textarea
-                    name="subtitle"
-                    value={form.subtitle}
-                    onChange={handleChange}
-                    rows={3}
-                    className="mt-1 w-full rounded-md border-gray-300 shadow-sm"
-                />
-            </div>
-
-            <div>
-                <label className="block text-sm font-medium">
-                    Gambar Background / Ilustrasi
+                    Gambar Background
                 </label>
                 <div className="mt-2 flex flex-col sm:flex-row sm:items-center gap-4">
                     {preview && (
@@ -136,7 +159,6 @@ const HeroSection = () => {
                             </button>
                         </div>
                     )}
-
                     <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-md border border-gray-300">
                         <PhotoIcon className="w-5 h-5" />
                         <span>Pilih Gambar</span>
@@ -150,30 +172,35 @@ const HeroSection = () => {
                 </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-3 gap-4">
                 <div>
                     <label className="block text-sm font-medium">
-                        Teks Tombol CTA
+                        Teks Tombol (ID)
                     </label>
                     <TextInput
-                        type="text"
-                        name="cta_text"
-                        value={form.cta_text}
+                        name="cta_text_id"
+                        value={form.cta_text_id}
                         onChange={handleChange}
-                        className="mt-1 w-full rounded-md border-gray-300 shadow-sm"
                     />
                 </div>
                 <div>
                     <label className="block text-sm font-medium">
-                        Link Tombol CTA
+                        CTA Text (EN)
                     </label>
                     <TextInput
-                        type="url"
+                        name="cta_text_en"
+                        value={form.cta_text_en}
+                        onChange={handleChange}
+                    />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium">
+                        Link CTA
+                    </label>
+                    <TextInput
                         name="cta_link"
                         value={form.cta_link}
                         onChange={handleChange}
-                        placeholder="https://..."
-                        className="mt-1 w-full rounded-md border-gray-300 shadow-sm"
                     />
                 </div>
             </div>

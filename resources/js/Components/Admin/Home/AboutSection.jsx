@@ -53,15 +53,18 @@ const AboutSection = () => {
             <div className="grid gap-4">
                 {data.map((item) => (
                     <div key={item.id} className="bg-white p-4 rounded shadow">
-                        <h3 className="text-lg font-semibold">{item.title}</h3>
+                        <h3 className="text-lg font-semibold">{item.title?.id}</h3>
                         <p
-                            dangerouslySetInnerHTML={{ __html: item.content }}
+                            dangerouslySetInnerHTML={{
+                                __html: item.content?.id || "",
+                            }}
                             className="text-sm mt-2"
                         />
                         {item.image && (
                             <img
                                 src={`/storage/${item.image}`}
                                 className="h-32 mt-2 rounded"
+                                alt="Gambar About"
                             />
                         )}
                         <div className="mt-4 flex gap-2">
@@ -105,7 +108,7 @@ const AboutSection = () => {
                 onClose={() => setShowConfirm(false)}
                 onConfirm={handleDelete}
                 title="Konfirmasi Hapus"
-                message={`Yakin ingin menghapus about "${selected?.title}"?`}
+                message={`Yakin ingin menghapus about "${selected?.title?.id}"?`}
             />
         </div>
     );

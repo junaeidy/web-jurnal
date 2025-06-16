@@ -14,26 +14,23 @@ class JournalController extends Controller
     {
         $query = Journal::query();
 
-        // Filter by search
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', "%{$search}%");
+                $q->where('title->id', 'like', "%{$search}%")
+                    ->orWhere('title->en', 'like', "%{$search}%");
             });
         }
 
-        // Filter by category
         if ($request->filled('category')) {
             $query->where('category_id', $request->category);
         }
 
-        // Sorting
-        $sortField = 'title';
+        $sortField = 'title->id';
         $sortDirection = 'asc';
 
         if ($request->filled('sort')) {
             $sort = $request->sort;
-
             if (str_starts_with($sort, '-')) {
                 $sortField = ltrim($sort, '-');
                 $sortDirection = 'desc';
@@ -41,9 +38,9 @@ class JournalController extends Controller
                 $sortField = $sort;
             }
 
-            $allowedSorts = ['title', 'impact_factor', 'acceptance_rate'];
+            $allowedSorts = ['title->id', 'impact_factor', 'acceptance_rate'];
             if (in_array($sortField, $allowedSorts)) {
-                $query->orderBy($sortField, $sortDirection);
+                $query->orderByRaw("$sortField $sortDirection");
             }
         } else {
             $query->orderBy('created_at', 'desc');
@@ -55,13 +52,14 @@ class JournalController extends Controller
         return response()->json($journals);
     }
 
-
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
+            'title_id' => 'required|string|max:255',
+            'title_en' => 'required|string|max:255',
+            'description_id' => 'required|string',
+            'description_en' => 'required|string',
             'cover' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'description' => 'required|string',
             'link' => 'required|url',
             'acceptance_rate' => 'nullable|numeric|between:0,100',
             'decision_days' => 'nullable|integer',
@@ -78,6 +76,18 @@ class JournalController extends Controller
             $validated['cover'] = 'storage/covers/' . $filename;
         }
 
+        $validated['title'] = [
+            'id' => $validated['title_id'],
+            'en' => $validated['title_en'],
+        ];
+
+        $validated['description'] = [
+            'id' => $validated['description_id'],
+            'en' => $validated['description_en'],
+        ];
+
+        unset($validated['title_id'], $validated['title_en'], $validated['description_id'], $validated['description_en']);
+
         $validated['is_featured'] = $request->boolean('is_featured', false);
 
         $journal = Journal::create($validated);
@@ -89,17 +99,14 @@ class JournalController extends Controller
         ], 201);
     }
 
-    public function show(Journal $journal)
-    {
-        return $journal;
-    }
-
     public function update(Request $request, Journal $journal)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
+            'title_id' => 'required|string|max:255',
+            'title_en' => 'required|string|max:255',
+            'description_id' => 'required|string',
+            'description_en' => 'required|string',
             'cover' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'description' => 'required|string',
             'link' => 'required|url',
             'acceptance_rate' => 'nullable|numeric|between:0,100',
             'decision_days' => 'nullable|integer',
@@ -119,6 +126,18 @@ class JournalController extends Controller
             $request->file('cover')->storeAs('covers', $filename, 'public');
             $validated['cover'] = 'storage/covers/' . $filename;
         }
+
+        $validated['title'] = [
+            'id' => $validated['title_id'],
+            'en' => $validated['title_en'],
+        ];
+
+        $validated['description'] = [
+            'id' => $validated['description_id'],
+            'en' => $validated['description_en'],
+        ];
+
+        unset($validated['title_id'], $validated['title_en'], $validated['description_id'], $validated['description_en']);
 
         $validated['is_featured'] = $request->boolean('is_featured', false);
 
@@ -143,36 +162,5 @@ class JournalController extends Controller
         return Journal::where('is_featured', true)
             ->select('id', 'title', 'description', 'link', 'cover', 'acceptance_rate', 'decision_days', 'impact_factor', 'published_year')
             ->get();
-    }
-
-    public function updateFeaturedJournals(Request $request)
-    {
-        $ids = $request->journal_ids ?? [];
-
-        Journal::query()->update(['is_featured' => false]);
-
-        Journal::whereIn('id', $ids)->update(['is_featured' => true]);
-
-        return response()->json(['message' => 'Jurnal unggulan berhasil diperbarui.']);
-    }
-
-    public function destroy(Journal $journal)
-    {
-        if ($journal->cover) {
-            $path = str_replace('storage/', '', $journal->cover);
-            Storage::disk('public')->delete($path);
-        }
-
-        $journal->delete();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Jurnal berhasil dihapus.'
-        ], 204);
-    }
-
-    public function active()
-    {
-        return Journal::where('is_active', true)->get();
     }
 }

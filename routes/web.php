@@ -10,6 +10,9 @@ use App\Http\Controllers\HomeHeroController;
 use App\Http\Controllers\JournalController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Session;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -70,9 +73,22 @@ Route::fallback(function () {
     return Inertia::render('Errors/404');
 });
 
-Route::get('/storage-link', function(){
+Route::get('/storage-link', function () {
     Artisan::call('storage:link');
     return "Storage link created";
 });
 
-require __DIR__.'/auth.php';
+Route::get('/lang/{locale}', function ($locale, Request $request) {
+    if (!in_array($locale, ['en', 'id'])) {
+        abort(400);
+    }
+
+    Session::put('locale', $locale);
+    App::setLocale($locale);
+
+    return redirect($request->query('redirect', '/'));
+});
+
+
+
+require __DIR__ . '/auth.php';

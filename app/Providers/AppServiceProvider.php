@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
+use Inertia\Inertia;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -12,7 +13,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        Inertia::share([
+            'translations' => fn() => \App\Helpers\TranslationHelpers::allTranslations(),
+            'locale' => fn() => app()->getLocale(),
+        ]);
     }
 
     /**
