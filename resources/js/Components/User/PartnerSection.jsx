@@ -44,7 +44,7 @@ export default function PartnerSection({ onLoadComplete, isLoading }) {
                                 className="flex-shrink-0"
                             >
                                 <img
-                                    src={`/storage/${partner.logo}`}
+                                    src={partner.logo_url}
                                     alt={partner.name}
                                     className="h-20 w-auto object-contain"
                                 />

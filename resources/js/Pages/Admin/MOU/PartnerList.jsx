@@ -113,28 +113,28 @@ export default function PartnerList() {
             case "name":
                 return <div className="font-medium">{partner.name}</div>;
             case "logo":
-                return partner.logo ? (
+                return partner.logo_url ? (
                     <img
-                        src={`/storage/${partner.logo}`}
+                        src={partner.logo_url}
                         alt="logo"
                         className="h-10 object-contain rounded"
                     />
                 ) : (
                     "-"
                 );
-                case "link":
-            return partner.link ? (
-                <a
-                    href={partner.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 hover:underline"
-                >
-                    {partner.link}
-                </a>
-            ) : (
-                <span className="text-gray-400 italic">Tidak ada</span>
-            );
+            case "link":
+                return partner.link ? (
+                    <a
+                        href={partner.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-500 hover:underline"
+                    >
+                        {partner.link}
+                    </a>
+                ) : (
+                    <span className="text-gray-400 italic">Tidak ada</span>
+                );
             case "created_at":
             case "updated_at":
                 return <span>{formatDateTime(partner[columnKey])}</span>;
@@ -194,7 +194,9 @@ export default function PartnerList() {
                     {(column) => (
                         <TableColumn
                             key={column.key}
-                            align={column.key === "actions" ? "center" : "start"}
+                            align={
+                                column.key === "actions" ? "center" : "start"
+                            }
                         >
                             {column.name}
                         </TableColumn>

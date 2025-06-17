@@ -15,7 +15,7 @@ export default function ListTeam({ onLoaded }) {
             .get("/api/teams")
             .then((res) => {
                 const activeTeams = res.data.filter(
-                    (member) => member.is_active === 1
+                    (member) => member.is_active == 1
                 );
                 setTeams(activeTeams);
             })

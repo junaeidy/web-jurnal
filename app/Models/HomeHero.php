@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class HomeHero extends Model
 {
-    protected $table = 'home_heroes';
 
     protected $fillable = [
         'title',
@@ -14,5 +13,11 @@ class HomeHero extends Model
         'image',
         'cta_text',
         'cta_link'
+    ];
+
+    protected $casts = [
+        'title' => 'array',
+        'subtitle' => 'array',
+        'cta_text' => 'array',
     ];
 }

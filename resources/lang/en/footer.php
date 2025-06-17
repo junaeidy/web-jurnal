@@ -15,4 +15,5 @@ return [
     'email' => 'Email: journal@adra.ac.id',
     'phone' => 'Telephone: +6285156342096',
     'address' => 'Address: Jorong Kubang Kaciak Dusun Kubang Kaciak, Kelurahan Balai Tangah, Kecamatan Lintau Buo Utara, Kabupaten Tanah Datar, Provinsi Sumatera Barat, Kodepos 27293.',
+    'copyright' => 'All rights reserved.',
 ];

@@ -245,16 +245,26 @@ export default function ListJournal({ onLoaded }) {
                                             __html: getText(selectedJournal.description),
                                         }}
                                     />
+                                    <div className="mt-6 flex flex-col sm:flex-row sm:items-center gap-4">
                                     {selectedJournal.link && (
                                         <a
                                             href={selectedJournal.link}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="inline-block mt-4 bg-[#50c878] hover:bg-[#3fa767] text-white font-bold py-2 px-4 rounded-lg transition"
+                                            className="flex-1 text-center bg-[#50c878] hover:bg-[#3fa767] text-white font-semibold py-2.5 px-4 rounded-lg transition duration-300"
                                         >
                                             {journalT.visit}
                                         </a>
                                     )}
+                                    <a
+                                            href="https://wa.me/6285379388533"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex-1 text-center flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2.5 px-4 rounded-lg transition duration-300"
+                                        >
+                                            WhatsApp
+                                        </a>
+                                        </div>
                                 </div>
                                 <div className="md:border-l md:pl-6 space-y-2 text-sm">
                                     <p className="text-gray-600">
