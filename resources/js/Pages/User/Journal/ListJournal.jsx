@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { usePage, Head } from "@inertiajs/react";
 import Modal from "@/Components/UI/Modal";
 
 export default function ListJournal({ onLoaded }) {
+    const { translations, locale } = usePage().props;
+    const journalT = translations.journal || {};
+    const currentLang = locale || "en";
+
     const [journals, setJournals] = useState([]);
     const [selectedJournal, setSelectedJournal] = useState(null);
     const [search, setSearch] = useState("");
@@ -53,58 +58,56 @@ export default function ListJournal({ onLoaded }) {
 
     const handleCloseModal = () => setSelectedJournal(null);
 
+    const getText = (field) => {
+        if (!field) return "";
+        return typeof field === "object" ? field[locale] || field["id"] || "" : field;
+    };
+
     return (
         <section className="py-16 bg-white">
+            <Head title={journalT.find_title?. [currentLang] ?? "Find Journal"} />
             <div className="container mx-auto px-4">
                 {/* FILTERS */}
                 <div className="mb-10 grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
+                    {/* Search */}
                     <div className="flex flex-col">
-                        <label
-                            htmlFor="search"
-                            className="text-sm font-medium text-gray-700 mb-1"
-                        >
-                            Search Journal
+                        <label htmlFor="search" className="text-sm font-medium text-gray-700 mb-1">
+                            {journalT.search_label?.[currentLang] ?? "Search Journal"}
                         </label>
                         <input
                             id="search"
                             type="text"
-                            placeholder="Search by title"
+                            placeholder={journalT.search_placeholder?. [currentLang] ?? "Enter journal name..."}
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                             className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                     </div>
 
+                    {/* Category */}
                     <div className="flex flex-col">
-                        <label
-                            htmlFor="category"
-                            className="text-sm font-medium text-gray-700 mb-1"
-                        >
-                            Category Filters
+                        <label htmlFor="category" className="text-sm font-medium text-gray-700 mb-1">
+                            {journalT.category_filter?. [currentLang] ?? "Category"}
                         </label>
                         <select
                             id="category"
                             value={selectedCategory}
-                            onChange={(e) =>
-                                setSelectedCategory(e.target.value)
-                            }
+                            onChange={(e) => setSelectedCategory(e.target.value)}
                             className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
-                            <option value="">All Categories</option>
+                            <option value="">{journalT.all_categories?. [currentLang] ?? "All Categories"}</option>
                             {categories.map((cat) => (
                                 <option key={cat.id} value={cat.id}>
-                                    {cat.name}
+                                    {getText(cat.name)}
                                 </option>
                             ))}
                         </select>
                     </div>
 
+                    {/* Sort */}
                     <div className="flex flex-col">
-                        <label
-                            htmlFor="sort"
-                            className="text-sm font-medium text-gray-700 mb-1"
-                        >
-                            Sort By
+                        <label htmlFor="sort" className="text-sm font-medium text-gray-700 mb-1">
+                            {journalT.sort_by?. [currentLang] ?? "Sort By"}
                         </label>
                         <select
                             id="sort"
@@ -112,25 +115,19 @@ export default function ListJournal({ onLoaded }) {
                             onChange={(e) => setSortBy(e.target.value)}
                             className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
-                            <option value="title">Title (A-Z)</option>
-                            <option value="-title">Title (Z-A)</option>
-                            <option value="-impact_factor">
-                                Impact Factor (High to Low)
-                            </option>
-                            <option value="-acceptance_rate">
-                                Acceptance Rate (High to Low)
-                            </option>
+                            <option value="title">{journalT.sort_title_asc?. [currentLang] ?? "Title (A-Z)"}</option>
+                            <option value="-title">{journalT.sort_title_desc?. [currentLang] ?? "Title (Z-A)"}</option>
+                            <option value="-impact_factor">{journalT.sort_impact_desc?. [currentLang] ?? "Highest Impact Factor"}</option>
+                            <option value="-acceptance_rate">{journalT.sort_acceptance_desc?. [currentLang] ?? "Highest Acceptance Rate"}</option>
                         </select>
                     </div>
                 </div>
 
-                {/* SPINNER */}
+                {/* LOADING */}
                 {loading ? (
                     <div className="text-center py-10">
                         <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mx-auto"></div>
-                        <p className="mt-2 text-gray-500">
-                            Loading journal ...
-                        </p>
+                        <p className="mt-2 text-gray-500">{journalT.loading?. [currentLang] ?? "Loading journals..."}</p>
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
@@ -138,12 +135,10 @@ export default function ListJournal({ onLoaded }) {
                             <div className="col-span-full flex flex-col items-center justify-center py-12 text-gray-500">
                                 <img
                                     src="/images/not-found.svg"
-                                    alt="Tidak ditemukan"
+                                    alt="Not found"
                                     className="w-40 h-40 object-contain mb-4"
                                 />
-                                <p className="text-lg font-medium">
-                                    No journal found.
-                                </p>
+                                <p className="text-lg font-medium">{journalT.no_journal?. [currentLang] ?? "No journals found."}</p>
                             </div>
                         ) : (
                             journals.map((journal) => (
@@ -157,23 +152,24 @@ export default function ListJournal({ onLoaded }) {
                                                 ? `/${journal.cover}`
                                                 : "https://placehold.co/250x400?text=No+Image"
                                         }
-                                        alt={journal.title}
+                                        alt={getText(journal.title?. [currentLang] ?? "Title")}
                                         className="w-full h-48 object-cover"
                                     />
                                     <div className="p-4 text-left">
                                         <h3 className="text-lg font-semibold text-gray-800 mb-2 leading-snug">
-                                            {journal.title}
+                                            {getText(journal.title)}
                                         </h3>
-                                        <p className="text-gray-700 text-sm mb-4 line-clamp-3">
-                                            {journal.description}
-                                        </p>
+                                        <p
+                                            className="text-gray-700 text-sm mb-4 line-clamp-3"
+                                            dangerouslySetInnerHTML={{
+                                                __html: getText(journal.description?. [currentLang] ?? journal.description),
+                                            }}
+                                        />
                                         <button
-                                            onClick={() =>
-                                                setSelectedJournal(journal)
-                                            }
-                                            className="inline-block bg-[#50c878] hover:bg-[#3fa767]0 text-white font-bold py-1.5 px-4 rounded-lg text-xs transition duration-300"
+                                            onClick={() => setSelectedJournal(journal)}
+                                            className="inline-block bg-[#50c878] hover:bg-[#3fa767] text-white font-bold py-1.5 px-4 rounded-lg text-xs transition duration-300"
                                         >
-                                            Read more
+                                            {journalT.read_more?. [currentLang] ?? "Read more"}
                                         </button>
                                     </div>
                                 </div>
@@ -234,18 +230,21 @@ export default function ListJournal({ onLoaded }) {
                                     ? `/${selectedJournal.cover}`
                                     : "https://placehold.co/250x400?text=No+Image"
                             }
-                            alt={selectedJournal.title}
+                            alt={getText(selectedJournal.title)}
                             className="w-full h-64 object-cover rounded-t-lg"
                         />
                         <div className="p-6 space-y-4">
                             <h3 className="text-2xl font-bold text-gray-800 mb-4">
-                                {selectedJournal.title}
+                                {getText(selectedJournal.title)}
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <p className="text-gray-700 leading-relaxed">
-                                        {selectedJournal.description}
-                                    </p>
+                                    <div
+                                        className="text-gray-700 leading-relaxed"
+                                        dangerouslySetInnerHTML={{
+                                            __html: getText(selectedJournal.description),
+                                        }}
+                                    />
                                     {selectedJournal.link && (
                                         <a
                                             href={selectedJournal.link}
@@ -253,33 +252,25 @@ export default function ListJournal({ onLoaded }) {
                                             rel="noopener noreferrer"
                                             className="inline-block mt-4 bg-[#50c878] hover:bg-[#3fa767] text-white font-bold py-2 px-4 rounded-lg transition"
                                         >
-                                            Visit Journal
+                                            {journalT.visit}
                                         </a>
                                     )}
                                 </div>
                                 <div className="md:border-l md:pl-6 space-y-2 text-sm">
                                     <p className="text-gray-600">
-                                        <span className="font-semibold">
-                                            First Published:
-                                        </span>{" "}
+                                        <span className="font-semibold">{journalT.published_year}:</span>{" "}
                                         {selectedJournal.published_year}
                                     </p>
                                     <p className="text-gray-600">
-                                        <span className="font-semibold">
-                                            Acceptance Rate:
-                                        </span>{" "}
+                                        <span className="font-semibold">{journalT.acceptance_rate}:</span>{" "}
                                         {selectedJournal.acceptance_rate}%
                                     </p>
                                     <p className="text-gray-600">
-                                        <span className="font-semibold">
-                                            Decision Days:
-                                        </span>{" "}
+                                        <span className="font-semibold">{journalT.decision_days}:</span>{" "}
                                         {selectedJournal.decision_days} days
                                     </p>
                                     <p className="text-gray-600">
-                                        <span className="font-semibold">
-                                            Impact Factor:
-                                        </span>{" "}
+                                        <span className="font-semibold">{journalT.impact_factor}:</span>{" "}
                                         {selectedJournal.impact_factor}
                                     </p>
                                 </div>

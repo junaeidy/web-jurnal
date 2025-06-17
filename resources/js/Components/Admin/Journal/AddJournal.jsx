@@ -90,7 +90,10 @@ export default function AddJournal({ show, onClose, onSuccess }) {
         const formData = new FormData();
         Object.entries(form).forEach(([key, val]) => {
             if (val !== "" && val !== null)
-                formData.append(key, typeof val === "boolean" ? (val ? "1" : "0") : val);
+                formData.append(
+                    key,
+                    typeof val === "boolean" ? (val ? "1" : "0") : val
+                );
         });
 
         try {
@@ -122,7 +125,9 @@ export default function AddJournal({ show, onClose, onSuccess }) {
                             }`}
                             onClick={() => setActiveTab(tab)}
                         >
-                            {tab === "informasi" ? "Informasi Umum" : "Konten & Media"}
+                            {tab === "informasi"
+                                ? "Informasi Umum"
+                                : "Konten & Media"}
                         </button>
                     ))}
                 </nav>
@@ -144,7 +149,9 @@ export default function AddJournal({ show, onClose, onSuccess }) {
                                     }`}
                                     onClick={() => setActiveLangTab(lang)}
                                 >
-                                    {lang === "id" ? "Bahasa Indonesia" : "English"}
+                                    {lang === "id"
+                                        ? "Bahasa Indonesia"
+                                        : "English"}
                                 </button>
                             ))}
                         </div>
@@ -213,7 +220,10 @@ export default function AddJournal({ show, onClose, onSuccess }) {
                             selectedKeys={[form.category_id]}
                             onSelectionChange={(selected) => {
                                 const value = Array.from(selected)[0];
-                                setForm((prev) => ({ ...prev, category_id: value }));
+                                setForm((prev) => ({
+                                    ...prev,
+                                    category_id: value,
+                                }));
                             }}
                         >
                             {categories.map((cat) => (
@@ -261,7 +271,9 @@ export default function AddJournal({ show, onClose, onSuccess }) {
                                     }`}
                                     onClick={() => setActiveLangTab(lang)}
                                 >
-                                    {lang === "id" ? "Bahasa Indonesia" : "English"}
+                                    {lang === "id"
+                                        ? "Bahasa Indonesia"
+                                        : "English"}
                                 </button>
                             ))}
                         </div>
@@ -296,7 +308,7 @@ export default function AddJournal({ show, onClose, onSuccess }) {
                                     Description (EN)
                                 </label>
                                 <Editor
-                                    apiKey="no-api-key"
+                                    apiKey="wh2upbh3nrh0erdyag8dxm7iktpct0smfh1oj0vxdfydpohv"
                                     value={form.description_en}
                                     init={{
                                         height: 250,

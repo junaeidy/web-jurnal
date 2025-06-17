@@ -1,14 +1,13 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Link } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 import Modal from "@/Components/UI/Modal";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
-import { usePage } from "@inertiajs/react";
 
 export default function FeaturedJournalsSection({ onLoadComplete, isLoading }) {
     const [journals, setJournals] = useState([]);
     const [selectedJournal, setSelectedJournal] = useState(null);
     const sliderRef = useRef(null);
-    const { translations } = usePage().props;
+    const { translations, locale } = usePage().props;
     const journalT = translations?.journal || {};
 
     useEffect(() => {
@@ -40,6 +39,21 @@ export default function FeaturedJournalsSection({ onLoadComplete, isLoading }) {
         }
     };
 
+    function stripHtml(html) {
+        const div = document.createElement("div");
+        div.innerHTML = html;
+        return div.textContent || div.innerText || "";
+    }
+
+    function truncate(text, maxLength) {
+        return text.length > maxLength
+            ? text.slice(0, maxLength) + "..."
+            : text;
+    }
+
+    const getText = (obj) =>
+        typeof obj === "object" ? obj[locale] || "" : obj || "";
+
     if (isLoading || journals.length === 0) return null;
 
     return (
@@ -52,7 +66,6 @@ export default function FeaturedJournalsSection({ onLoadComplete, isLoading }) {
                     {journalT.title}
                 </h2>
 
-                {/* Tombol Navigasi Slider */}
                 <div className="hidden md:block">
                     <button
                         onClick={() => scroll("left")}
@@ -68,7 +81,6 @@ export default function FeaturedJournalsSection({ onLoadComplete, isLoading }) {
                     </button>
                 </div>
 
-                {/* Slider Card */}
                 <div
                     ref={sliderRef}
                     className="flex overflow-x-auto gap-6 scroll-smooth scrollbar-hide py-2"
@@ -86,16 +98,20 @@ export default function FeaturedJournalsSection({ onLoadComplete, isLoading }) {
                                         ? `/${journal.cover}`
                                         : "https://placehold.co/250x400?text=No+Image"
                                 }
-                                alt={journal.title}
+                                alt={getText(journal.title)}
                                 className="w-full h-48 object-cover"
                             />
                             <div className="p-4 text-left">
                                 <h3 className="text-base font-semibold text-gray-800 mb-2 leading-snug line-clamp-2">
-                                    {journal.title}
+                                    {getText(journal.title)}
                                 </h3>
-                                <p className="text-gray-700 text-sm mb-4 line-clamp-3">
-                                    {journal.description}
+                                <p className="text-gray-700 text-sm mb-4">
+                                    {truncate(
+                                        stripHtml(getText(journal.description)),
+                                        120
+                                    )}
                                 </p>
+
                                 <button
                                     onClick={() => setSelectedJournal(journal)}
                                     className="inline-block bg-[#50c878] hover:bg-[#3fa767] text-white font-bold py-1.5 px-4 rounded-lg text-xs transition duration-300"
@@ -107,7 +123,6 @@ export default function FeaturedJournalsSection({ onLoadComplete, isLoading }) {
                     ))}
                 </div>
 
-                {/* Tombol Lihat Semua */}
                 <div className="mt-12" data-aos="zoom-in" data-aos-delay="800">
                     <Link
                         href="/journal"
@@ -118,7 +133,6 @@ export default function FeaturedJournalsSection({ onLoadComplete, isLoading }) {
                 </div>
             </div>
 
-            {/* Modal Detail Jurnal */}
             <Modal
                 show={!!selectedJournal}
                 maxWidth="2xl"
@@ -132,20 +146,24 @@ export default function FeaturedJournalsSection({ onLoadComplete, isLoading }) {
                                     ? `/${selectedJournal.cover}`
                                     : "https://placehold.co/250x400?text=No+Image"
                             }
-                            alt={selectedJournal.title}
+                            alt={getText(selectedJournal.title)}
                             className="w-full h-64 object-cover rounded-t-lg"
                         />
                         <div className="p-6 space-y-4">
                             <h3 className="text-2xl font-bold text-gray-800 mb-4">
-                                {selectedJournal.title}
+                                {getText(selectedJournal.title)}
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <p className="text-gray-700 leading-relaxed whitespace-pre-line">
-                                        {selectedJournal.description}
-                                    </p>
+                                    <div
+                                        className="text-gray-700 leading-relaxed prose max-w-none"
+                                        dangerouslySetInnerHTML={{
+                                            __html: getText(
+                                                selectedJournal.description
+                                            ),
+                                        }}
+                                    />
 
-                                    {/* Tombol Aksi */}
                                     <div className="mt-6 flex flex-col sm:flex-row sm:items-center gap-4">
                                         {selectedJournal.link && (
                                             <a
@@ -157,7 +175,6 @@ export default function FeaturedJournalsSection({ onLoadComplete, isLoading }) {
                                                 {journalT.visit}
                                             </a>
                                         )}
-
                                         <a
                                             href="https://wa.me/6285379388533"
                                             target="_blank"
@@ -169,7 +186,6 @@ export default function FeaturedJournalsSection({ onLoadComplete, isLoading }) {
                                     </div>
                                 </div>
 
-                                {/* Detail Metadata */}
                                 <div className="md:border-l md:pl-6 space-y-2 text-sm">
                                     <p className="text-gray-600">
                                         <span className="font-semibold">

@@ -12,14 +12,25 @@ export default function JournalDetail({ isOpen, onClose, journal }) {
               bg: "bg-green-100 text-green-700",
           }
         : {
-              text: "Tidak",
+              text: "Tidak Aktif",
               icon: <XCircleIcon className="h-5 w-5 text-red-500" />,
               bg: "bg-red-100 text-red-700",
           };
 
-    const truncate = (str, length = 35) => {
-        return str.length > length ? str.substring(0, length) + "..." : str;
-    };
+    const unggulanStyle = journal.is_featured
+        ? {
+              text: "Unggulan",
+              icon: <CheckCircleIcon className="h-5 w-5 text-yellow-500" />,
+              bg: "bg-yellow-100 text-yellow-700",
+          }
+        : {
+              text: "Biasa",
+              icon: <XCircleIcon className="h-5 w-5 text-gray-400" />,
+              bg: "bg-gray-100 text-gray-700",
+          };
+
+    const truncate = (str, length = 35) =>
+        str.length > length ? str.substring(0, length) + "..." : str;
 
     return (
         <Transition appear show={isOpen} as={Fragment}>
@@ -57,7 +68,7 @@ export default function JournalDetail({ isOpen, onClose, journal }) {
                                         <div className="font-semibold text-gray-500">
                                             Judul
                                         </div>
-                                        <div>{journal.title}</div>
+                                        <div>{journal.title?.id ?? "-"}</div>
                                     </div>
                                     <div>
                                         <div className="font-semibold text-gray-500">
@@ -77,7 +88,7 @@ export default function JournalDetail({ isOpen, onClose, journal }) {
                                     </div>
                                     <div>
                                         <div className="font-semibold text-gray-500">
-                                            Link
+                                            Tautan / Link
                                         </div>
                                         <a
                                             href={journal.link}
@@ -90,7 +101,7 @@ export default function JournalDetail({ isOpen, onClose, journal }) {
                                     </div>
                                     <div>
                                         <div className="font-semibold text-gray-500">
-                                            Acceptance Rate
+                                            Tingkat Penerimaan
                                         </div>
                                         <div>
                                             {journal.acceptance_rate ?? "-"}%
@@ -98,7 +109,7 @@ export default function JournalDetail({ isOpen, onClose, journal }) {
                                     </div>
                                     <div>
                                         <div className="font-semibold text-gray-500">
-                                            Decision Days
+                                            Waktu Keputusan
                                         </div>
                                         <div>
                                             {journal.decision_days ?? "-"} hari
@@ -106,7 +117,7 @@ export default function JournalDetail({ isOpen, onClose, journal }) {
                                     </div>
                                     <div>
                                         <div className="font-semibold text-gray-500">
-                                            Impact Factor
+                                            Faktor Dampak
                                         </div>
                                         <div>
                                             {journal.impact_factor ?? "-"}
@@ -117,11 +128,11 @@ export default function JournalDetail({ isOpen, onClose, journal }) {
                                             Unggulan
                                         </div>
                                         <div
-                                            className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium ${statusStyle.bg}`}
+                                            className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium ${unggulanStyle.bg}`}
                                         >
-                                            {statusStyle.icon}
+                                            {unggulanStyle.icon}
                                             <span className="ml-1">
-                                                {statusStyle.text}
+                                                {unggulanStyle.text}
                                             </span>
                                         </div>
                                     </div>
@@ -142,13 +153,18 @@ export default function JournalDetail({ isOpen, onClose, journal }) {
                                         <div className="font-semibold text-gray-500 mb-1">
                                             Deskripsi
                                         </div>
-                                        <div className="bg-gray-100 rounded p-3 text-gray-700">
-                                            {journal.description || "-"}
-                                        </div>
+                                        <div
+                                            className="bg-gray-100 rounded p-3 text-gray-700"
+                                            dangerouslySetInnerHTML={{
+                                                __html:
+                                                    journal.description?.id ||
+                                                    "-",
+                                            }}
+                                        />
                                     </div>
                                     <div className="sm:col-span-2">
                                         <div className="font-semibold text-gray-500 mb-2">
-                                            Cover
+                                            Gambar Sampul
                                         </div>
                                         {journal.cover ? (
                                             <img

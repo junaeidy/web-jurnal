@@ -99,6 +99,11 @@ class JournalController extends Controller
         ], 201);
     }
 
+    public function show(Journal $journal)
+    {
+        return $journal;
+    }
+
     public function update(Request $request, Journal $journal)
     {
         $validated = $request->validate([

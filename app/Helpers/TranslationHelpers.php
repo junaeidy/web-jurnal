@@ -40,6 +40,8 @@ class TranslationHelpers
             ],
             'journal' => [
                 'title' => __('journal.title'),
+                'find_title' => __('journal.find_title'),
+                'find_description' => __('journal.find_description'),
                 'read_more' => __('journal.read_more'),
                 'view_all' => __('journal.view_all'),
                 'visit' => __('journal.visit'),
@@ -49,7 +51,11 @@ class TranslationHelpers
                 'decision_days' => __('journal.decision_days'),
                 'impact_factor' => __('journal.impact_factor'),
             ],
-
+            'event' => [
+                'title' => __('event.title'),
+                'find_title' => __('event.find_title'),
+                'find_description' => __('event.find_description'),
+            ],
         ];
     }
 }

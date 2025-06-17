@@ -2,6 +2,8 @@
 
 return [
     'title' => 'Our Featured Journals',
+    'find_title' => 'Find Journal',
+    'find_description' => 'Exploring a collection of quality scientific journals from various fields that have been published on our Journal platform.',
     'read_more' => 'Read more',
     'view_all' => 'View All Journals',
     'visit' => 'Visit Journal',
@@ -10,4 +12,15 @@ return [
     'acceptance_rate' => 'Acceptance Rate',
     'decision_days' => 'Decision Days',
     'impact_factor' => 'Impact Factor',
+    'search_label' => 'Search Journal',
+    'search_placeholder' => 'Enter journal name...',
+    'category_filter' => 'Category',
+    'all_categories' => 'All Categories',
+    'sort_by' => 'Sort By',
+    'sort_title_asc' => 'Title (A-Z)',
+    'sort_title_desc' => 'Title (Z-A)',
+    'sort_impact_desc' => 'Highest Impact Factor',
+    'sort_acceptance_desc' => 'Highest Acceptance Rate',
+    'loading' => 'Loading journals...',
+    'no_journal' => 'No journals found.',
 ];

@@ -1,72 +1,93 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Modal from "@/Components/UI/Modal";
 import TextInput from "@/Components/UI/TextInput";
 import PrimaryButton from "@/Components/UI/PrimaryButton";
 import SecondaryButton from "@/Components/UI/SecondaryButton";
 import toast from "react-hot-toast";
-import { Textarea, Select, SelectItem } from "@heroui/react";
+import { Select, SelectItem } from "@heroui/react";
+import { PhotoIcon } from "@heroicons/react/24/solid";
+import { Editor } from "@tinymce/tinymce-react";
+import axios from "axios";
 
-export default function EditJournal({ show, onClose, onSuccess, journalId }) {
-    const [categories, setCategories] = useState([]);
+export default function EditJournal({ show, journalId, onClose, onSuccess }) {
+    const [activeTab, setActiveTab] = useState("informasi");
+    const [activeLangTab, setActiveLangTab] = useState("id");
     const [form, setForm] = useState({
-        title: "",
-        description: "",
+        title_id: "",
+        title_en: "",
+        description_id: "",
+        description_en: "",
         link: "",
         acceptance_rate: "",
         decision_days: "",
         impact_factor: "",
         is_active: true,
         is_featured: false,
-        cover: null,
         category_id: "",
         published_year: "",
+        cover: null,
     });
-
     const [preview, setPreview] = useState(null);
+    const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [initialLoading, setInitialLoading] = useState(true);
 
     useEffect(() => {
-        if (show) {
-            fetch("/api/categories")
-                .then((res) => res.json())
-                .then((data) => setCategories(data));
-        }
-
         if (show && journalId) {
-            setLoading(true);
-            fetch(`/api/journals/${journalId}`)
-                .then((res) => res.json())
-                .then((data) => {
-                    setForm({
-                        ...data,
-                        is_active: !!data.is_active,
-                        is_featured: !!data.is_featured,
-                        cover: null,
-                        category_id: data.category_id ?? "",
-                        published_year: data.published_year ?? "",
-                    });
-                    setPreview(data.cover ? `/${data.cover}` : null);
-                })
-                .catch(() => toast.error("Gagal memuat data jurnal"))
-                .finally(() => setLoading(false));
+            fetchCategories();
+            fetchJournalData(journalId);
         }
     }, [show, journalId]);
 
-    const handleChange = (e) => {
-        const { name, value, type, checked, files } = e.target;
-
-        if (type === "file") {
-            const file = files?.[0];
-            if (file) {
-                setForm((prev) => ({ ...prev, cover: file }));
-                setPreview(URL.createObjectURL(file));
-            }
-        } else {
-            setForm((prev) => ({
-                ...prev,
-                [name]: type === "checkbox" ? checked : value,
-            }));
+    const fetchCategories = async () => {
+        try {
+            const res = await axios.get("/api/categories");
+            setCategories(res.data);
+        } catch {
+            toast.error("Gagal memuat kategori");
         }
+    };
+
+    const fetchJournalData = async (id) => {
+        try {
+            setInitialLoading(true);
+            const res = await axios.get(`/api/journals/${id}`);
+            const journal = res.data;
+            setForm({
+                title_id: journal.title?.id || "",
+                title_en: journal.title?.en || "",
+                description_id: journal.description?.id || "",
+                description_en: journal.description?.en || "",
+                link: journal.link || "",
+                acceptance_rate: journal.acceptance_rate || "",
+                decision_days: journal.decision_days || "",
+                impact_factor: journal.impact_factor || "",
+                is_active: journal.is_active ?? true,
+                is_featured: journal.is_featured ?? false,
+                category_id: journal.category_id?.toString() || "",
+                published_year: journal.published_year || "",
+                cover: null,
+            });
+            setPreview(journal.cover ? `/${journal.cover}` : null);
+        } catch {
+            toast.error("Gagal memuat data jurnal");
+        } finally {
+            setInitialLoading(false);
+        }
+    };
+
+    const handleChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setForm((prev) => ({
+            ...prev,
+            [name]: type === "checkbox" ? checked : value,
+        }));
+    };
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        setForm((prev) => ({ ...prev, cover: file }));
+        if (file) setPreview(URL.createObjectURL(file));
     };
 
     const handleRemoveImage = () => {
@@ -79,201 +100,312 @@ export default function EditJournal({ show, onClose, onSuccess, journalId }) {
         setLoading(true);
 
         const formData = new FormData();
-
-        for (const key in form) {
-            let value = form[key];
-            if (value === "") value = null;
-            if (typeof value === "boolean") value = value ? 1 : 0;
-            if (value !== null) formData.append(key, value);
-        }
+        Object.entries(form).forEach(([key, val]) => {
+            if (val !== "" && val !== null) {
+                formData.append(
+                    key,
+                    typeof val === "boolean" ? (val ? "1" : "0") : val
+                );
+            }
+        });
 
         try {
-            const res = await fetch(`/api/journals/${journalId}`, {
-                method: "POST",
-                body: (() => {
-                    formData.append("_method", "PUT");
-                    return formData;
-                })(),
-            });
-
-            if (res.ok) {
-                const data = await res.json();
-                toast.success("Jurnal berhasil diperbarui");
-                onSuccess(data);
-                onClose();
-            } else {
-                toast.error("Gagal memperbarui jurnal");
-            }
-        } catch (err) {
-            console.error(err);
-            toast.error("Terjadi kesalahan");
+            await axios.post(
+                `/api/journals/${journalId}?_method=PUT`,
+                formData
+            );
+            toast.success("Jurnal berhasil diperbarui");
+            onSuccess();
+            onClose();
+        } catch {
+            toast.error("Gagal mengedit jurnal");
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <Modal show={show} onClose={onClose}>
-            <form onSubmit={handleSubmit} className="p-6 space-y-6">
-                <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
-                    Edit Jurnal
-                </h2>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <TextInput
-                        label="Judul Jurnal"
-                        name="title"
-                        value={form.title}
-                        onChange={handleChange}
-                        isRequired
-                    />
-                    <TextInput
-                        label="Link"
-                        name="link"
-                        value={form.link}
-                        onChange={handleChange}
-                        placeholder="https://..."
-                        isRequired
-                    />
-                    <TextInput
-                        label="Acceptance Rate"
-                        name="acceptance_rate"
-                        type="number"
-                        value={form.acceptance_rate}
-                        onChange={handleChange}
-                    />
-                    <TextInput
-                        label="Decision Days"
-                        name="decision_days"
-                        type="number"
-                        value={form.decision_days}
-                        onChange={handleChange}
-                    />
-                    <TextInput
-                        label="Impact Factor"
-                        name="impact_factor"
-                        type="number"
-                        step="0.01"
-                        value={form.impact_factor}
-                        onChange={handleChange}
-                    />
-                    <TextInput
-                        label="Tahun Terbit"
-                        name="published_year"
-                        type="number"
-                        value={form.published_year}
-                        onChange={handleChange}
-                        placeholder="Misal: 2024"
-                        isRequired
-                    />
-                    <Select
-                        label="Pilih Kategori"
-                        selectedKeys={
-                            form.category_id ? [String(form.category_id)] : []
-                        }
-                        onSelectionChange={(key) =>
-                            setForm((prev) => ({
-                                ...prev,
-                                category_id: Array.from(key)[0],
-                            }))
-                        }
-                        className="max-w-xs"
-                        isRequired
-                    >
-                        {categories.map((cat) => (
-                            <SelectItem key={cat.id} value={cat.id}>
-                                {cat.name}
-                            </SelectItem>
-                        ))}
-                    </Select>
-
-                    {/* Checkbox is_active */}
-                    <div className="flex items-center mt-1">
-                        <input
-                            type="checkbox"
-                            name="is_active"
-                            checked={form.is_active}
-                            onChange={handleChange}
-                            className="mr-2"
-                        />
-                        <span className="text-sm text-gray-700 dark:text-gray-200">
-                            Aktif
-                        </span>
-                    </div>
-
-                    {/* Checkbox is_featured */}
-                    <div className="flex items-center mt-1">
-                        <input
-                            type="checkbox"
-                            name="is_featured"
-                            checked={form.is_featured}
-                            onChange={handleChange}
-                            className="mr-2"
-                        />
-                        <span className="text-sm text-gray-700 dark:text-gray-200">
-                            Unggulan
-                        </span>
-                    </div>
-
-                    <div className="col-span-full">
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
-                            Deskripsi
-                        </label>
-                        <Textarea
-                            name="description"
-                            value={form.description}
-                            onChange={(e) =>
-                                setForm((prev) => ({
-                                    ...prev,
-                                    description: e.target.value,
-                                }))
-                            }
-                            rows={3}
-                            maxLength={255}
-                            isRequired
-                        />
-                    </div>
-
-                    <div className="col-span-full">
-                        <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-200">
-                            Sampul (Cover)
-                        </label>
-                        {preview ? (
-                            <div className="relative w-[100px] h-[100px] max-w-xs">
-                                <img
-                                    src={preview}
-                                    alt="Preview"
-                                    className="rounded shadow"
-                                />
+        <Modal show={show} onClose={onClose} maxWidth="3xl">
+            {initialLoading ? (
+                <div className="p-6 text-center text-gray-500">
+                    Memuat data jurnal...
+                </div>
+            ) : (
+                <>
+                    <div className="border-b px-6 pt-4">
+                        <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-5">
+                            Edit Jurnal
+                        </h2>
+                        <nav
+                            className="-mb-px flex space-x-6"
+                            aria-label="Tabs"
+                        >
+                            {["informasi", "konten"].map((tab) => (
                                 <button
-                                    type="button"
-                                    onClick={handleRemoveImage}
-                                    className="absolute top-1 right-1 px-2 py-1 bg-red-500 text-white text-xs rounded-full"
+                                    key={tab}
+                                    className={`pb-2 text-sm font-medium ${
+                                        activeTab === tab
+                                            ? "border-b-2 border-blue-600 text-blue-600"
+                                            : "text-gray-500 hover:text-gray-700"
+                                    }`}
+                                    onClick={() => setActiveTab(tab)}
                                 >
-                                    ×
+                                    {tab === "informasi"
+                                        ? "Informasi Umum"
+                                        : "Konten & Media"}
                                 </button>
-                            </div>
-                        ) : (
-                            <input
-                                type="file"
-                                name="cover"
-                                accept="image/*"
-                                onChange={handleChange}
-                                className="block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
-                            />
-                        )}
+                            ))}
+                        </nav>
                     </div>
-                </div>
 
-                <div className="flex justify-end gap-2 pt-4">
-                    <SecondaryButton type="button" onClick={onClose}>
-                        Batal
-                    </SecondaryButton>
-                    <PrimaryButton type="submit" disabled={loading}>
-                        {loading ? "Menyimpan..." : "Simpan Perubahan"}
-                    </PrimaryButton>
-                </div>
-            </form>
+                    <form
+                        onSubmit={handleSubmit}
+                        className="space-y-6 px-6 py-4"
+                    >
+                        {activeTab === "informasi" && (
+                            <>
+                                <div className="flex gap-4 border-b pb-2">
+                                    {["id", "en"].map((lang) => (
+                                        <button
+                                            type="button"
+                                            key={lang}
+                                            className={`text-sm font-semibold ${
+                                                activeLangTab === lang
+                                                    ? "text-blue-600 border-b-2 border-blue-600"
+                                                    : "text-gray-500"
+                                            }`}
+                                            onClick={() =>
+                                                setActiveLangTab(lang)
+                                            }
+                                        >
+                                            {lang === "id"
+                                                ? "Bahasa Indonesia"
+                                                : "English"}
+                                        </button>
+                                    ))}
+                                </div>
+
+                                {activeLangTab === "id" && (
+                                    <TextInput
+                                        label="Judul (ID)"
+                                        name="title_id"
+                                        value={form.title_id}
+                                        onChange={handleChange}
+                                        isRequired
+                                    />
+                                )}
+                                {activeLangTab === "en" && (
+                                    <TextInput
+                                        label="Title (EN)"
+                                        name="title_en"
+                                        value={form.title_en}
+                                        onChange={handleChange}
+                                        isRequired
+                                    />
+                                )}
+
+                                <TextInput
+                                    label="Link Jurnal"
+                                    name="link"
+                                    value={form.link}
+                                    onChange={handleChange}
+                                    isRequired
+                                />
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <TextInput
+                                        label="Acceptance Rate (%)"
+                                        name="acceptance_rate"
+                                        type="number"
+                                        value={form.acceptance_rate}
+                                        onChange={handleChange}
+                                    />
+                                    <TextInput
+                                        label="Decision Days"
+                                        name="decision_days"
+                                        type="number"
+                                        value={form.decision_days}
+                                        onChange={handleChange}
+                                    />
+                                    <TextInput
+                                        label="Impact Factor"
+                                        name="impact_factor"
+                                        type="number"
+                                        step="0.01"
+                                        value={form.impact_factor}
+                                        onChange={handleChange}
+                                    />
+                                    <TextInput
+                                        label="Tahun Terbit"
+                                        name="published_year"
+                                        type="number"
+                                        value={form.published_year}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+
+                                <Select
+                                    label="Kategori"
+                                    selectedKeys={[form.category_id]}
+                                    onSelectionChange={(selected) => {
+                                        const value = Array.from(selected)[0];
+                                        setForm((prev) => ({
+                                            ...prev,
+                                            category_id: value,
+                                        }));
+                                    }}
+                                >
+                                    {categories.map((cat) => (
+                                        <SelectItem key={cat.id} value={cat.id}>
+                                            {cat.name}
+                                        </SelectItem>
+                                    ))}
+                                </Select>
+
+                                <div className="flex items-center gap-6 mt-2">
+                                    <label className="flex gap-2 items-center text-sm">
+                                        <input
+                                            type="checkbox"
+                                            name="is_active"
+                                            checked={form.is_active}
+                                            onChange={handleChange}
+                                        />
+                                        Aktif
+                                    </label>
+                                    <label className="flex gap-2 items-center text-sm">
+                                        <input
+                                            type="checkbox"
+                                            name="is_featured"
+                                            checked={form.is_featured}
+                                            onChange={handleChange}
+                                        />
+                                        Tampilkan sebagai unggulan
+                                    </label>
+                                </div>
+                            </>
+                        )}
+
+                        {activeTab === "konten" && (
+                            <>
+                                <div className="flex gap-4 border-b pb-2">
+                                    {["id", "en"].map((lang) => (
+                                        <button
+                                            type="button"
+                                            key={lang}
+                                            className={`text-sm font-semibold ${
+                                                activeLangTab === lang
+                                                    ? "text-blue-600 border-b-2 border-blue-600"
+                                                    : "text-gray-500"
+                                            }`}
+                                            onClick={() =>
+                                                setActiveLangTab(lang)
+                                            }
+                                        >
+                                            {lang === "id"
+                                                ? "Bahasa Indonesia"
+                                                : "English"}
+                                        </button>
+                                    ))}
+                                </div>
+
+                                {activeLangTab === "id" && (
+                                    <div>
+                                        <label className="block text-sm font-medium mb-2">
+                                            Deskripsi (ID)
+                                        </label>
+                                        <Editor
+                                            apiKey="wh2upbh3nrh0erdyag8dxm7iktpct0smfh1oj0vxdfydpohv"
+                                            value={form.description_id}
+                                            init={{
+                                                height: 250,
+                                                menubar: false,
+                                                plugins:
+                                                    "link lists image preview",
+                                                toolbar:
+                                                    "undo redo | bold italic underline | bullist numlist | link | preview",
+                                            }}
+                                            onEditorChange={(content) =>
+                                                setForm((prev) => ({
+                                                    ...prev,
+                                                    description_id: content,
+                                                }))
+                                            }
+                                        />
+                                    </div>
+                                )}
+                                {activeLangTab === "en" && (
+                                    <div>
+                                        <label className="block text-sm font-medium mb-2">
+                                            Description (EN)
+                                        </label>
+                                        <Editor
+                                            apiKey="wh2upbh3nrh0erdyag8dxm7iktpct0smfh1oj0vxdfydpohv"
+                                            value={form.description_en}
+                                            init={{
+                                                height: 250,
+                                                menubar: false,
+                                                plugins:
+                                                    "link lists image preview",
+                                                toolbar:
+                                                    "undo redo | bold italic underline | bullist numlist | link | preview",
+                                            }}
+                                            onEditorChange={(content) =>
+                                                setForm((prev) => ({
+                                                    ...prev,
+                                                    description_en: content,
+                                                }))
+                                            }
+                                        />
+                                    </div>
+                                )}
+
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">
+                                        Sampul (Cover)
+                                    </label>
+                                    <div className="mt-2 flex gap-4 items-center">
+                                        {preview && (
+                                            <div className="relative">
+                                                <img
+                                                    src={preview}
+                                                    alt="Preview"
+                                                    className="h-24 rounded border"
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={handleRemoveImage}
+                                                    className="absolute top-0 right-0 bg-red-500 text-white px-1 text-xs rounded-bl"
+                                                >
+                                                    x
+                                                </button>
+                                            </div>
+                                        )}
+                                        <label className="cursor-pointer flex items-center gap-2 text-sm px-3 py-2 border border-gray-300 rounded-md bg-gray-50 hover:bg-gray-100">
+                                            <PhotoIcon className="w-5 h-5" />
+                                            <span>Pilih Gambar</span>
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                className="hidden"
+                                                onChange={handleImageChange}
+                                            />
+                                        </label>
+                                    </div>
+                                </div>
+                            </>
+                        )}
+
+                        <div className="flex justify-end gap-3 border-t pt-4 mt-6">
+                            <SecondaryButton onClick={onClose}>
+                                Batal
+                            </SecondaryButton>
+                            <PrimaryButton type="submit" disabled={loading}>
+                                {loading ? "Menyimpan..." : "Simpan Perubahan"}
+                            </PrimaryButton>
+                        </div>
+                    </form>
+                </>
+            )}
         </Modal>
     );
 }

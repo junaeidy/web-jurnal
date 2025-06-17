@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 
 function stripHtml(html) {
     const div = document.createElement("div");
@@ -14,6 +14,9 @@ export default function ListEvent({ onLoaded }) {
     const [totalPages, setTotalPages] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
     const limit = 15;
+    const { translations, locale } = usePage().props;
+    const eventT = translations?.event || {};
+    const currentLang = locale || "en";
 
     useEffect(() => {
         const fetchEvents = async () => {
@@ -83,7 +86,7 @@ export default function ListEvent({ onLoaded }) {
     return (
         <section className="max-w-6xl mx-auto px-4 py-12">
             <h2 className="text-3xl font-bold mb-8 text-center">
-                List of events
+                {eventT?.title}
             </h2>
 
             {isLoading ? (

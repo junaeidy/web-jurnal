@@ -1,23 +1,24 @@
 import React, { useState } from "react";
-import { Head } from "@inertiajs/react";
+import { Head, usePage } from "@inertiajs/react";
 import Navbar from "@/Components/User/Navbar";
 import Footer from "@/Components/User/Footer";
 import ListJournal from "./ListJournal";
 
 export default function Index({ auth }) {
     const [isLoading, setIsLoading] = useState(true);
+    const { translations, locale } = usePage().props;
+    const journalT = translations?.journal || {};
+    const currentLang = locale || "en";
 
     return (
         <>
-            <Head title="Find Journal" />
+            <Head title={journalT?.find_title?.[currentLang] ?? ""} />
             <Navbar user={auth.user} />
 
             {isLoading && (
                 <div className="fixed inset-0 bg-white z-[999] flex flex-col items-center justify-center">
                     <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-                    <p className="mt-4 text-gray-600 text-sm">
-                        Loading...
-                    </p>
+                    <p className="mt-4 text-gray-600 text-sm">Loading...</p>
                 </div>
             )}
 
@@ -35,10 +36,10 @@ export default function Index({ auth }) {
                     <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="text-left md:text-left text-white">
                             <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
-                                Find Journal
+                                {journalT.find_title || ""}
                             </h1>
                             <p className="text-lg md:text-xl max-w-2xl leading-relaxed">
-                                Exploring a collection of quality scientific journals from various fields that have been published on our Journal platform.
+                                {journalT.find_description || ""}
                             </p>
                         </div>
                     </div>
