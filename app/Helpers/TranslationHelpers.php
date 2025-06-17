@@ -56,6 +56,15 @@ class TranslationHelpers
                 'find_title' => __('event.find_title'),
                 'find_description' => __('event.find_description'),
             ],
+            'team' => [
+                'find_title' => __('team.find_title'),
+                'list_description' => __('team.list_description'),
+                'find_description' => __('team.find_description'),
+            ],
+            'about' => [
+                'find_title' => __('about.find_title'),
+                'find_description' => __('about.find_description'),
+            ],
         ];
     }
 }

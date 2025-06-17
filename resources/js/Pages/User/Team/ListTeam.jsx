@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Modal from "@/Components/UI/Modal";
+import { usePage } from "@inertiajs/react";
 
 export default function ListTeam({ onLoaded }) {
     const [teams, setTeams] = useState([]);
     const [selectedMember, setSelectedMember] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const { translations } = usePage().props;
+    const teamT = translations?.team || {};
 
     useEffect(() => {
         axios
@@ -50,11 +53,10 @@ export default function ListTeam({ onLoaded }) {
     return (
         <section className="max-w-6xl mx-auto px-4 py-12">
             <h2 className="text-4xl font-bold text-center mb-4 text-gray-800">
-                Our Team
+                {teamT?.find_title}
             </h2>
             <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
-                We are a team dedicated to supporting the advancement of science
-                and innovation.
+                {teamT?.list_description}
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">

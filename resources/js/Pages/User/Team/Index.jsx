@@ -1,15 +1,17 @@
 import React, { useState } from "react";
-import { Head } from "@inertiajs/react";
+import { Head, usePage } from "@inertiajs/react";
 import Navbar from "@/Components/User/Navbar";
 import Footer from "@/Components/User/Footer";
 import ListTeam from "./ListTeam";
 
 export default function Index({ auth }) {
     const [loading, setLoading] = useState(true);
+    const { translations } = usePage().props;
+    const teamT = translations?.team || {};
 
     return (
         <>
-            <Head title="Our Team" />
+            <Head title={teamT?.find_title} />
             <Navbar user={auth.user} />
 
             {loading && (
@@ -32,10 +34,10 @@ export default function Index({ auth }) {
                     <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="text-left md:text-left text-white">
                             <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
-                                Our Team
+                                {teamT?.find_title}
                             </h1>
                             <p className="text-lg md:text-xl max-w-2xl leading-relaxed">
-                                Our Journal Team is a combination of editors, reviewers, and content managers who are dedicated to supporting quality scientific publications.
+                                {teamT?.find_description}
                             </p>
                         </div>
                     </div>

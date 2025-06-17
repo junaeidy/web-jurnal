@@ -2,6 +2,7 @@ import { Link } from "@inertiajs/react";
 
 export default function RecentJournals({ journals }) {
     const latestJournals = [...journals]
+        .filter(journal => journal.title?.id)
         .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
         .slice(0, 5);
 
@@ -56,7 +57,7 @@ export default function RecentJournals({ journals }) {
                                 )}
                             </td>
                             <td className="flex items-center py-2">
-                                {item.title}
+                                {item.title?.id}
                             </td>
                             <td>{new Date(item.created_at).toLocaleDateString()}</td>
                             <td>
