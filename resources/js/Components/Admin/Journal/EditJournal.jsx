@@ -64,7 +64,8 @@ export default function EditJournal({ show, journalId, onClose, onSuccess }) {
                 impact_factor: journal.impact_factor || "",
                 is_active: journal.is_active ?? true,
                 is_featured: journal.is_featured ?? false,
-                category_id: journal.category_id?.toString() || "",
+                category_id:
+                    journal.category_id?.map((id) => id.toString()) || [],
                 published_year: journal.published_year || "",
                 cover: null,
             });
@@ -102,10 +103,16 @@ export default function EditJournal({ show, journalId, onClose, onSuccess }) {
         const formData = new FormData();
         Object.entries(form).forEach(([key, val]) => {
             if (val !== "" && val !== null) {
-                formData.append(
-                    key,
-                    typeof val === "boolean" ? (val ? "1" : "0") : val
-                );
+                if (key === "category_id" && Array.isArray(val)) {
+                    val.forEach((v) => {
+                        formData.append("category_id[]", v);
+                    });
+                } else {
+                    formData.append(
+                        key,
+                        typeof val === "boolean" ? (val ? "1" : "0") : val
+                    );
+                }
             }
         });
 
@@ -246,12 +253,13 @@ export default function EditJournal({ show, journalId, onClose, onSuccess }) {
 
                                 <Select
                                     label="Kategori"
-                                    selectedKeys={[form.category_id]}
+                                    selectionMode="multiple"
+                                    selectedKeys={form.category_id}
                                     onSelectionChange={(selected) => {
-                                        const value = Array.from(selected)[0];
+                                        const values = Array.from(selected);
                                         setForm((prev) => ({
                                             ...prev,
-                                            category_id: value,
+                                            category_id: values,
                                         }));
                                     }}
                                 >

@@ -12,7 +12,7 @@ class JournalController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Journal::query();
+        $query = Journal::with('categories');
 
         if ($request->filled('search')) {
             $search = $request->search;
@@ -23,7 +23,9 @@ class JournalController extends Controller
         }
 
         if ($request->filled('category')) {
-            $query->where('category_id', $request->category);
+            $query->whereHas('categories', function ($q) use ($request) {
+                $q->whereIn('categories.id', (array) $request->category);
+            });
         }
 
         $sortField = 'title->id';
@@ -66,8 +68,9 @@ class JournalController extends Controller
             'impact_factor' => 'nullable|numeric',
             'is_active' => 'boolean',
             'is_featured' => 'boolean',
-            'category_id' => 'nullable|exists:categories,id',
             'published_year' => 'nullable|digits:4|integer|min:1900|max:' . date('Y'),
+            'category_id' => 'nullable|array',
+            'category_id.*' => 'exists:categories,id',
         ]);
 
         if ($request->hasFile('cover')) {
@@ -86,23 +89,47 @@ class JournalController extends Controller
             'en' => $validated['description_en'],
         ];
 
-        unset($validated['title_id'], $validated['title_en'], $validated['description_id'], $validated['description_en']);
-
-        $validated['is_featured'] = $request->boolean('is_featured', false);
+        unset(
+            $validated['title_id'],
+            $validated['title_en'],
+            $validated['description_id'],
+            $validated['description_en']
+        );
 
         $journal = Journal::create($validated);
+
+        if ($request->filled('category_id')) {
+            $journal->categories()->sync($validated['category_id']);
+        }
 
         return response()->json([
             'success' => true,
             'message' => 'Jurnal berhasil ditambahkan.',
-            'data' => $journal
+            'data' => $journal->load('categories')
         ], 201);
     }
 
     public function show(Journal $journal)
     {
-        return $journal;
+        $journal->load('categories');
+
+        return response()->json([
+            'id' => $journal->id,
+            'title' => $journal->title,
+            'description' => $journal->description,
+            'link' => $journal->link,
+            'acceptance_rate' => $journal->acceptance_rate,
+            'decision_days' => $journal->decision_days,
+            'impact_factor' => $journal->impact_factor,
+            'is_active' => $journal->is_active,
+            'is_featured' => $journal->is_featured,
+            'published_year' => $journal->published_year,
+            'cover' => $journal->cover,
+            'categories' => $journal->categories,
+            'category_id' => $journal->categories->pluck('id'),
+        ]);
     }
+
 
     public function update(Request $request, Journal $journal)
     {
@@ -118,8 +145,9 @@ class JournalController extends Controller
             'impact_factor' => 'nullable|numeric',
             'is_active' => 'boolean',
             'is_featured' => 'boolean',
-            'category_id' => 'nullable|exists:categories,id',
             'published_year' => 'nullable|digits:4|integer|min:1900|max:' . date('Y'),
+            'category_id' => 'nullable|array',
+            'category_id.*' => 'exists:categories,id',
         ]);
 
         if ($request->hasFile('cover')) {
@@ -142,22 +170,30 @@ class JournalController extends Controller
             'en' => $validated['description_en'],
         ];
 
-        unset($validated['title_id'], $validated['title_en'], $validated['description_id'], $validated['description_en']);
-
-        $validated['is_featured'] = $request->boolean('is_featured', false);
+        unset(
+            $validated['title_id'],
+            $validated['title_en'],
+            $validated['description_id'],
+            $validated['description_en']
+        );
 
         $journal->update($validated);
+
+        if ($request->filled('category_id')) {
+            $journal->categories()->sync($validated['category_id']);
+        }
 
         return response()->json([
             'success' => true,
             'message' => 'Jurnal berhasil diupdate.',
-            'data' => $journal
+            'data' => $journal->load('categories')
         ]);
     }
 
     public function activeJournals()
     {
         return Journal::where('is_active', true)
+            ->with('categories')
             ->select('id', 'title', 'cover')
             ->get();
     }
@@ -165,6 +201,7 @@ class JournalController extends Controller
     public function featuredJournals()
     {
         return Journal::where('is_featured', true)
+            ->with('categories')
             ->select('id', 'title', 'description', 'link', 'cover', 'acceptance_rate', 'decision_days', 'impact_factor', 'published_year')
             ->get();
     }

@@ -16,7 +16,6 @@ class Journal extends Model
         'impact_factor',
         'is_active',
         'is_featured',
-        'category_id',
         'published_year',
     ];
 
@@ -30,8 +29,8 @@ class Journal extends Model
         'description' => 'array',
     ];
 
-    public function category()
+    public function categories()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsToMany(Category::class);
     }
 }

@@ -24,7 +24,7 @@ export default function AddJournal({ show, onClose, onSuccess }) {
         impact_factor: "",
         is_active: true,
         is_featured: false,
-        category_id: "",
+        category_id: [],
         published_year: "",
         cover: null,
     });
@@ -46,7 +46,7 @@ export default function AddJournal({ show, onClose, onSuccess }) {
                 impact_factor: "",
                 is_active: true,
                 is_featured: false,
-                category_id: "",
+                category_id: [],
                 published_year: "",
                 cover: null,
             });
@@ -89,11 +89,18 @@ export default function AddJournal({ show, onClose, onSuccess }) {
 
         const formData = new FormData();
         Object.entries(form).forEach(([key, val]) => {
-            if (val !== "" && val !== null)
-                formData.append(
-                    key,
-                    typeof val === "boolean" ? (val ? "1" : "0") : val
-                );
+            if (val !== "" && val !== null) {
+                if (key === "category_id" && Array.isArray(val)) {
+                    val.forEach((v) => {
+                        formData.append("category_id[]", v);
+                    });
+                } else {
+                    formData.append(
+                        key,
+                        typeof val === "boolean" ? (val ? "1" : "0") : val
+                    );
+                }
+            }
         });
 
         try {
@@ -101,7 +108,8 @@ export default function AddJournal({ show, onClose, onSuccess }) {
             toast.success("Jurnal berhasil ditambahkan");
             onSuccess();
             onClose();
-        } catch {
+        } catch (err) {
+            console.error(err);
             toast.error("Gagal menambahkan jurnal");
         } finally {
             setLoading(false);
@@ -217,12 +225,13 @@ export default function AddJournal({ show, onClose, onSuccess }) {
 
                         <Select
                             label="Kategori"
-                            selectedKeys={[form.category_id]}
+                            selectionMode="multiple"
+                            selectedKeys={form.category_id}
                             onSelectionChange={(selected) => {
-                                const value = Array.from(selected)[0];
+                                const values = Array.from(selected);
                                 setForm((prev) => ({
                                     ...prev,
-                                    category_id: value,
+                                    category_id: values,
                                 }));
                             }}
                         >
