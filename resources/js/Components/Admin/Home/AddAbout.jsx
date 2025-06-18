@@ -204,7 +204,7 @@ export default function AddAbout({ show, onClose, onSuccess }) {
                                 </label>
                                 <div className="border rounded-md shadow-sm overflow-hidden">
                                     <Editor
-                                        apiKey="wh2upbh3nrh0erdyag8dxm7iktpct0smfh1oj0vxdfydpohv"
+                                        apiKey="pyjzhjk91dk9ks2jft1cs0wd0dw2alw1wy0x03qhtj1wrn2d"
                                         value={form.content_id}
                                         init={{
                                             height: 300,
@@ -231,7 +231,7 @@ export default function AddAbout({ show, onClose, onSuccess }) {
                                 </label>
                                 <div className="border rounded-md shadow-sm overflow-hidden">
                                     <Editor
-                                        apiKey="no-api-key"
+                                        apiKey="pyjzhjk91dk9ks2jft1cs0wd0dw2alw1wy0x03qhtj1wrn2d"
                                         value={form.content_en}
                                         init={{
                                             height: 300,

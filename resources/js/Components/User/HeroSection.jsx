@@ -62,7 +62,12 @@ export default function HeroSection({ onLoadComplete, isLoading }) {
             className="relative h-screen bg-cover bg-center flex items-center justify-center text-center transition-all duration-1000"
             style={{ backgroundImage: `url('/storage/${heroData.image}')` }}
         >
-            <div className="absolute inset-0 bg-black/60" />
+            {(heroData.title?.[currentLang] ||
+                heroData.subtitle?.[currentLang] ||
+                heroData.cta_text?.[currentLang] ||
+                heroData.cta_link) && (
+                <div className="absolute inset-0 bg-black/60" />
+            )}
 
             <div className="relative z-10 text-white px-4 sm:px-6 md:px-8 max-w-4xl w-full">
                 <h1

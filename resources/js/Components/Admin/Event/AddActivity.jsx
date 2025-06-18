@@ -208,7 +208,7 @@ export default function AddActivity({ show, onClose, onSuccess }) {
                                 Konten Kegiatan
                             </label>
                             <Editor
-                                apiKey="wh2upbh3nrh0erdyag8dxm7iktpct0smfh1oj0vxdfydpohv"
+                                apiKey="pyjzhjk91dk9ks2jft1cs0wd0dw2alw1wy0x03qhtj1wrn2d"
                                 value={form.description}
                                 init={{
                                     height: 300,
