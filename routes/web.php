@@ -1,18 +1,19 @@
 <?php
 
 use Inertia\Inertia;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\TeamsController;
 use App\Http\Controllers\EventsController;
-use App\Http\Controllers\HomeHeroController;
 use App\Http\Controllers\JournalController;
 use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Session;
+use App\Http\Controllers\HomeHeroController;
+use App\Http\Controllers\EmailCampaignController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -67,6 +68,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/abouts', [AboutController::class, 'index'])->name('dashboard.abouts.index');
     Route::get('/dashboard/events', [EventsController::class, 'index'])->name('dashboard.events.index');
     Route::get('/dashboard/home', [HomeHeroController::class, 'index'])->name('dashboard.home.index');
+    Route::get('/dashboard/campaigns', [EmailCampaignController::class, 'index'])->name('campaigns.index');
+    Route::post('/dashboard/campaigns', [EmailCampaignController::class, 'store'])->name('campaigns.store');
+    Route::get('/dashboard/campaigns/{id}', [EmailCampaignController::class, 'show'])->name('campaigns.show');
+    Route::get('/campaigns/create', fn () => Inertia::render('Admin/Campaigns/Create'))->name('campaigns.create');
 });
 
 Route::fallback(function () {
