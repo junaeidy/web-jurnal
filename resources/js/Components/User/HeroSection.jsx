@@ -59,7 +59,7 @@ export default function HeroSection({ onLoadComplete, isLoading }) {
 
     return (
         <section
-            className="relative h-screen bg-cover bg-center flex items-center justify-center text-center transition-all duration-1000"
+            className="relative min-h-screen bg-cover bg-center flex items-center justify-center text-center transition-all duration-1000 overflow-hidden"
             style={{ backgroundImage: `url('/storage/${heroData.image}')` }}
         >
             {(heroData.title?.[currentLang] ||

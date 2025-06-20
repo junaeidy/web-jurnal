@@ -29,7 +29,7 @@ export default function Navbar({ user }) {
                         <img
                             src="/images/Logo-1.png"
                             alt="Logo"
-                            className="w-14 h-12"
+                            className="w-12 h-12"
                         />
                         <div className="flex flex-col leading-tight">
                             <span
