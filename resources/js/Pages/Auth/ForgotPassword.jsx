@@ -1,8 +1,6 @@
 import InputError from "@/Components/UI/InputError";
 import PrimaryButton from "@/Components/UI/PrimaryButton";
 import TextInput from "@/Components/UI/TextInput";
-import GuestLayout from "@/Layouts/GuestLayout";
-import ApplicationLogo from "@/Components/UI/ApplicationLogo";
 import { Head, Link, useForm } from "@inertiajs/react";
 import InputLabel from "@/Components/UI/InputLabel";
 
@@ -19,46 +17,42 @@ export default function ForgotPassword({ status }) {
     return (
         <>
             <Head title="Forgot Password" />
-
-            <div className="min-h-screen flex flex-col md:flex-row">
-                {/* Left side - illustration / text */}
-                <div
-                    className="hidden md:flex flex-1 items-center justify-center bg-cover bg-center p-8"
-                    style={{
-                        backgroundImage:
-                            "url(https://images.pexels.com/photos/3183183/pexels-photo-3183183.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1)",
-                    }}
-                >
-                    <div className="text-white text-center max-w-md bg-black/40 p-6 rounded-xl">
-                        <h1 className="text-4xl font-bold mb-4">
-                            Lupa kata sandi Anda?
-                        </h1>
-                        <p className="text-lg">
-                            Jangan khawatir! Masukkan email Anda dan kami akan mengirimkan tautan
-untuk menyetel ulang.
-                        </p>
-                    </div>
-                </div>
-
-                {/* Right side - form */}
-                <div className="flex-1 flex items-center justify-center bg-white dark:bg-gray-900">
-                    <div className="w-full max-w-md p-8">
-                        <div className="flex flex-col items-center mb-8">
-                            <ApplicationLogo className="h-16 w-16 sm:h-20 sm:w-20" />
-                            <h2 className="text-2xl font-semibold mt-4 text-gray-800 dark:text-gray-100">
-                                Reset Kata Sandi
+            <div className="min-h-screen flex items-center justify-center bg-gray-100">
+                <div className="w-full max-w-4xl bg-white rounded-xl shadow-lg overflow-hidden flex">
+                    {/* Kiri: Quote sama seperti login */}
+                    <div className="w-1/2 bg-[#2A7C4C] text-white flex items-center justify-center p-10">
+                        <div className="text-center max-w-md">
+                            <h2 className="text-2xl font-semibold mb-4 leading-snug">
+                                “Produktivitas dimulai dari satu langkah kecil:
+                                <br /> masuk dan mulai berkarya.”
                             </h2>
+                            <p className="text-sm text-white/80">
+                                – Sistem Anda, Lebih Baik Setiap Hari
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Kanan: Form Reset Password */}
+                    <div className="w-1/2 p-10 flex flex-col justify-center">
+                        {/* Header */}
+                        <div className="mb-6 text-center">
+                            <h2 className="text-2xl font-bold text-gray-800">
+                                Lupa Password?
+                            </h2>
+                            <p className="text-gray-600 text-sm mt-1">
+                                Masukkan email Anda dan kami akan kirimkan
+                                tautan untuk mengatur ulang password.
+                            </p>
                         </div>
 
                         {status && (
-                            <div className="mb-4 text-sm font-medium text-green-600 dark:text-green-400">
+                            <div className="mb-4 text-sm text-green-600 text-center font-medium">
                                 {status}
                             </div>
                         )}
 
                         <form onSubmit={submit} className="space-y-6">
                             <div>
-                                <InputLabel value="Email" />
                                 <TextInput
                                     id="email"
                                     type="email"
@@ -66,7 +60,6 @@ untuk menyetel ulang.
                                     value={data.email}
                                     className="mt-1 block w-full"
                                     isFocused={true}
-                                    autoComplete="email"
                                     onChange={(e) =>
                                         setData("email", e.target.value)
                                     }
@@ -78,23 +71,12 @@ untuk menyetel ulang.
                             </div>
 
                             <PrimaryButton
-                                type="submit"
-                                className="w-full justify-center"
+                                className="w-full bg-emerald-600 hover:bg-emerald-700 focus:ring-emerald-500"
                                 disabled={processing}
                             >
-                                Kirim Tautan Reset Kata Sandi
+                                Kirim Link Reset Password
                             </PrimaryButton>
                         </form>
-
-                        {/* Link back to login */}
-                        <div className="mt-6 text-center">
-                            <Link
-                                href={route("login")}
-                                className="text-sm text-indigo-600 hover:text-indigo-800 underline dark:text-indigo-400 dark:hover:text-indigo-300"
-                            >
-                                Kembali ke Login
-                            </Link>
-                        </div>
                     </div>
                 </div>
             </div>

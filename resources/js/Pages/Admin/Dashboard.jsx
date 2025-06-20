@@ -1,92 +1,159 @@
-import { useState, useEffect } from "react";
-import {
-    ChartBarIcon,
-    CheckCircleIcon,
-    XCircleIcon,
-} from "@heroicons/react/24/solid";
-import Sidebar from "@/Components/layouts/Sidebar";
-import StatCard from "@/Components/Admin/StatCard";
-import Topbar from "@/Components/layouts/Topbar";
-import { Head } from "@inertiajs/react";
-import RecentJournals from "@/Components/Admin/RecentJournals";
-import axios from "axios";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import { Head, Link } from "@inertiajs/react";
 
-export default function Dashboard() {
-    const [activeTab, setActiveTab] = useState("Dashboard");
-    const [journals, setJournals] = useState([]);
-
-    useEffect(() => {
-        axios.get("/api/journals").then((res) => {
-            const journalData = Array.isArray(res.data)
-                ? res.data
-                : res.data.data || [];
-
-            setJournals(journalData);
-        });
-    }, []);
-
-    const total = journals.length;
-    const active = journals.filter((j) => j.is_active).length;
-    const inactive = total - active;
-
-    const stats = [
+export default function Dashboard({
+    journalsCount = 21,
+    recentJournalsCount = 19,
+    publishedCount = 19,
+    draftCount = 2,
+    latestJournals = [
         {
-            icon: <ChartBarIcon className="h-6 w-6" />,
-            label: "Total Jurnal",
-            value: total,
-            color: "blue",
-            data: [
-                { value: total * 0.2 },
-                { value: total * 0.4 },
-                { value: total * 0.6 },
-                { value: total * 0.8 },
-                { value: total },
-            ],
+            id: 1,
+            title: "Analisis Dampak AI dalam Dunia Pendidikan",
+            created_at: "2025-06-18T10:15:00",
+            status: "published",
         },
         {
-            icon: <CheckCircleIcon className="h-6 w-6" />,
-            label: "Jurnal Aktif",
-            value: active,
-            color: "green",
-            data: [
-                { value: active * 0.2 },
-                { value: active * 0.5 },
-                { value: active },
-            ],
+            id: 2,
+            title: "Studi Komparatif Metode Klasifikasi Teks",
+            created_at: "2025-06-16T08:45:00",
+            status: "draft",
         },
         {
-            icon: <XCircleIcon className="h-6 w-6" />,
-            label: "Tidak Aktif",
-            value: inactive,
-            color: "red",
-            data: [
-                { value: inactive * 0.2 },
-                { value: inactive * 0.5 },
-                { value: inactive },
-            ],
+            id: 3,
+            title: "Pemanfaatan Energi Terbarukan di Indonesia",
+            created_at: "2025-06-14T14:20:00",
+            status: "pending",
         },
-    ];
+        {
+            id: 4,
+            title: "Evaluasi Model Deep Learning untuk Deteksi Wajah",
+            created_at: "2025-06-12T11:00:00",
+            status: "published",
+        },
+        {
+            id: 5,
+            title: "Kajian Etika Penggunaan Data Pribadi",
+            created_at: "2025-06-10T09:30:00",
+            status: "draft",
+        },
+    ],
+}) {
+    return (
+        <AuthenticatedLayout
+            header={
+                <h2 className="text-xl font-semibold leading-tight text-gray-800">
+                    Dashboard Admin
+                </h2>
+            }
+        >
+            <Head title="Dashboard" />
+
+            <div className="py-12">
+                <div className="mx-auto max-w-7xl space-y-8 sm:px-6 lg:px-8">
+                    {/* Statistik */}
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+                        <StatCard
+                            title="Total Jurnal"
+                            value={journalsCount}
+                            bgColor="bg-[#2A7C4C]"
+                        />
+                        <StatCard
+                            title="Jurnal Bulan Ini"
+                            value={recentJournalsCount}
+                            bgColor="bg-blue-600"
+                        />
+                        <StatCard
+                            title="Dipublikasikan"
+                            value={publishedCount}
+                            bgColor="bg-teal-600"
+                        />
+                        <StatCard
+                            title="Draft"
+                            value={draftCount}
+                            bgColor="bg-gray-600"
+                        />
+                    </div>
+
+                    {/* Tabel Jurnal Terbaru */}
+                    <div className="bg-white shadow rounded-2xl p-6">
+                        <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-lg font-semibold text-gray-800">
+                                Jurnal Terbaru
+                            </h3>
+                            <Link
+                                href= {route("dashboard.journals.index")}
+                                className="text-sm text-[#2A7C4C] font-medium hover:underline"
+                            >
+                                Lihat Semua
+                            </Link>
+                        </div>
+
+                        <table className="w-full table-auto text-sm text-left">
+                            <thead className="text-gray-500 border-b">
+                                <tr>
+                                    <th className="py-2">Judul</th>
+                                    <th className="py-2">Tanggal</th>
+                                    <th className="py-2">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {latestJournals.length === 0 ? (
+                                    <tr>
+                                        <td
+                                            colSpan="3"
+                                            className="py-4 text-center text-gray-400"
+                                        >
+                                            Belum ada jurnal.
+                                        </td>
+                                    </tr>
+                                ) : (
+                                    latestJournals.map((j) => (
+                                        <tr key={j.id} className="border-b">
+                                            <td className="py-2">{j.title}</td>
+                                            <td className="py-2">
+                                                {new Date(
+                                                    j.created_at
+                                                ).toLocaleDateString()}
+                                            </td>
+                                            <td className="py-2">
+                                                <StatusBadge
+                                                    status={j.status}
+                                                />
+                                            </td>
+                                        </tr>
+                                    ))
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </AuthenticatedLayout>
+    );
+}
+
+function StatCard({ title, value, icon, bgColor, textColor }) {
+    return (
+        <div className={`p-5 rounded-2xl shadow-lg text-white ${bgColor}`}>
+            <div className="text-sm font-medium opacity-80">{title}</div>
+            <div className="mt-2 text-3xl font-bold">{value}</div>
+        </div>
+    );
+}
+
+function StatusBadge({ status }) {
+    const isPublished = status === "published";
+    const baseClass =
+        "inline-block px-3 py-1 text-xs font-semibold rounded-full";
+
+    const colorClass = isPublished
+        ? "bg-green-100 text-green-700"
+        : "bg-gray-100 text-gray-700";
 
     return (
-        <div className="flex h-screen bg-gray-50">
-            <Head title="Dashboard" />
-            <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-            <div className="flex-1 flex flex-col overflow-auto">
-                <Topbar />
-                <main className="p-6 flex-1">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {stats.map((stat, i) => (
-                            <StatCard key={i} {...stat} />
-                        ))}
-                    </div>
-
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-5">
-                        <div className="lg:col-span-4">
-                            <RecentJournals journals={journals} />
-                        </div>
-                    </div>
-                </main>
-            </div>
-        </div>
+        <span className={`${baseClass} ${colorClass}`}>
+            {isPublished ? "Published" : "Draft"}
+        </span>
     );
 }

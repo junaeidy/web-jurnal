@@ -1,26 +1,25 @@
-import React from 'react'
-import Topbar from "@/Components/layouts/Topbar";
-import Sidebar from "@/Components/layouts/Sidebar";
-import { useState } from "react";
+import React from "react";
 import { Head } from "@inertiajs/react";
 import JournalList from "./JournalList";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 
-export default function index () {
-    const [activeTab, setActiveTab] = useState("Manajemen Jurnal");
-
+export default function index() {
     return (
-        <div className="flex h-screen overflow-hidden">
+        <div>
             <Head title="Manajemen Jurnal" />
-            <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-            <div className="flex flex-col flex-1 overflow-hidden">
-                <Topbar />
-                <main className="flex-1 overflow-y-auto p-8">
-                    <h1 className="text-2xl font-bold mb-6 text-gray-800 dark:text-white">
+            <AuthenticatedLayout
+                header={
+                    <h2 className="text-xl font-semibold leading-tight text-gray-800">
                         Manajemen Jurnal
-                    </h1>
-                    <JournalList />
-                </main>
-            </div>
+                    </h2>
+                }
+            >
+                <div className="flex flex-col flex-1 overflow-hidden">
+                    <main className="flex-1 overflow-y-auto p-8">
+                        <JournalList />
+                    </main>
+                </div>
+            </AuthenticatedLayout>
         </div>
-    )
+    );
 }

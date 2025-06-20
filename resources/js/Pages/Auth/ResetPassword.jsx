@@ -1,60 +1,57 @@
 import InputError from "@/Components/UI/InputError";
 import PrimaryButton from "@/Components/UI/PrimaryButton";
 import TextInput from "@/Components/UI/TextInput";
-import ApplicationLogo from "@/Components/UI/ApplicationLogo";
 import { Head, useForm } from "@inertiajs/react";
 import InputLabel from "@/Components/UI/InputLabel";
 
-export default function ResetPassword({ token, email: defaultEmail }) {
-    const { data, setData, post, processing, errors } = useForm({
-        token,
-        email: defaultEmail || "",
+export default function ResetPassword({ token, email }) {
+    const { data, setData, post, processing, errors, reset } = useForm({
+        token: token,
+        email: email,
         password: "",
         password_confirmation: "",
     });
 
     const submit = (e) => {
         e.preventDefault();
-        post(route("password.store"));
+        post(route("password.store"), {
+            onFinish: () => reset("password", "password_confirmation"),
+        });
     };
 
     return (
         <>
             <Head title="Reset Password" />
-
-            <div className="min-h-screen flex flex-col md:flex-row">
-                {/* Left side - illustration / text */}
-                <div
-                    className="hidden md:flex flex-1 items-center justify-center bg-cover bg-center p-8"
-                    style={{
-                        backgroundImage:
-                            "url(https://images.pexels.com/photos/3183183/pexels-photo-3183183.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1)",
-                    }}
-                >
-                    <div className="text-white text-center max-w-md bg-black/40 p-6 rounded-xl">
-                        <h1 className="text-4xl font-bold mb-4">
-                            Buat Kata Sandi Baru
-                        </h1>
-                        <p className="text-lg">
-                            Tetapkan kata sandi baru untuk kembali ke akun Anda.
-                        </p>
-                    </div>
-                </div>
-
-                {/* Right side - form */}
-                <div className="flex-1 flex items-center justify-center bg-white dark:bg-gray-900">
-                    <div className="w-full max-w-md p-8">
-                        <div className="flex flex-col items-center mb-8">
-                            <ApplicationLogo className="h-16 w-16 sm:h-20 sm:w-20" />
-                            <h2 className="text-2xl font-semibold mt-4 text-gray-800 dark:text-gray-100">
-                                Buat Kata Sandi Baru
+            <div className="min-h-screen flex items-center justify-center bg-gray-100">
+                <div className="w-full max-w-4xl bg-white rounded-xl shadow-lg overflow-hidden flex">
+                    {/* Kiri: Quote inspiratif */}
+                    <div className="w-1/2 bg-[#2A7C4C] text-white flex items-center justify-center p-10">
+                        <div className="text-center max-w-md">
+                            <h2 className="text-2xl font-semibold mb-4 leading-snug">
+                                “Produktivitas dimulai dari satu langkah kecil:
+                                <br /> masuk dan mulai berkarya.”
                             </h2>
+                            <p className="text-sm text-white/80">
+                                – Sistem Anda, Lebih Baik Setiap Hari
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Kanan: Form reset password */}
+                    <div className="w-1/2 p-10 flex flex-col justify-center">
+                        {/* Header */}
+                        <div className="mb-6 text-center">
+                            <h2 className="text-2xl font-bold text-gray-800">
+                                Reset Password
+                            </h2>
+                            <p className="text-gray-600 text-sm mt-1">
+                                Masukkan password baru untuk akun Anda.
+                            </p>
                         </div>
 
                         <form onSubmit={submit} className="space-y-6">
                             <div>
                                 <InputLabel htmlFor="email" value="Email" />
-
                                 <TextInput
                                     id="email"
                                     type="email"
@@ -66,19 +63,17 @@ export default function ResetPassword({ token, email: defaultEmail }) {
                                         setData("email", e.target.value)
                                     }
                                 />
-
                                 <InputError
                                     message={errors.email}
                                     className="mt-2"
                                 />
                             </div>
 
-                            <div className="mt-4">
+                            <div>
                                 <InputLabel
                                     htmlFor="password"
                                     value="Password"
                                 />
-
                                 <TextInput
                                     id="password"
                                     type="password"
@@ -91,22 +86,20 @@ export default function ResetPassword({ token, email: defaultEmail }) {
                                         setData("password", e.target.value)
                                     }
                                 />
-
                                 <InputError
                                     message={errors.password}
                                     className="mt-2"
                                 />
                             </div>
 
-                            <div className="mt-4">
+                            <div>
                                 <InputLabel
                                     htmlFor="password_confirmation"
                                     value="Confirm Password"
                                 />
-
                                 <TextInput
-                                    type="password"
                                     id="password_confirmation"
+                                    type="password"
                                     name="password_confirmation"
                                     value={data.password_confirmation}
                                     className="mt-1 block w-full"
@@ -118,24 +111,18 @@ export default function ResetPassword({ token, email: defaultEmail }) {
                                         )
                                     }
                                 />
-
                                 <InputError
                                     message={errors.password_confirmation}
                                     className="mt-2"
                                 />
                             </div>
 
-                            <div>
-                                <PrimaryButton
-                                    type="submit"
-                                    className="w-full justify-center"
-                                    disabled={processing}
-                                >
-                                    {processing
-                                        ? "Resetting..."
-                                        : "Reset Password"}
-                                </PrimaryButton>
-                            </div>
+                            <PrimaryButton
+                                className="w-full bg-emerald-600 hover:bg-emerald-700 focus:ring-emerald-500"
+                                disabled={processing}
+                            >
+                                Reset Password
+                            </PrimaryButton>
                         </form>
                     </div>
                 </div>

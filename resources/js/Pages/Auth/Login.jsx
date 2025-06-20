@@ -8,52 +8,52 @@ import ApplicationLogo from '@/Components/UI/ApplicationLogo';
 
 export default function Login({ status, canResetPassword }) {
     const { data, setData, post, processing, errors, reset } = useForm({
-        email: '',
-        password: '',
+        email: "",
+        password: "",
         remember: false,
     });
 
     const submit = (e) => {
         e.preventDefault();
-        post(route('login'), {
-            onFinish: () => reset('password'),
+        post(route("login"), {
+            onFinish: () => reset("password"),
         });
     };
 
     return (
         <>
             <Head title="Log in" />
-
-            <div className="min-h-screen flex flex-col md:flex-row">
-                {/* Left side - image/branding */}
-                <div
-                    className="hidden md:flex flex-1 items-center justify-center bg-cover bg-center p-8"
-                    style={{
-                        backgroundImage:
-                            'url(https://images.pexels.com/photos/3183183/pexels-photo-3183183.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1)',
-                    }}
-                >
-                    <div className="text-white text-center max-w-lg bg-black/40 p-6 rounded-xl">
-                        <h1 className="text-4xl font-bold mb-4">Selamat Datang Kembali</h1>
-                        <p className="text-lg leading-relaxed">
-                            Silakan masuk ke dashboard admin
-                        </p>
-                    </div>
-                </div>
-
-                {/* Right side - login form */}
-                <div className="flex-1 flex items-center justify-center bg-white dark:bg-gray-900">
-                    <div className="w-full max-w-md p-8">
-                        {/* Logo + heading */}
-                        <div className="flex flex-col items-center mb-8">
-                            <ApplicationLogo className="h-[120px] w-[120px]" />
-                            <h2 className="text-2xl font-semibold mt-4 text-gray-800 dark:text-gray-100">
-                                Masuk ke akun Anda
+            <div className="min-h-screen flex items-center justify-center bg-gray-100">
+                <div className="w-full max-w-4xl bg-white rounded-xl shadow-lg overflow-hidden flex">
+                    {/* Kiri: Logo dengan background hijau brand */}
+                    <div className="w-1/2 bg-[#2A7C4C] text-white flex items-center justify-center p-10">
+                        <div className="text-center max-w-md">
+                            <h2 className="text-2xl font-semibold mb-4 leading-snug">
+                                “Produktivitas dimulai dari satu langkah kecil:
+                                <br /> masuk dan mulai berkarya.”
                             </h2>
+                            <p className="text-sm text-white/80">
+                                – Sistem Anda, Lebih Baik Setiap Hari
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Kanan: Teks sambutan + Form */}
+                    <div className="w-1/2 p-10 flex flex-col justify-center">
+                        {/* Teks sambutan */}
+                        <div className="mb-6 text-center">
+                            <h2 className="text-2xl font-bold text-gray-800">
+                                Selamat Datang Kembali!
+                            </h2>
+                            <p className="text-gray-600 text-sm mt-1">
+                                Silakan masuk ke akun Anda untuk melanjutkan.
+                            </p>
                         </div>
 
                         {status && (
-                            <div className="mb-4 text-sm font-medium text-green-600">{status}</div>
+                            <div className="mb-4 text-sm text-green-600 text-center font-medium">
+                                {status}
+                            </div>
                         )}
 
                         <form onSubmit={submit} className="space-y-6">
@@ -66,14 +66,22 @@ export default function Login({ status, canResetPassword }) {
                                     value={data.email}
                                     className="mt-1 block w-full"
                                     autoComplete="username"
-                                    isFocused
-                                    onChange={(e) => setData('email', e.target.value)}
+                                    isFocused={true}
+                                    onChange={(e) =>
+                                        setData("email", e.target.value)
+                                    }
                                 />
-                                <InputError message={errors.email} className="mt-2" />
+                                <InputError
+                                    message={errors.email}
+                                    className="mt-2"
+                                />
                             </div>
 
                             <div>
-                                <InputLabel htmlFor="password" value="Password" />
+                                <InputLabel
+                                    htmlFor="password"
+                                    value="Password"
+                                />
                                 <TextInput
                                     id="password"
                                     type="password"
@@ -81,9 +89,14 @@ export default function Login({ status, canResetPassword }) {
                                     value={data.password}
                                     className="mt-1 block w-full"
                                     autoComplete="current-password"
-                                    onChange={(e) => setData('password', e.target.value)}
+                                    onChange={(e) =>
+                                        setData("password", e.target.value)
+                                    }
                                 />
-                                <InputError message={errors.password} className="mt-2" />
+                                <InputError
+                                    message={errors.password}
+                                    className="mt-2"
+                                />
                             </div>
 
                             <div className="flex items-center justify-between">
@@ -91,32 +104,35 @@ export default function Login({ status, canResetPassword }) {
                                     <Checkbox
                                         name="remember"
                                         checked={data.remember}
-                                        onChange={(e) => setData('remember', e.target.checked)}
+                                        onChange={(e) =>
+                                            setData(
+                                                "remember",
+                                                e.target.checked
+                                            )
+                                        }
                                     />
-                                    <span className="ms-2 text-sm text-gray-600 dark:text-gray-400">
+                                    <span className="ms-2 text-sm text-gray-600">
                                         Remember me
                                     </span>
                                 </label>
 
                                 {canResetPassword && (
                                     <Link
-                                        href={route('password.request')}
-                                        className="text-sm text-indigo-600 hover:underline"
+                                        href={route("password.request")}
+                                        className="text-sm text-emerald-600 hover:text-emerald-800"
                                     >
-                                        Forgot password?
+                                        Lupa password?
                                     </Link>
                                 )}
                             </div>
 
-                            <div>
-                                <PrimaryButton
-                                    type="submit"
-                                    className="w-full justify-center"
-                                    disabled={processing}
-                                >
-                                    {processing ? 'Logging in...' : 'Log in'}
-                                </PrimaryButton>
-                            </div>
+                            <PrimaryButton
+                                className="w-full"
+                                disabled={processing}
+                                type="submit"
+                            >
+                                Log in
+                            </PrimaryButton>
                         </form>
                     </div>
                 </div>
