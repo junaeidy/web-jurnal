@@ -48,7 +48,7 @@ class EmailCampaignController extends Controller
                 'status'            => 'pending',
             ]);
 
-            (new SendCampaignEmail($recipient))->handle();
+            SendCampaignEmail::dispatch($recipient);
         }
 
         return redirect()->route('campaigns.index')->with('success', 'Campaign berhasil dibuat & email dikirim!');
