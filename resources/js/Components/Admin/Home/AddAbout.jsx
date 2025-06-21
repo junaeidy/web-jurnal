@@ -82,7 +82,7 @@ export default function AddAbout({ show, onClose, onSuccess }) {
         <Modal show={show} onClose={onClose}>
             <div className="border-b px-6 pt-4">
                 <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-5">
-                    Tambah About Section
+                    Tambah Section 2
                 </h2>
                 <nav className="-mb-px flex space-x-6" aria-label="Tabs">
                     <button

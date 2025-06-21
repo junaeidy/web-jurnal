@@ -18,6 +18,7 @@ import EditCategory from "@/Components/Admin/Category/EditCategory";
 import ConfirmDialog from "@/Components/ConfirmDialog";
 import axios from "axios";
 import toast from "react-hot-toast";
+import PrimaryButton from '@/Components/UI/PrimaryButton';
 
 const columns = [
     { name: "NO", key: "no" },
@@ -164,13 +165,13 @@ export default function CategoryList() {
                 />
 
                 <div className="flex items-center gap-3 w-full md:w-auto">
-                    <Button
+                    <PrimaryButton
                         color="primary"
                         endContent={<PlusIcon />}
                         onPress={() => setShowAddModal(true)}
                     >
                         Tambah
-                    </Button>
+                    </PrimaryButton>
                 </div>
             </div>
 

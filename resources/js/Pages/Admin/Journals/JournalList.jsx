@@ -20,6 +20,7 @@ import EditJournal from "@/Components/Admin/Journal/EditJournal";
 import ConfirmDialog from "@/Components/ConfirmDialog";
 import JournalDetail from "@/Components/Admin/Journal/JournalDetail";
 import toast from "react-hot-toast";
+import PrimaryButton from "@/Components/UI/PrimaryButton";
 
 const columns = [
     { name: "NO", key: "no" },
@@ -87,8 +88,8 @@ export default function JournalList() {
             .includes(search.toLowerCase());
         const matchesStatus =
             statusFilter === "all" ||
-            (statusFilter === "active" && journal.is_active) ||
-            (statusFilter === "inactive" && !journal.is_active);
+            (statusFilter === "published" && journal.is_active) ||
+            (statusFilter === "draft" && !journal.is_active);
         return matchesSearch && matchesStatus;
     });
 
@@ -183,7 +184,7 @@ export default function JournalList() {
                         size="sm"
                         variant="flat"
                     >
-                        {journal.is_active ? "Active" : "Inactive"}
+                        {journal.is_active ? "Published" : "Draft"}
                     </Chip>
                 );
             case "actions":
@@ -247,21 +248,21 @@ export default function JournalList() {
                         <SelectItem key="all" value="all">
                             Semua Status
                         </SelectItem>
-                        <SelectItem key="active" value="active">
-                            Aktif
+                        <SelectItem key="published" value="published">
+                            Published
                         </SelectItem>
-                        <SelectItem key="inactive" value="inactive">
-                            Nonaktif
+                        <SelectItem key="draft" value="draft">
+                            Draft
                         </SelectItem>
                     </Select>
 
-                    <Button
+                    <PrimaryButton
                         color="primary"
                         endContent={<PlusIcon />}
                         onPress={() => setShowAddModal(true)}
                     >
                         Tambah
-                    </Button>
+                    </PrimaryButton>
                 </div>
             </div>
 

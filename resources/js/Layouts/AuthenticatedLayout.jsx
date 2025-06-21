@@ -31,10 +31,46 @@ export default function AuthenticatedLayout({ header, children }) {
                                     Dashboard
                                 </NavLink>
                                 <NavLink
+                                    href={route('dashboard.home.index')}
+                                    active={route().current('dashboard.home.index')}
+                                >
+                                    Home
+                                </NavLink>
+                                <NavLink
                                     href={route('dashboard.journals.index')}
                                     active={route().current('dashboard.journals.index')}
                                 >
-                                    Journal
+                                    Jurnal
+                                </NavLink>
+                                <NavLink
+                                    href={route('dashboard.categories.index')}
+                                    active={route().current('dashboard.categories.index')}
+                                >
+                                    Kategori
+                                </NavLink>
+                                <NavLink
+                                    href={route('dashboard.abouts.index')}
+                                    active={route().current('dashboard.abouts.index')}
+                                >
+                                    About
+                                </NavLink>
+                                <NavLink
+                                    href={route('dashboard.events.index')}
+                                    active={route().current('dashboard.events.index')}
+                                >
+                                    Kegiatan
+                                </NavLink>
+                                <NavLink
+                                    href={route('dashboard.partners.index')}
+                                    active={route().current('dashboard.partners.index')}
+                                >
+                                    Partner
+                                </NavLink>
+                                <NavLink
+                                    href={route('dashboard.teams.index')}
+                                    active={route().current('dashboard.teams.index')}
+                                >
+                                    Teams
                                 </NavLink>
                             </div>
                         </div>

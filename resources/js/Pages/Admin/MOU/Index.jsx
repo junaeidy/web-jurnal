@@ -1,26 +1,25 @@
-import React from 'react'
-import Topbar from "@/Components/layouts/Topbar";
-import Sidebar from "@/Components/layouts/Sidebar";
-import { useState } from "react";
+import React from "react";
 import { Head } from "@inertiajs/react";
 import PartnerList from "./PartnerList";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 
-export default function index () {
-    const [activeTab, setActiveTab] = useState("Manajemen Partner");
-
+export default function index() {
     return (
-        <div className="flex h-screen overflow-hidden">
-            <Head title="Manajemen Partner" />
-            <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-            <div className="flex flex-col flex-1 overflow-hidden">
-                <Topbar />
-                <main className="flex-1 overflow-y-auto p-8">
-                    <h1 className="text-2xl font-bold mb-6 text-gray-800 dark:text-white">
+        <div>
+            <AuthenticatedLayout
+                header={
+                    <h2 className="text-xl font-semibold leading-tight text-gray-800">
                         Manajemen Partner
-                    </h1>
-                    <PartnerList />
-                </main>
-            </div>
+                    </h2>
+                }
+            >
+                <Head title="Manajemen Partner" />
+                <div className="flex flex-col flex-1 overflow-hidden">
+                    <main className="flex-1 overflow-y-auto p-8">
+                        <PartnerList />
+                    </main>
+                </div>
+            </AuthenticatedLayout>
         </div>
-    )
+    );
 }

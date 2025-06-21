@@ -19,6 +19,7 @@ import AddTeamMember from "@/Components/Admin/Team/AddTeamMember";
 import EditTeamMember from "@/Components/Admin/Team/EditTeamMember";
 import ConfirmDialog from "@/Components/ConfirmDialog";
 import toast from "react-hot-toast";
+import PrimaryButton from "@/Components/UI/PrimaryButton";
 
 const columns = [
     { name: "NO", key: "no" },
@@ -211,13 +212,12 @@ export default function TeamList() {
                         </SelectItem>
                     </Select>
 
-                    <Button
-                        color="primary"
+                    <PrimaryButton
                         endContent={<PlusIcon />}
                         onPress={() => setShowAddModal(true)}
                     >
                         Tambah
-                    </Button>
+                    </PrimaryButton>
                 </div>
             </div>
 

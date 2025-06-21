@@ -20,7 +20,6 @@ const navItems = [
     { name: "Manajemen Kegiatan", icon: ClockIcon, href: route("dashboard.events.index")},
     { name: "Manajemen Team", icon: UserGroupIcon, href: route("dashboard.teams.index")},
     { name: "Manajemen About", icon: InformationCircleIcon, href: route("dashboard.abouts.index")},
-    { name: "Campaign Email", icon: EnvelopeOpenIcon, href: route("campaigns.index")},
 ];
 
 export default function Sidebar({ activeTab, setActiveTab }) {

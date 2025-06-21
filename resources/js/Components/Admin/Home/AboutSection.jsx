@@ -43,7 +43,7 @@ const AboutSection = () => {
         <div className="space-y-4">
             <div className="flex justify-between items-center">
                 <h2 className="text-xl font-semibold">
-                    Manajemen About Section
+                    Section 2
                 </h2>
                 <PrimaryButton onClick={() => setShowAdd(true)}>
                     Tambah

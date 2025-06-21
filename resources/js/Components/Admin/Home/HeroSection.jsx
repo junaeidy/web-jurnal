@@ -5,6 +5,7 @@ import AddHero from "./AddHero";
 import EditHero from "./EditHero";
 import ConfirmDialog from "@/Components/ConfirmDialog";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/solid";
+import PrimaryButton from "@/Components/UI/PrimaryButton";
 
 export default function HeroSection() {
     const [heroes, setHeroes] = useState([]);
@@ -40,12 +41,11 @@ export default function HeroSection() {
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-bold">Hero Section</h2>
-                <button
-                    className="px-4 py-2 bg-blue-600 text-white rounded"
+                <PrimaryButton
                     onClick={() => setShowAdd(true)}
                 >
                     Tambah
-                </button>
+                </PrimaryButton>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

@@ -1,18 +1,19 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
+import SecondaryButton from "@/Components/UI/SecondaryButton";
 
 export default function JournalDetail({ isOpen, onClose, journal }) {
     if (!journal) return null;
 
     const statusStyle = journal.is_active
         ? {
-              text: "Aktif",
+              text: "Published",
               icon: <CheckCircleIcon className="h-5 w-5 text-green-500" />,
               bg: "bg-green-100 text-green-700",
           }
         : {
-              text: "Tidak Aktif",
+              text: "Draft",
               icon: <XCircleIcon className="h-5 w-5 text-red-500" />,
               bg: "bg-red-100 text-red-700",
           };
@@ -75,7 +76,15 @@ export default function JournalDetail({ isOpen, onClose, journal }) {
                                             Kategori
                                         </div>
                                         <div>
-                                            {journal.category?.name ?? "-"}
+                                            {journal.categories &&
+                                            journal.categories.length > 0
+                                                ? journal.categories
+                                                      .map(
+                                                          (category) =>
+                                                              category.name
+                                                      )
+                                                      .join(", ")
+                                                : "-"}
                                         </div>
                                     </div>
                                     <div>
@@ -181,12 +190,12 @@ export default function JournalDetail({ isOpen, onClose, journal }) {
                                 </div>
 
                                 <div className="mt-6 text-right">
-                                    <button
+                                    <SecondaryButton
                                         onClick={onClose}
                                         className="inline-flex items-center px-4 py-2 bg-gray-700 text-white text-sm rounded-lg hover:bg-gray-800 transition"
                                     >
                                         Tutup
-                                    </button>
+                                    </SecondaryButton>
                                 </div>
                             </Dialog.Panel>
                         </Transition.Child>

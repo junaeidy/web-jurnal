@@ -1,44 +1,54 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link } from "@inertiajs/react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function Dashboard({
-    journalsCount = 21,
-    recentJournalsCount = 19,
-    publishedCount = 19,
-    draftCount = 2,
-    latestJournals = [
-        {
-            id: 1,
-            title: "Analisis Dampak AI dalam Dunia Pendidikan",
-            created_at: "2025-06-18T10:15:00",
-            status: "published",
-        },
-        {
-            id: 2,
-            title: "Studi Komparatif Metode Klasifikasi Teks",
-            created_at: "2025-06-16T08:45:00",
-            status: "draft",
-        },
-        {
-            id: 3,
-            title: "Pemanfaatan Energi Terbarukan di Indonesia",
-            created_at: "2025-06-14T14:20:00",
-            status: "pending",
-        },
-        {
-            id: 4,
-            title: "Evaluasi Model Deep Learning untuk Deteksi Wajah",
-            created_at: "2025-06-12T11:00:00",
-            status: "published",
-        },
-        {
-            id: 5,
-            title: "Kajian Etika Penggunaan Data Pribadi",
-            created_at: "2025-06-10T09:30:00",
-            status: "draft",
-        },
-    ],
+    journalsCount = 0,
+    recentJournalsCount = 0,
+    publishedCount = 0,
+    draftCount = 0,
 }) {
+    const [latestJournals, setLatestJournals] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [stats, setStats] = useState({
+        total: 0,
+        thisMonth: 0,
+        published: 0,
+        draft: 0,
+    });
+
+    useEffect(() => {
+        axios.get("/api/journals").then((response) => {
+            const journals = response.data.data;
+
+            setLatestJournals(journals);
+            setLoading(false);
+
+            // Hitung Statistik
+            const total = journals.length;
+            const now = new Date();
+            const thisMonth = journals.filter((j) => {
+                const createdAt = new Date(j.created_at);
+                return (
+                    createdAt.getMonth() === now.getMonth() &&
+                    createdAt.getFullYear() === now.getFullYear()
+                );
+            }).length;
+
+            const published = journals.filter((j) => j.is_active).length;
+            const draft = journals.filter((j) => !j.is_active).length;
+
+            // Set state stat
+            setStats({
+                total,
+                thisMonth,
+                published,
+                draft,
+            });
+        });
+    }, []);
+
     return (
         <AuthenticatedLayout
             header={
@@ -55,22 +65,22 @@ export default function Dashboard({
                     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
                         <StatCard
                             title="Total Jurnal"
-                            value={journalsCount}
+                            value={stats.total}
                             bgColor="bg-[#2A7C4C]"
                         />
                         <StatCard
                             title="Jurnal Bulan Ini"
-                            value={recentJournalsCount}
+                            value={stats.thisMonth}
                             bgColor="bg-blue-600"
                         />
                         <StatCard
                             title="Dipublikasikan"
-                            value={publishedCount}
+                            value={stats.published}
                             bgColor="bg-teal-600"
                         />
                         <StatCard
                             title="Draft"
-                            value={draftCount}
+                            value={stats.draft}
                             bgColor="bg-gray-600"
                         />
                     </div>
@@ -82,7 +92,7 @@ export default function Dashboard({
                                 Jurnal Terbaru
                             </h3>
                             <Link
-                                href= {route("dashboard.journals.index")}
+                                href={route("dashboard.journals.index")}
                                 className="text-sm text-[#2A7C4C] font-medium hover:underline"
                             >
                                 Lihat Semua
@@ -98,7 +108,16 @@ export default function Dashboard({
                                 </tr>
                             </thead>
                             <tbody>
-                                {latestJournals.length === 0 ? (
+                                {loading ? (
+                                    <tr>
+                                        <td
+                                            colSpan="3"
+                                            className="py-4 text-center text-gray-400"
+                                        >
+                                            Memuat...
+                                        </td>
+                                    </tr>
+                                ) : latestJournals.length === 0 ? (
                                     <tr>
                                         <td
                                             colSpan="3"
@@ -108,9 +127,11 @@ export default function Dashboard({
                                         </td>
                                     </tr>
                                 ) : (
-                                    latestJournals.map((j) => (
+                                    latestJournals.slice(0, 5).map((j) => (
                                         <tr key={j.id} className="border-b">
-                                            <td className="py-2">{j.title}</td>
+                                            <td className="py-2">
+                                                {j.title?.id}
+                                            </td>
                                             <td className="py-2">
                                                 {new Date(
                                                     j.created_at
@@ -118,7 +139,7 @@ export default function Dashboard({
                                             </td>
                                             <td className="py-2">
                                                 <StatusBadge
-                                                    status={j.status}
+                                                    is_active={j.is_active}
                                                 />
                                             </td>
                                         </tr>
@@ -142,18 +163,16 @@ function StatCard({ title, value, icon, bgColor, textColor }) {
     );
 }
 
-function StatusBadge({ status }) {
-    const isPublished = status === "published";
+function StatusBadge({ is_active }) {
     const baseClass =
         "inline-block px-3 py-1 text-xs font-semibold rounded-full";
-
-    const colorClass = isPublished
+    const colorClass = is_active
         ? "bg-green-100 text-green-700"
         : "bg-gray-100 text-gray-700";
 
     return (
         <span className={`${baseClass} ${colorClass}`}>
-            {isPublished ? "Published" : "Draft"}
+            {is_active ? "Published" : "Draft"}
         </span>
     );
 }

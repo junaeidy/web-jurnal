@@ -68,10 +68,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/abouts', [AboutController::class, 'index'])->name('dashboard.abouts.index');
     Route::get('/dashboard/events', [EventsController::class, 'index'])->name('dashboard.events.index');
     Route::get('/dashboard/home', [HomeHeroController::class, 'index'])->name('dashboard.home.index');
-    Route::get('/dashboard/campaigns', [EmailCampaignController::class, 'index'])->name('campaigns.index');
-    Route::post('/dashboard/campaigns', [EmailCampaignController::class, 'store'])->name('campaigns.store');
-    Route::get('/dashboard/campaigns/{id}', [EmailCampaignController::class, 'show'])->name('campaigns.show');
-    Route::get('/campaigns/create', fn () => Inertia::render('Admin/Campaigns/Create'))->name('campaigns.create');
 });
 
 Route::fallback(function () {

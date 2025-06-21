@@ -278,7 +278,7 @@ export default function EditJournal({ show, journalId, onClose, onSuccess }) {
                                             checked={form.is_active}
                                             onChange={handleChange}
                                         />
-                                        Aktif
+                                        Published
                                     </label>
                                     <label className="flex gap-2 items-center text-sm">
                                         <input

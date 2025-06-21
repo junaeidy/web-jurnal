@@ -19,6 +19,7 @@ import AddActivity from "@/Components/Admin/Event/AddActivity";
 import EditActivity from "@/Components/Admin/Event/EditActivity";
 import ConfirmDialog from "@/Components/ConfirmDialog";
 import toast from "react-hot-toast";
+import PrimaryButton from "@/Components/UI/PrimaryButton";
 
 const columns = [
     { name: "NO", key: "no" },
@@ -206,13 +207,12 @@ export default function KegiatanList() {
                         </SelectItem>
                     </Select>
 
-                    <Button
-                        color="primary"
+                    <PrimaryButton
                         endContent={<PlusIcon />}
                         onPress={() => setShowAddModal(true)}
                     >
                         Tambah
-                    </Button>
+                    </PrimaryButton>
                 </div>
             </div>
 

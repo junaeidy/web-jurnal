@@ -16,6 +16,7 @@ import AddAbout from "@/Components/Admin/About/AddAbout";
 import EditAbout from "@/Components/Admin/About/EditAbout";
 import ConfirmDialog from "@/Components/ConfirmDialog";
 import toast from "react-hot-toast";
+import PrimaryButton from "@/Components/UI/PrimaryButton";
 
 const columns = [
     { name: "NO", key: "no" },
@@ -161,13 +162,12 @@ export default function AboutList() {
                     className="w-full md:w-1/3"
                 />
 
-                <Button
-                    color="primary"
+                <PrimaryButton
                     endContent={<PlusIcon />}
                     onPress={() => setShowAddModal(true)}
                 >
                     Tambah
-                </Button>
+                </PrimaryButton>
             </div>
 
             <Table aria-label="Tabel About">
