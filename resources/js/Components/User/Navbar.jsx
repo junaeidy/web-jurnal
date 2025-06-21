@@ -21,81 +21,46 @@ export default function Navbar({ user }) {
     const isActive = (href) => url === href || url.startsWith(href + "/");
 
     return (
-        <nav className="fixed w-full z-50 bg-[#fdfaf2]/90 backdrop-blur-md shadow-md">
-            <div className="container mx-auto px-4 py-3 flex items-center justify-between h-16">
-                {/* Logo */}
-                <div className="text-xl font-bold" style={{ color: "#50c878" }}>
-                    <Link href="/" className="flex items-center space-x-3">
-                        <img
-                            src="/images/Logo-1.png"
-                            alt="Logo"
-                            className="w-12 h-12"
-                        />
-                        <div className="flex flex-col leading-tight">
-                            <span
-                                className="text-sm font-semibold"
-                                style={{ color: "#50c878" }}
-                            >
-                                Adra Karima Hubbi
-                            </span>
-                            <span
-                                className="text-xs font-medium"
-                                style={{ color: "#cfb53b" }}
-                            >
-                                Research and Publisher
-                            </span>
-                        </div>
-                    </Link>
-                </div>
+        <nav className="fixed w-full z-50 bg-white/90 backdrop-blur shadow-sm">
+            <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+                {/* Logo & Brand */}
+                <Link href="/" className="flex items-center gap-3">
+                    <img src="/images/Logo-1.png" alt="Logo" className="h-10 w-10" />
+                    <span className="text-lg font-semibold text-[#2A7C4C]">
+                        Denisya Smart Consulting
+                    </span>
+                </Link>
 
-                {/* Hamburger */}
-                <div className="lg:hidden">
-                    <button
-                        onClick={() => setIsOpen(!isOpen)}
-                        className="text-gray-700 focus:outline-none"
-                        aria-label="Toggle Menu"
-                    >
-                        {isOpen ? (
-                            <XMarkIcon className="w-6 h-6" />
-                        ) : (
-                            <Bars3Icon className="w-6 h-6" />
-                        )}
-                    </button>
-                </div>
-
-                {/* Navigasi Utama */}
-                <div className="hidden lg:flex flex-grow justify-center space-x-8">
+                {/* Desktop Navigation */}
+                <div className="hidden lg:flex gap-10 items-center">
                     {navLinks.map((link) => (
                         <Link
                             key={link.href}
                             href={link.href}
-                            className={`font-medium transition-colors duration-300 ${
+                            className={`relative text-sm font-medium transition-all after:content-[''] after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:scale-x-0 after:bg-[#2A7C4C] after:origin-left after:transition-transform hover:after:scale-x-100 ${
                                 isActive(link.href)
-                                    ? "text-[#50c878] font-semibold underline underline-offset-4"
-                                    : "text-gray-600 hover:text-[#50c878]"
+                                    ? "text-[#2A7C4C] after:scale-x-100 font-semibold"
+                                    : "text-gray-700 hover:text-[#2A7C4C]"
                             }`}
                         >
                             {link.label}
                         </Link>
                     ))}
-                </div>
 
-                {/* Bahasa + Login */}
-                <div className="hidden lg:flex items-center space-x-4">
-                    {/* Bahasa */}
-                    <div className="flex gap-2 text-sm">
+                    {/* Locale Switcher */}
+                    <div className="flex gap-2 items-center text-sm">
                         <Link
                             href="/lang/en"
-                            className={`hover:text-[#50c878] ${
+                            className={`hover:text-[#2A7C4C] ${
                                 locale === "en" ? "font-bold underline" : ""
                             }`}
                         >
                             EN
                         </Link>
-                        <span>|</span>
+                        <span className="text-gray-400">|</span>
                         <Link
                             href="/lang/id"
-                            className={`hover:text-[#50c878] ${
+                            className={`hover:text-[#2A7C4C] ${
                                 locale === "id" ? "font-bold underline" : ""
                             }`}
                         >
@@ -103,71 +68,78 @@ export default function Navbar({ user }) {
                         </Link>
                     </div>
 
-                    {/* Login / Dashboard */}
+                    {/* Auth Button */}
                     {user ? (
                         <Link
                             href="/dashboard"
-                            className="bg-[#50c878] text-white px-5 py-2 rounded-lg hover:bg-[#3fa767] transition duration-300"
+                            className="bg-[#2A7C4C] text-white px-4 py-2 rounded-full text-sm hover:bg-[#226c40] transition"
                         >
                             {t.dashboard}
                         </Link>
                     ) : (
                         <Link
                             href="/login"
-                            className="bg-[#50c878] text-white px-5 py-2 rounded-lg hover:bg-[#3fa767] transition duration-300"
+                            className="bg-[#2A7C4C] text-white px-4 py-2 rounded-full text-sm hover:bg-[#226c40] transition"
                         >
                             {t.login}
                         </Link>
                     )}
                 </div>
+
+                {/* Hamburger Mobile */}
+                <button
+                    onClick={() => setIsOpen(!isOpen)}
+                    className="lg:hidden text-gray-700 focus:outline-none"
+                    aria-label="Toggle Menu"
+                >
+                    {isOpen ? <XMarkIcon className="h-6 w-6" /> : <Bars3Icon className="h-6 w-6" />}
+                </button>
             </div>
 
-            {/* Dropdown Mobile */}
+            {/* Mobile Dropdown */}
             <div
-                className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-                    isOpen ? "max-h-[400px] opacity-100" : "max-h-0 opacity-0"
+                className={`lg:hidden transition-all duration-300 ease-in-out overflow-hidden ${
+                    isOpen ? "max-h-[500px]" : "max-h-0"
                 }`}
             >
-                <div className="px-4 pb-4 flex flex-col space-y-2">
+                <div className="px-4 pb-4 flex flex-col gap-4 text-sm">
                     {navLinks.map((link) => (
                         <Link
                             key={link.href}
                             href={link.href}
-                            className={`block py-2 font-medium transition-colors duration-300 ${
-                                isActive(link.href)
-                                    ? "text-[#50c878] font-semibold underline underline-offset-4"
-                                    : "text-gray-600 hover:text-[#50c878]"
-                            }`}
                             onClick={() => setIsOpen(false)}
+                            className={`py-2 border-b transition ${
+                                isActive(link.href)
+                                    ? "text-[#2A7C4C] font-semibold"
+                                    : "text-gray-700 hover:text-[#2A7C4C]"
+                            }`}
                         >
                             {link.label}
                         </Link>
                     ))}
 
-                    {/* Dashboard / Login */}
-                    <div className="mt-2">
-                        {user ? (
-                            <Link
-                                href="/dashboard"
-                                className="block w-full bg-[#50c878] text-white px-4 py-2 rounded-lg text-center hover:bg-[#3fa767] transition"
-                            >
-                                {t.dashboard}
-                            </Link>
-                        ) : (
-                            <Link
-                                href="/login"
-                                className="block w-full bg-[#50c878] text-white px-4 py-2 rounded-lg text-center hover:bg-[#3fa767] transition"
-                            >
-                                {t.login}
-                            </Link>
-                        )}
-                    </div>
+                    {/* Auth Buttons */}
+                    {user ? (
+                        <Link
+                            href="/dashboard"
+                            className="block w-full text-center bg-[#2A7C4C] text-white py-2 rounded-lg hover:bg-[#226c40] transition"
+                        >
+                            {t.dashboard}
+                        </Link>
+                    ) : (
+                        <Link
+                            href="/login"
+                            className="block w-full text-center bg-[#2A7C4C] text-white py-2 rounded-lg hover:bg-[#226c40] transition"
+                        >
+                            {t.login}
+                        </Link>
+                    )}
 
-                    {/* Bahasa */}
-                    <div className="flex justify-center gap-4 mt-4 text-sm">
+                    {/* Language */}
+                    <div className="flex justify-center gap-4 mt-2">
                         <Link
                             href="/lang/en"
-                            className={`hover:text-[#50c878] ${
+                            className={`hover:text-[#2A7C4C] ${
                                 locale === "en" ? "font-bold underline" : ""
                             }`}
                         >
@@ -175,7 +147,7 @@ export default function Navbar({ user }) {
                         </Link>
                         <Link
                             href="/lang/id"
-                            className={`hover:text-[#50c878] ${
+                            className={`hover:text-[#2A7C4C] ${
                                 locale === "id" ? "font-bold underline" : ""
                             }`}
                         >

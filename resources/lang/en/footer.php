@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'title' => 'Adra Karima Hubbi',
-    'description' => 'A leading scientific publishing platform dedicated to disseminating innovative research and cutting-edge knowledge across a range of disciplines.',
+    'title' => 'Denisya Smart Consulting',
+    'description' => 'A leading scientific publication center that facilitates the dissemination of cutting-edge knowledge and current research findings across a range of disciplines.',
 
     'navigation' => 'Navigation',
     'home' => 'Home',
@@ -12,8 +12,8 @@ return [
     'journal' => 'Find Journal',
     'contact' => 'Contact Us',
 
-    'email' => 'Email: journal@adra.ac.id',
-    'phone' => 'Telephone: +6285156342096',
-    'address' => 'Address: Jorong Kubang Kaciak Dusun Kubang Kaciak, Kelurahan Balai Tangah, Kecamatan Lintau Buo Utara, Kabupaten Tanah Datar, Provinsi Sumatera Barat, Kodepos 27293.',
+    'email' => 'Email: journal@denisyasmartconsulting.co.id',
+    'phone' => 'Telephone: +62895323444273',
+    'address' => 'Address: Garuda Mas Housing Complex Block K2 Five Kaum Tanah Datar (27216).',
     'copyright' => 'All rights reserved.',
 ];

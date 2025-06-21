@@ -116,7 +116,7 @@ export default function AboutSection({ onLoadComplete, isLoading }) {
                                             href={about.whatsapp_link}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-lg text-base transition duration-300 transform hover:scale-105 flex items-center justify-center space-x-2"
+                                            className="bg-[#2A7C4C] hover:bg-green-600 text-white font-bold py-3 px-8 rounded-lg text-base transition duration-300 transform hover:scale-105 flex items-center justify-center space-x-2"
                                         >
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
